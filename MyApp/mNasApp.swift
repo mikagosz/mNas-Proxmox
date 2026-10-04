@@ -36,6 +36,9 @@ struct mNasApp: App {
         .windowResizability(.contentSize)
         .commands {
             CommandGroup(replacing: .appSettings) { PolecenieUstawien() }
+            CommandGroup(after: .appInfo) {
+                Button("Sprawdź aktualizacje…") { Task { await Updates.shared.check(manually: true) } }
+            }
             CommandGroup(replacing: .help) { PrzyciskInstrukcji(tytul: "Instrukcja mNas") }
         }
 
@@ -128,6 +131,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func uruchomPasekMenu(model: AppModel, otworzOkno: @escaping () -> Void) {
         self.otworzOkno = otworzOkno
         sledzZamykanieOkien()
+        Updates.shared.isBusy = { [weak model] in model?.instalujeZbieracz ?? false }
+    }
+
+    /// Aktualizacje ruszają raz, przy starcie — niezależnie od tego, czy okno się otworzy
+    /// (program może żyć samą ikoną w pasku menu).
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        MainActor.assumeIsolated { Updates.shared.start() }
     }
 
     /// Podnosi główne okno. Gdy użytkownik je zamknął, prosi SwiftUI o nowe.

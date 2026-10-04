@@ -1573,6 +1573,22 @@
         }
       }
     },
+    "Adres paczki prowadzi poza serwer fractal8.eu — program jej nie pobierze.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The package address leads outside fractal8.eu — the app will not download it."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adres paczki prowadzi poza serwer fractal8.eu — program jej nie pobierze."
+          }
+        }
+      }
+    },
     "Adres węzła": {
       "localizations": {
         "en": {
@@ -1585,6 +1601,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adres węzła"
+          }
+        }
+      }
+    },
+    "Aktualizacje": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacje"
           }
         }
       }
@@ -2981,6 +3013,22 @@
         }
       }
     },
+    "Instaluję — za chwilę program uruchomi się ponownie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing — the app will restart in a moment…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instaluję — za chwilę program uruchomi się ponownie…"
+          }
+        }
+      }
+    },
     "Instrukcja": {
       "localizations": {
         "en": {
@@ -3125,6 +3173,22 @@
         }
       }
     },
+    "Jest nowsza wersja": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A newer version is available"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jest nowsza wersja"
+          }
+        }
+      }
+    },
     "Jeszcze nic się nie domknęło.": {
       "localizations": {
         "en": {
@@ -3137,6 +3201,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jeszcze nic się nie domknęło."
+          }
+        }
+      }
+    },
+    "Jeszcze nie sprawdzano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not checked yet"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jeszcze nie sprawdzano"
           }
         }
       }
@@ -3813,6 +3893,38 @@
         }
       }
     },
+    "Masz %@, dostępna jest %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have %1$@, version %2$@ is available."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Masz %1$@, dostępna jest %2$@."
+          }
+        }
+      }
+    },
+    "Masz najnowszą wersję": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You are up to date"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masz najnowszą wersję"
+          }
+        }
+      }
+    },
     "Maszyna": {
       "localizations": {
         "en": {
@@ -4293,6 +4405,22 @@
         }
       }
     },
+    "Nie udało się pobrać nowej wersji.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not download the new version."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie udało się pobrać nowej wersji."
+          }
+        }
+      }
+    },
     "Nie udało się przygotować pliku na wyjście komendy.": {
       "localizations": {
         "en": {
@@ -4305,6 +4433,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nie udało się przygotować pliku na wyjście komendy."
+          }
+        }
+      }
+    },
+    "Nie udało się sprawdzić aktualizacji": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not check for updates"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie udało się sprawdzić aktualizacji"
           }
         }
       }
@@ -4353,6 +4497,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nie udało się wygenerować klucza."
+          }
+        }
+      }
+    },
+    "Nie udało się zainstalować nowej wersji. Program działa dalej w obecnej.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not install the new version. The app keeps running the current one."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie udało się zainstalować nowej wersji. Program działa dalej w obecnej."
           }
         }
       }
@@ -4417,6 +4577,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Niżej — dalej od pierwszej strony"
+          }
+        }
+      }
+    },
+    "Nowa wersja jest zainstalowana, ale restart się nie udał. Zamknij i otwórz program ręcznie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The new version is installed, but the restart failed. Quit and reopen the app manually."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nowa wersja jest zainstalowana, ale restart się nie udał. Zamknij i otwórz program ręcznie."
           }
         }
       }
@@ -4805,6 +4981,22 @@
         }
       }
     },
+    "Ostatnio: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last checked: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ostatnio: %@"
+          }
+        }
+      }
+    },
     "Ostrzeżenia": {
       "localizations": {
         "en": {
@@ -5141,6 +5333,22 @@
         }
       }
     },
+    "Pobieram i sprawdzam paczkę…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading and verifying the package…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobieram i sprawdzam paczkę…"
+          }
+        }
+      }
+    },
     "Pobieranie": {
       "localizations": {
         "en": {
@@ -5153,6 +5361,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pobieranie"
+          }
+        }
+      }
+    },
+    "Pobierz ręcznie i podmień sam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download manually and replace it yourself"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pobierz ręcznie i podmień sam"
           }
         }
       }
@@ -5281,6 +5505,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pomiar RAPL — pobór procesora, nie całego komputera. Zasilacz w tym sprzęcie nie udostępnia odczytu."
+          }
+        }
+      }
+    },
+    "Pomiń tę wersję": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip This Version"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pomiń tę wersję"
           }
         }
       }
@@ -5681,6 +5921,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Progi, przy których to się zapala"
+          }
+        }
+      }
+    },
+    "Program pobierze nową wersję, sprawdzi ją, podmieni się i uruchomi ponownie. Połączenie z serwerem, token, układ kafli i ustawienia zostają, a na serwerze nic się nie zmienia.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app downloads the new version, checks it, replaces itself and restarts. Your server connection, token, tile layout and settings stay, and nothing changes on the server."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Program pobierze nową wersję, sprawdzi ją, podmieni się i uruchomi ponownie. Połączenie z serwerem, token, układ kafli i ustawienia zostają, a na serwerze nic się nie zmienia."
+          }
+        }
+      }
+    },
+    "Program pyta stronę fractal8.eu o numer najnowszej wersji — nic więcej nie wysyła. Nowa wersja instaluje się dopiero, gdy klikniesz „Zainstaluj”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app asks fractal8.eu for the newest version number and sends nothing else. A new version installs only when you click “Install”."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Program pyta stronę fractal8.eu o numer najnowszej wersji — nic więcej nie wysyła. Nowa wersja instaluje się dopiero, gdy klikniesz „Zainstaluj”."
+          }
+        }
+      }
+    },
+    "Program stoi w miejscu, którego nie da się nadpisać (np. otwarty prosto z Pobranych). Przenieś go do katalogu Aplikacje albo pobierz nową wersję ręcznie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app sits where it cannot be overwritten (e.g. opened straight from Downloads). Move it to the Applications folder or download the new version manually."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Program stoi w miejscu, którego nie da się nadpisać (np. otwarty prosto z Pobranych). Przenieś go do katalogu Aplikacje albo pobierz nową wersję ręcznie."
           }
         }
       }
@@ -7033,6 +7321,38 @@
         }
       }
     },
+    "Sprawdzaj aktualizacje raz w miesiącu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for updates once a month"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdzaj aktualizacje raz w miesiącu"
+          }
+        }
+      }
+    },
+    "Sprawdź aktualizacje…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check for Updates…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdź aktualizacje…"
+          }
+        }
+      }
+    },
     "Sprawdź dostęp roota": {
       "localizations": {
         "en": {
@@ -7061,6 +7381,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sprawdź przebiegi teraz"
+          }
+        }
+      }
+    },
+    "Sprawdź teraz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Now"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdź teraz"
           }
         }
       }
@@ -8009,6 +8345,22 @@
         }
       }
     },
+    "Trwa instalacja zbieracza historii na serwerze — restart by ją przerwał. Kliknij ponownie, gdy się skończy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The history collector is being installed on the server — a restart would cut that off. Click again when it finishes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trwa instalacja zbieracza historii na serwerze — restart by ją przerwał. Kliknij ponownie, gdy się skończy."
+          }
+        }
+      }
+    },
     "Tryb automatyczny": {
       "localizations": {
         "en": {
@@ -8777,6 +9129,22 @@
         }
       }
     },
+    "Wersja %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wersja %@."
+          }
+        }
+      }
+    },
     "Wersja modułu nie pasuje do aktualnego jądra — moduł trzeba przebudować (DKMS) po ostatniej aktualizacji systemu.": {
       "localizations": {
         "en": {
@@ -9513,6 +9881,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zainstaluj"
+          }
+        }
+      }
+    },
+    "Zainstaluj i uruchom ponownie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install and Restart"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zainstaluj i uruchom ponownie"
           }
         }
       }
@@ -10897,6 +11281,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "mNas — %@"
+          }
+        }
+      }
+    },
+    "mNas — Aktualizacja": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas — Update"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas — Aktualizacja"
           }
         }
       }

@@ -1232,10 +1232,16 @@ final class AppModel {
     }
 
     /// Instalacja albo aktualizacja zbieracza — wołana dopiero po pytaniu w oknie.
+    /// Trwa wgrywanie zbieracza na serwer — aktualizacja programu (`Updates.isBusy`) czeka,
+    /// bo restart w połowie zostawiłby na serwerze skrypt bez jednostek albo odwrotnie.
+    private(set) var instalujeZbieracz = false
+
     func zainstalujZbieracz() async -> Result<Void, BladHistorii> {
         guard gpuSSHEnabled, status == .connected else {
             return .failure(BladHistorii(opis: String(localized: "Instalacja wymaga połączenia SSH.")))
         }
+        instalujeZbieracz = true
+        defer { instalujeZbieracz = false }
         let r = await commands.instalujZbieracz()
         guard r.ok else {
             let szczegol = r.error.trimmingCharacters(in: .whitespacesAndNewlines).suffix(300)

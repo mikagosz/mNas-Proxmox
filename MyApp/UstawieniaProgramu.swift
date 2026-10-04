@@ -81,6 +81,7 @@ struct OknoUstawien: View {
             } header: {
                 Label("Język", systemImage: "globe")
             }
+            SekcjaAktualizacji()
             Section {
                 HStack {
                     Text("Token, połączenie, SSH, historia i kafle krok po kroku.")
@@ -132,5 +133,34 @@ struct PolecenieUstawien: View {
     var body: some View {
         Button("Ustawienia…") { openWindow(id: OknoUstawien.id) }
             .keyboardShortcut(",")
+    }
+}
+
+/// Aktualizacje w Ustawieniach — zawsze opcjonalne (decyzja [U] 2026-10-01): przełącznik
+/// comiesięcznego sprawdzania i ręczne „Sprawdź teraz”, które działa także przy wyłączonym.
+struct SekcjaAktualizacji: View {
+    @ObservedObject private var aktualizacje = Updates.shared
+    @AppStorage(UpdateSetting.checkUpdates) private var sprawdzaj = true
+
+    var body: some View {
+        Section {
+            Toggle("Sprawdzaj aktualizacje raz w miesiącu", isOn: $sprawdzaj)
+                .onChange(of: sprawdzaj) { _, wlaczone in aktualizacje.enabled = wlaczone }
+            HStack {
+                Text(ostatnio).foregroundStyle(.secondary)
+                Spacer()
+                Button("Sprawdź teraz") { Task { await aktualizacje.check(manually: true) } }
+            }
+        } header: {
+            Label("Aktualizacje", systemImage: "arrow.down.circle")
+        } footer: {
+            Text("Program pyta stronę fractal8.eu o numer najnowszej wersji — nic więcej nie wysyła. Nowa wersja instaluje się dopiero, gdy klikniesz „Zainstaluj”.")
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var ostatnio: String {
+        guard let data = aktualizacje.lastCheck else { return String(localized: "Jeszcze nie sprawdzano") }
+        return String(localized: "Ostatnio: \(data.formatted(date: .abbreviated, time: .shortened))")
     }
 }

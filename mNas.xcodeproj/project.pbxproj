@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		000000000000000E0000BF01 /* ErrorUpdate in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000E00000D01 /* ErrorUpdate */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				000000000000000E0000BF01 /* ErrorUpdate in Frameworks */,
 			);
 		};
 		000000000000000230000000 /* Frameworks */ = {
@@ -76,6 +78,9 @@
 				000000000000000000000010 /* MyApp */,
 			);
 			name = mNas;
+			packageProductDependencies = (
+				000000000000000E00000D01 /* ErrorUpdate */,
+			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* mNas.app */;
 			productType = "com.apple.product-type.application";
@@ -130,6 +135,9 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				000000000000000E0000AE01 /* XCRemoteSwiftPackageReference "ErrorUpdate" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -324,7 +332,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = 85C274E1928B36D546B36B8462A879E6A97BFC22;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
@@ -335,7 +343,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 1.2.26;
+				MARKETING_VERSION = 1.2.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikagosz.mNasProxmox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -361,7 +369,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
@@ -372,7 +380,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 1.2.26;
+				MARKETING_VERSION = 1.2.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikagosz.mNasProxmox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -394,11 +402,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = 85C274E1928B36D546B36B8462A879E6A97BFC22;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 1.2.26;
+				MARKETING_VERSION = 1.2.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikagosz.mNasProxmoxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -419,11 +427,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = 85C274E1928B36D546B36B8462A879E6A97BFC22;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 65;
+				CURRENT_PROJECT_VERSION = 66;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.6;
-				MARKETING_VERSION = 1.2.26;
+				MARKETING_VERSION = 1.2.27;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mikagosz.mNasProxmoxTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -466,6 +474,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		000000000000000E0000AE01 /* XCRemoteSwiftPackageReference "ErrorUpdate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mikagosz/ErrorUpdate.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.0.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		000000000000000E00000D01 /* ErrorUpdate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000000000000000E0000AE01 /* XCRemoteSwiftPackageReference "ErrorUpdate" */;
+			productName = ErrorUpdate;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }
