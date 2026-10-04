@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	    Uprawnienia konfiguracji RELEASE — celowo PUSTE.
+
+	    Ten plik istnieje po to, żeby z wydania zniknął `com.apple.security.get-task-allow`,
+	    który Xcode dokłada sam przy podpisie tożsamością deweloperską. Ten entitlement
+	    pozwala obcemu procesowi pobrać port zadania i czytać pamięć aplikacji — a w pamięci
+	    mNas siedzi sekret tokenu API z rolą PVEAdmin na całym węźle.
+
+	    Konfiguracja DEBUG celowo NIE wskazuje tego pliku: tam `get-task-allow` musi zostać,
+	    bo bez niego debugger Xcode przestanie zatrzymywać się na breakpointach.
+
+	    ⚠️ NIE dopisuj tu `com.apple.security.app-sandbox`. Sandbox jest w tym projekcie
+	    wyłączony świadomie i bezwarunkowo — jest warunkiem działania kanału SSH.
+	-->
+</dict>
+</plist>

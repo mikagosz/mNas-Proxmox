@@ -1,0 +1,10 @@
+[Unit]
+Description=mNas — zbieracz historii (temperatury, moc, miejsce, zapisy)
+
+[Service]
+Type=oneshot
+# Limit: dla oneshot systemd domyślnie żadnego nie stawia, a zawieszony smartctl
+# (dysk za mostkiem USB) blokowałby każdą następną minutę do restartu serwera.
+TimeoutStartSec=50
+ExecStart=/usr/local/bin/mnas-historia
+Nice=10

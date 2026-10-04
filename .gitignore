@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Xcode — stan lokalny użytkownika (zmienia się przy każdym otwarciu projektu)
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Wyniki budowania
+DerivedData/
+build/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Menedżery pakietów (projekt nie ma zależności — na wypadek, gdyby się pojawiły)
+.swiftpm/
+Packages/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/configuration/
