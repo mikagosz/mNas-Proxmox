@@ -1249,7 +1249,24 @@
         }
       }
     },
+    "**Adres węzła**: adres IP albo nazwa serwera, bez https i bez portu. Najpierw kliknij **Edytuj**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Node address**: the server's IP address or name, without https and without a port. Click **Edit** first."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Adres węzła**: adres IP albo nazwa serwera, bez https i bez portu. Najpierw kliknij **Edytuj**."
+          }
+        }
+      }
+    },
     "**Adres węzła**: adres IP albo nazwa serwera, bez https i bez portu. Port 8006 mNas dodaje sam.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1265,7 +1282,24 @@
         }
       }
     },
+    "**Auto** odświeża dane samo, **Odśwież** robi to od razu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Auto** refreshes the data by itself, **Refresh** does it right away."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Auto** odświeża dane samo, **Odśwież** robi to od razu."
+          }
+        }
+      }
+    },
     "**Edytuj układ** (prawy górny róg okna): przeciągasz kafel w dowolne pole, przycisk rozmiaru przełącza Mały → Średni → Duży, oczko chowa kafel, kłódka przypina go do miejsca.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1277,6 +1311,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "**Edytuj układ** (prawy górny róg okna): przeciągasz kafel w dowolne pole, przycisk rozmiaru przełącza Mały → Średni → Duży, oczko chowa kafel, kłódka przypina go do miejsca."
+          }
+        }
+      }
+    },
+    "**Edytuj układ** w prawym górnym rogu włącza tryb układania. Kafel przeciągasz w dowolne pole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Edit layout** in the top right corner turns on arranging. Drag a tile to any cell."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Edytuj układ** w prawym górnym rogu włącza tryb układania. Kafel przeciągasz w dowolne pole."
           }
         }
       }
@@ -1297,7 +1347,72 @@
         }
       }
     },
+    "**Otwórz okno** i **Zakończ mNas**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Open window** and **Quit mNas**."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Otwórz okno** i **Zakończ mNas**."
+          }
+        }
+      }
+    },
+    "**Połącz**. macOS zapyta o dostęp do sieci lokalnej — kliknij **Pozwól**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Connect**. macOS asks for local network access — click **Allow**."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Połącz**. macOS zapyta o dostęp do sieci lokalnej — kliknij **Pozwól**."
+          }
+        }
+      }
+    },
+    "**SSH**: zielony znaczek, gdy SSH działa. Tu kopiujesz klucz i testujesz połączenie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**SSH**: a green tick when SSH works. Here you copy the key and test the connection."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**SSH**: zielony znaczek, gdy SSH działa. Tu kopiujesz klucz i testujesz połączenie."
+          }
+        }
+      }
+    },
+    "**Sekret tokenu**. Z „Zapamiętaj sekret” trafia do pęku kluczy macOS.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Token secret**. With “Remember the secret” it goes to the macOS Keychain."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Sekret tokenu**. Z „Zapamiętaj sekret” trafia do pęku kluczy macOS."
+          }
+        }
+      }
+    },
     "**Sekret tokenu**: wartość skopiowana przy tworzeniu tokenu. Zaznacz „Zapamiętaj sekret”, żeby nie wpisywać go ponownie — trafia do pęku kluczy macOS.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1313,7 +1428,56 @@
         }
       }
     },
+    "**Teraz** albo **Historia** temperatur dysku.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Now** or the **History** of the disk's temperatures."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Teraz** albo **Historia** temperatur dysku."
+          }
+        }
+      }
+    },
+    "**Terminal** otwiera konsolę serwera w mNas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Terminal** opens the server's console in mNas."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Terminal** otwiera konsolę serwera w mNas."
+          }
+        }
+      }
+    },
+    "**Token API**, np. **root@pam!mnas**. Jak go założyć — pod „Więcej”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**API token**, e.g. **root@pam!mnas**. How to create one — under “More”."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Token API**, np. **root@pam!mnas**. Jak go założyć — pod „Więcej”."
+          }
+        }
+      }
+    },
     "**Token API**: użytkownik, realm i nazwa tokenu, np. **root@pam!mnas**.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1329,7 +1493,24 @@
         }
       }
     },
+    "**Ściśnij** układa kafle bez dziur, **Resetuj układ** wraca do ustawienia fabrycznego, **Gotowe** kończy edycję.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Compact** closes the gaps, **Reset layout** goes back to the default, **Done** ends editing."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Ściśnij** układa kafle bez dziur, **Resetuj układ** wraca do ustawienia fabrycznego, **Gotowe** kończy edycję."
+          }
+        }
+      }
+    },
     "**Ściśnij** układa kafle bez dziur, **Resetuj układ** wraca do ustawienia fabrycznego, **Gotowe** kończy edycję. Układ zostaje po ponownym uruchomieniu.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1430,6 +1611,7 @@
       }
     },
     "1. Czego potrzeba": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1462,6 +1644,7 @@
       }
     },
     "2. Token API — pełny dostęp": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1478,6 +1661,7 @@
       }
     },
     "3. Token API — tylko podgląd": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1494,6 +1678,7 @@
       }
     },
     "4. Połączenie w mNas": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1510,6 +1695,7 @@
       }
     },
     "5. SSH — temperatury, wentylatory, SMART, terminal": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1526,6 +1712,7 @@
       }
     },
     "6. Historia na wykresach": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1542,6 +1729,7 @@
       }
     },
     "7. Pulpit i kafle": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1558,6 +1746,7 @@
       }
     },
     "8. Pasek menu i ustawienia": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -1989,6 +2178,22 @@
         }
       }
     },
+    "CPU: zużycie, rdzenie, temperatura i obciążenie. Kliknij, żeby zobaczyć procesy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU: usage, cores, temperature and load. Click it to see the processes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU: zużycie, rdzenie, temperatura i obciążenie. Kliknij, żeby zobaczyć procesy."
+          }
+        }
+      }
+    },
     "CT %lld · %@ · %@": {
       "localizations": {
         "en": {
@@ -2133,6 +2338,22 @@
         }
       }
     },
+    "Certyfikat serwera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server's certificate"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Certyfikat serwera"
+          }
+        }
+      }
+    },
     "Certyfikat serwera się zmienił": {
       "localizations": {
         "en": {
@@ -2213,6 +2434,22 @@
         }
       }
     },
+    "Co wymaga uwagi, np. nieudana kopia albo przekroczony czas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What needs attention, such as a failed backup or a run over time."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Co wymaga uwagi, np. nieudana kopia albo przekroczony czas."
+          }
+        }
+      }
+    },
     "Cykle zasilania": {
       "localizations": {
         "en": {
@@ -2273,6 +2510,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Czas · systemd-timesyncd"
+          }
+        }
+      }
+    },
+    "Czego potrzeba": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What you need"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Czego potrzeba"
           }
         }
       }
@@ -2389,6 +2642,22 @@
         }
       }
     },
+    "Dobrze wiedzieć": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good to know"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dobrze wiedzieć"
+          }
+        }
+      }
+    },
     "Dopisz go na serwerze do **/root/.ssh/authorized_keys** — z Maca jednym poleceniem: `ssh-copy-id -i <klucz> root@%@`, albo z konsoli węzła: `mkdir -p /root/.ssh && echo \"KLUCZ\" >> /root/.ssh/authorized_keys`.": {
       "localizations": {
         "en": {
@@ -2501,6 +2770,22 @@
         }
       }
     },
+    "Dysk i SMART": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disk and SMART"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dysk i SMART"
+          }
+        }
+      }
+    },
     "Dysk nie udostępnia tablicy wskaźników SMART — werdykt wyżej to wszystko, co podaje.": {
       "localizations": {
         "en": {
@@ -2577,6 +2862,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dyski talerzowe (np. dysk kopii) mają historię **tylko z chwil, gdy same pracują** — przy kopii albo zapisie. Zbieracz ich nie budzi, więc ich dane **nie są na bieżąco**, a przerwy w linii to czas, gdy dysk spał."
+          }
+        }
+      }
+    },
+    "Dyski talerzowe mają historię tylko z chwil, gdy same pracują — mNas ich nie budzi.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spinning disks have history only from the moments they work anyway — mNas does not wake them."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dyski talerzowe mają historię tylko z chwil, gdy same pracują — mNas ich nie budzi."
+          }
+        }
+      }
+    },
+    "Dyski: kondycja i temperatura każdego dysku. Strzałka otwiera jego okno.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disks: the health and temperature of each disk. The arrow opens its window."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dyski: kondycja i temperatura każdego dysku. Strzałka otwiera jego okno."
           }
         }
       }
@@ -2837,6 +3154,22 @@
         }
       }
     },
+    "Historia na wykresach": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "History on charts"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historia na wykresach"
+          }
+        }
+      }
+    },
     "Historia przebiegów wymaga połączenia z Proxmoksem.": {
       "localizations": {
         "en": {
@@ -2917,6 +3250,22 @@
         }
       }
     },
+    "Historię zbiera i trzyma sam serwer, więc drugi Mac od razu widzi te same wykresy — także sprzed instalacji mNas.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server itself collects and keeps the history, so a second Mac sees the same charts straight away — including from before mNas was installed there."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historię zbiera i trzyma sam serwer, więc drugi Mac od razu widzi te same wykresy — także sprzed instalacji mNas."
+          }
+        }
+      }
+    },
     "Identyfikator albo sekret tokenu zawiera znak nowej linii lub znak sterujący. Najczęstsza przyczyna: skopiowanie wartości razem z łamaniem wiersza. Wklej ją ponownie, w jednym kawałku.": {
       "localizations": {
         "en": {
@@ -2950,6 +3299,7 @@
       }
     },
     "Ikona w pasku menu otwiera panel z wybranymi kaflami i listą przebiegów. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii. **Zakończ mNas** jest w tym panelu.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2961,6 +3311,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ikona w pasku menu otwiera panel z wybranymi kaflami i listą przebiegów. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii. **Zakończ mNas** jest w tym panelu."
+          }
+        }
+      }
+    },
+    "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The menu bar icon opens a panel. Closing the window hides mNas in the menu bar — it keeps watching the backups."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii."
           }
         }
       }
@@ -3110,6 +3476,7 @@
       }
     },
     "Jak połączyć mNas z Proxmoksem": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3269,6 +3636,22 @@
         }
       }
     },
+    "Język programu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app's language"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Język programu"
+          }
+        }
+      }
+    },
     "KAFLE Z OKNA GŁÓWNEGO": {
       "localizations": {
         "en": {
@@ -3318,6 +3701,7 @@
       }
     },
     "Kafle mają **trzy rozmiary: Mały, Średni i Duży**.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3329,6 +3713,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kafle mają **trzy rozmiary: Mały, Średni i Duży**."
+          }
+        }
+      }
+    },
+    "Kafle z historią otwierają wykres — od ostatniej godziny po cały rok.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiles with history open a chart — from the last hour to a whole year."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kafle z historią otwierają wykres — od ostatniej godziny po cały rok."
+          }
+        }
+      }
+    },
+    "Każdy kafel to jedna sprawa serwera. Kliknięcie otwiera okno ze szczegółami albo historią.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each tile is one part of the server. A click opens a window with details or history."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Każdy kafel to jedna sprawa serwera. Kliknięcie otwiera okno ze szczegółami albo historią."
           }
         }
       }
@@ -3366,6 +3782,7 @@
       }
     },
     "Kliknij **Połącz**.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3377,6 +3794,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kliknij **Połącz**."
+          }
+        }
+      }
+    },
+    "Kliknij dysk na kaflu Dyski albo Pamięć masowa — otworzy się jego okno.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click a disk on the Disks or Storage drives tile — its window opens."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kliknij dysk na kaflu Dyski albo Pamięć masowa — otworzy się jego okno."
           }
         }
       }
@@ -3494,6 +3927,7 @@
       }
     },
     "Kliknięcie kafla otwiera okno ze szczegółami albo historią. W trybie edycji kliknięcie niczego nie otwiera.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3777,6 +4211,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kłódka przygważdża kafel do jego pola: nie da się go złapać i **nie ustąpi** miejsca innym. Upuszczenie czegoś na zablokowane pole nie dochodzi do skutku, zamiast przepychać kafle dalej."
+          }
+        }
+      }
+    },
+    "Kłódka przypina kafel do miejsca, oczko go chowa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The lock pins a tile to its place, the eye hides it."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kłódka przypina kafel do miejsca, oczko go chowa."
           }
         }
       }
@@ -4085,6 +4535,22 @@
         }
       }
     },
+    "Mniej": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mniej"
+          }
+        }
+      }
+    },
     "Moduł nie rozpoznał żadnego obsługiwanego chipu na standardowych adresach. Kliknij przycisk Wykryj czujniki (sensors-detect) — to narzędzie realnie przeskanuje sprzęt i poda właściwy moduł/adres, zamiast zgadywać.": {
       "localizations": {
         "en": {
@@ -4229,6 +4695,22 @@
         }
       }
     },
+    "Nagłówek okna": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The window's header"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nagłówek okna"
+          }
+        }
+      }
+    },
     "Najbardziej obciążające procesy": {
       "localizations": {
         "en": {
@@ -4241,6 +4723,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Najbardziej obciążające procesy"
+          }
+        }
+      }
+    },
+    "Najważniejsze przyciski stoją na górze okna głównego.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The main buttons are at the top of the main window."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najważniejsze przyciski stoją na górze okna głównego."
           }
         }
       }
@@ -4289,6 +4787,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Następna strona"
+          }
+        }
+      }
+    },
+    "Natywne programy dla macOS, budowane według jednego wzoru.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Native macOS software, built to a single pattern."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Natywne programy dla macOS, budowane według jednego wzoru."
           }
         }
       }
@@ -4901,6 +5415,22 @@
         }
       }
     },
+    "Okno Miejsce pokazuje zajętość udziałów i dysków w czasie: ile przybyło i ile zwolniono.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Space window shows how full shares and disks are over time: how much was added and how much was freed."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Okno Miejsce pokazuje zajętość udziałów i dysków w czasie: ile przybyło i ile zwolniono."
+          }
+        }
+      }
+    },
     "Ostatni odczyt: %@ — zbieracz na serwerze stoi?": {
       "localizations": {
         "en": {
@@ -5189,6 +5719,22 @@
         }
       }
     },
+    "Pamięć RAM: wolne, usługi i przydział każdej maszyny.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memory: free, services and what each machine is given."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pamięć RAM: wolne, usługi i przydział każdej maszyny."
+          }
+        }
+      }
+    },
     "Pamięć SSD ma policzoną liczbę zapisów. %lld%% tego zapasu jest już wykorzystane — dysk nadal działa, ale zbliża się do końca przewidzianego życia.": {
       "localizations": {
         "en": {
@@ -5253,6 +5799,22 @@
         }
       }
     },
+    "Pasek menu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The menu bar"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasek menu"
+          }
+        }
+      }
+    },
     "Pełna historia w oknie programu, kafel „Zdarzenia”.": {
       "localizations": {
         "en": {
@@ -5297,6 +5859,22 @@
           "stringUnit": {
             "state": "new",
             "value": "Pełny dostęp: cokolwiek zrobisz z powłoki roota, zrobisz stąd. %1$@@%2$@"
+          }
+        }
+      }
+    },
+    "Pierwsze kroki z mNas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getting started with mNas"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pierwsze kroki z mNas"
           }
         }
       }
@@ -5701,6 +6279,22 @@
         }
       }
     },
+    "Połączenie z Proxmoksem": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting to Proxmox"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Połączenie z Proxmoksem"
+          }
+        }
+      }
+    },
     "Połączenie z serwerem zerwane — wracam sam.": {
       "localizations": {
         "en": {
@@ -6085,6 +6679,22 @@
         }
       }
     },
+    "Przebiegi, które właśnie trwają.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Runs going on right now."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przebiegi, które właśnie trwają."
+          }
+        }
+      }
+    },
     "Przeciągnij kafel w dowolną kratkę — także w puste pole, dziury zostają. Przycisk rozmiaru przełącza Mały → Średni → Duży, oczko chowa kafel.": {
       "localizations": {
         "en": {
@@ -6161,6 +6771,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Przy pierwszym połączeniu:"
+          }
+        }
+      }
+    },
+    "Przycisk rozmiaru przełącza **Mały → Średni → Duży**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The size button switches **Small → Medium → Large**."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Przycisk rozmiaru przełącza **Mały → Średni → Duży**."
           }
         }
       }
@@ -6325,6 +6951,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prędkość łącza, wykres godzinny i trzej najwięksi."
+          }
+        }
+      }
+    },
+    "Pulpit i kafle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dashboard and its tiles"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pulpit i kafle"
           }
         }
       }
@@ -6985,6 +7627,22 @@
         }
       }
     },
+    "SSH — temperatury, wentylatory, SMART, terminal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SSH — temperatures, fans, SMART, terminal"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SSH — temperatury, wentylatory, SMART, terminal"
+          }
+        }
+      }
+    },
     "Sam dysk zgłasza, że jest z nim źle. To nie jest ocena programu ani serwera — to werdykt elektroniki dysku o samej sobie.": {
       "localizations": {
         "en": {
@@ -7449,6 +8107,22 @@
         }
       }
     },
+    "Stan połączenia. Suwaki wybierają kafle panelu, strzałka odświeża.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection. The sliders pick the panel's tiles, the arrow refreshes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stan połączenia. Suwaki wybierają kafle panelu, strzałka odświeża."
+          }
+        }
+      }
+    },
     "Start %@": {
       "localizations": {
         "en": {
@@ -7881,6 +8555,22 @@
         }
       }
     },
+    "Ta sama historia na każdym Macu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same history on every Mac"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ta sama historia na każdym Macu"
+          }
+        }
+      }
+    },
     "Taktowanie": {
       "localizations": {
         "en": {
@@ -8073,6 +8763,22 @@
         }
       }
     },
+    "Teraz, zmiana, przybyło i zwolniono w wybranym zakresie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now, change, added and freed in the chosen range."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz, zmiana, przybyło i zwolniono w wybranym zakresie."
+          }
+        }
+      }
+    },
     "Terminal": {
       "localizations": {
         "en": {
@@ -8201,6 +8907,22 @@
         }
       }
     },
+    "Testy dysku: krótki i długi, oraz ponowny odczyt kondycji.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disk tests: short and long, and reading the health again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testy dysku: krótki i długi, oraz ponowny odczyt kondycji."
+          }
+        }
+      }
+    },
     "Token API": {
       "localizations": {
         "en": {
@@ -8261,6 +8983,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Token API odrzucony."
+          }
+        }
+      }
+    },
+    "Token API — pełny dostęp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API token — full access"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token API — pełny dostęp"
+          }
+        }
+      }
+    },
+    "Token API — tylko podgląd": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API token — view only"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token API — tylko podgląd"
           }
         }
       }
@@ -8393,6 +9147,22 @@
         }
       }
     },
+    "Twój serwer Proxmox w jednym oknie i w pasku menu: zasoby, dyski, kontenery, kopie i rok historii na wykresach.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Proxmox server in one window and in the menu bar: resources, disks, containers, backups and a year of history on charts."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Twój serwer Proxmox w jednym oknie i w pasku menu: zasoby, dyski, kontenery, kopie i rok historii na wykresach."
+          }
+        }
+      }
+    },
     "Tydzień": {
       "localizations": {
         "en": {
@@ -8453,6 +9223,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Udziały i dyski serwera — zajętość"
+          }
+        }
+      }
+    },
+    "Układ zostaje po ponownym uruchomieniu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The layout survives a restart."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Układ zostaje po ponownym uruchomieniu."
+          }
+        }
+      }
+    },
+    "Układanie kafli": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arranging tiles"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Układanie kafli"
           }
         }
       }
@@ -8793,6 +9595,22 @@
         }
       }
     },
+    "Uśpione dyski zostają uśpione": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleeping disks stay asleep"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uśpione dyski zostają uśpione"
+          }
+        }
+      }
+    },
     "Użycie": {
       "localizations": {
         "en": {
@@ -8933,6 +9751,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "W toku"
+          }
+        }
+      }
+    },
+    "W trybie edycji kliknięcie kafla niczego nie otwiera.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While editing, clicking a tile opens nothing."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W trybie edycji kliknięcie kafla niczego nie otwiera."
           }
         }
       }
@@ -9209,6 +10043,22 @@
         }
       }
     },
+    "Więcej": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Więcej"
+          }
+        }
+      }
+    },
     "Wolne": {
       "localizations": {
         "en": {
@@ -9369,6 +10219,22 @@
         }
       }
     },
+    "Wskaźniki krytyczne — zielone, gdy wszystko w porządku.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Critical attributes — green when all is well."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wskaźniki krytyczne — zielone, gdy wszystko w porządku."
+          }
+        }
+      }
+    },
     "Współdzielenie pamięci (KSM)": {
       "localizations": {
         "en": {
@@ -9429,6 +10295,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wybierz, co ma być w tym okienku"
+          }
+        }
+      }
+    },
+    "Wybierz, które miejsca pokazać na wykresie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick which places the chart shows."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wybierz, które miejsca pokazać na wykresie."
           }
         }
       }
@@ -9577,6 +10459,22 @@
         }
       }
     },
+    "Wykres z wybranego zakresu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chart of the chosen range."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wykres z wybranego zakresu."
+          }
+        }
+      }
+    },
     "Wykryto %lld wentylator(y).": {
       "localizations": {
         "en": {
@@ -9645,6 +10543,22 @@
         }
       }
     },
+    "Wynik SMART, temperatura i godziny pracy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The SMART result, temperature and power-on hours."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wynik SMART, temperatura i godziny pracy."
+          }
+        }
+      }
+    },
     "Wynik sensors-detect": {
       "localizations": {
         "en": {
@@ -9661,7 +10575,24 @@
         }
       }
     },
+    "Wystarczy adres serwera i token API. SSH to dodatek — daje temperatury, wentylatory, SMART, terminal i historię temperatur.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server's address and an API token are enough. SSH is an extra — it adds temperatures, fans, SMART, the terminal and temperature history."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wystarczy adres serwera i token API. SSH to dodatek — daje temperatury, wentylatory, SMART, terminal i historię temperatur."
+          }
+        }
+      }
+    },
     "Wystarczy token API. SSH jest dodatkiem — daje temperatury, wentylatory, SMART, terminal i historię temperatur.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -9949,6 +10880,22 @@
         }
       }
     },
+    "Zajętość w czasie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usage over time."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zajętość w czasie."
+          }
+        }
+      }
+    },
     "Zakończ mNas": {
       "localizations": {
         "en": {
@@ -9977,6 +10924,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zakres"
+          }
+        }
+      }
+    },
+    "Zakres: Godzina, Doba, Tydzień, Miesiąc albo Rok.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Range: Hour, Day, Week, Month or Year."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zakres: Godzina, Doba, Tydzień, Miesiąc albo Rok."
           }
         }
       }
@@ -10381,6 +11344,22 @@
         }
       }
     },
+    "Zbieracz historii na serwerze": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The history collector on the server"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zbieracz historii na serwerze"
+          }
+        }
+      }
+    },
     "Zbieracz na serwerze, co minutę. Dyski talerzowe tylko wtedy, gdy same pracują — przerwy w linii to sen dysku.": {
       "localizations": {
         "en": {
@@ -10473,6 +11452,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zmień rozmiar kafla"
+          }
+        }
+      }
+    },
+    "Znak zapytania otwiera tę instrukcję, zębatka — Ustawienia.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The question mark opens this guide, the gear — Settings."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Znak zapytania otwiera tę instrukcję, zębatka — Ustawienia."
           }
         }
       }
@@ -10621,7 +11616,24 @@
         }
       }
     },
+    "Zębatka w oknie głównym otwiera **Ustawienia** — tam wybierzesz język: według systemu, polski albo angielski.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The gear in the main window opens **Settings** — choose the language there: system default, Polish or English."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zębatka w oknie głównym otwiera **Ustawienia** — tam wybierzesz język: według systemu, polski albo angielski."
+          }
+        }
+      }
+    },
     "Zębatka w oknie głównym otwiera **Ustawienia** — tam zmienisz język programu.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -11253,6 +12265,22 @@
         }
       }
     },
+    "mNas pyta o każdą rzecz tylko tak często, jak ona się zmienia, i nie budzi śpiących dysków talerzowych.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas asks about each thing only as often as it actually changes, and it never wakes sleeping spinning disks."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas pyta o każdą rzecz tylko tak często, jak ona się zmienia, i nie budzi śpiących dysków talerzowych."
+          }
+        }
+      }
+    },
     "mNas zapamięta certyfikat serwera. Jeśli kiedyś się zmieni, program przerwie połączenie i zapyta, czy nowemu ufać.": {
       "localizations": {
         "en": {
@@ -11265,6 +12293,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "mNas zapamięta certyfikat serwera. Jeśli kiedyś się zmieni, program przerwie połączenie i zapyta, czy nowemu ufać."
+          }
+        }
+      }
+    },
+    "mNas zapamiętuje certyfikat serwera przy pierwszym połączeniu. Jeśli kiedyś się zmieni, program przerwie połączenie i zapyta, czy nowemu ufać.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas remembers the server's certificate on the first connection. If it ever changes, mNas stops and asks whether to trust the new one."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas zapamiętuje certyfikat serwera przy pierwszym połączeniu. Jeśli kiedyś się zmieni, program przerwie połączenie i zapyta, czy nowemu ufać."
           }
         }
       }
@@ -12417,6 +13461,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Średnia"
+          }
+        }
+      }
+    },
+    "Średnia, szczyt i — przy poborze mocy — przybliżone kWh w tym zakresie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average, peak and — for power draw — an estimate of kWh in the range."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Średnia, szczyt i — przy poborze mocy — przybliżone kWh w tym zakresie."
           }
         }
       }
