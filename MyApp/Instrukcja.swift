@@ -1,7 +1,7 @@
 import SwiftUI
 import AppKit
 
-/// Instrukcja ułożona jak poradniki Apple: duży tytuł, potem sekcje z obrazkiem programu i numerowanymi punktami,
+/// Instrukcja w układzie Pomocy programów: duży tytuł, potem sekcje z obrazkiem programu i numerowanymi punktami,
 /// te same numery przy krokach obok. Wcześniejsza instrukcja krok po kroku (token, połączenie, SSH, historia, kafle)
 /// zostaje w całości pod „Więcej”, razem z poleceniami do skopiowania.
 ///
