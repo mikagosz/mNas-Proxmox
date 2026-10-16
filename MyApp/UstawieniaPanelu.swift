@@ -1,9 +1,9 @@
 import Foundation
 
-/// Co pokazuje panel spod ikony w pasku menu — wybór należy do [U].
+/// Co pokazuje panel spod ikony w pasku menu — wybór należy do użytkownika.
 ///
 /// > [!important] Skąd to jest
-/// > Zgłoszenie [U] 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu
+/// > Zgłoszenie 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu
 /// > bar, aby mógł dostosować co chcę, aby tam się wyświetlało — a najlepiej, jeżeli
 /// > chcę mieć dwa okna, to żeby to okienko dzieliło się na pół, dwie sekcje, lub też
 /// > jak chcę więcej, to do przewijania strzałkami"*.
@@ -16,7 +16,7 @@ import Foundation
 /// > [!danger] 🔴 Kafel w panelu to **ten sam widok** co w oknie, nie jego kopia
 /// > Rysuje go `DashboardView` w trybie `.panel` — jedno wywołanie `tileContent`.
 /// > Nie pisz drugiej, „skróconej" wersji kafla na potrzeby paska: rozjedzie się
-/// > z oknem przy pierwszej zmianie i [U] zobaczy dwie różne prawdy o tej samej rzeczy.
+/// > z oknem przy pierwszej zmianie i użytkownik zobaczy dwie różne prawdy o tej samej rzeczy.
 /// > Siedem skrótów niżej to co innego — one **nie mają** odpowiednika w oknie
 /// > (rozbicie przebiegów na trzy stany, ostrzeżenia SMART) i dlatego zostają.
 
@@ -138,6 +138,7 @@ nonisolated struct ModulPanelu: RawRepresentable, Codable, Hashable, Sendable, I
         case .miejsce:    return "chart.pie"
         case .zdarzenia:  return "list.bullet.rectangle"
         case .transfery:  return "arrow.left.arrow.right"
+        case .aktualizacje: return "arrow.down.circle"
         }
     }
 }
@@ -146,7 +147,7 @@ nonisolated struct ModulPanelu: RawRepresentable, Codable, Hashable, Sendable, I
 
 /// Ile miejsca pozycja zajmuje na stronie panelu.
 ///
-/// 🔴 To jest **wybór [U]**, nie wynik reguły. Do 1.0.39 podział na pół był wymuszony
+/// 🔴 To jest **wybór**, nie wynik reguły. Do 1.0.39 podział na pół był wymuszony
 /// zawsze, gdy wybrano więcej niż jedną rzecz — zgłoszenie po teście:
 /// *„teraz jest wymuszenie tylko na pół"*.
 nonisolated enum RozmiarModulu: String, Codable, CaseIterable, Sendable {
@@ -158,13 +159,13 @@ nonisolated enum RozmiarModulu: String, Codable, CaseIterable, Sendable {
     var etykieta: String { self == .pol ? String(localized: "Pół") : String(localized: "Całe") }
 }
 
-/// Wybór [U] plus sposób pokazania go w panelu.
+/// Wybór plus sposób pokazania go w panelu.
 nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
 
     /// Moduły w kolejności, w jakiej mają się pokazywać. Pusta lista = układ domyślny.
     var moduly: [ModulPanelu] = Self.domyslne
 
-    /// Czy kolejność ułożył [U] ręcznie (strzałkami w ustawieniach panelu).
+    /// Czy kolejność ułożył użytkownik ręcznie (strzałkami w ustawieniach panelu).
     ///
     /// Dopóki `false`, `przelacz` porządkuje listę wg `ModulPanelu.allCases` — tak było
     /// od początku i tak ma zostać dla kogoś, kto strzałek nie tknął. Po pierwszym
@@ -178,7 +179,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     /// Rozmiar pozycji, kluczowany jej surową nazwą. Brak wpisu = `domyslnyRozmiar`.
     var rozmiary: [String: RozmiarModulu] = [:]
 
-    /// Domyślnie to, co panel pokazywał przed wprowadzeniem ustawień — żeby [U],
+    /// Domyślnie to, co panel pokazywał przed wprowadzeniem ustawień — żeby użytkownik,
     /// który nic nie wybierze, dostał dokładnie to, co miał do tej pory.
     static let domyslne: [ModulPanelu] = [.wToku, .wymagaUwagi, .ostatniePrzebiegi, .zdarzenia]
 
@@ -190,7 +191,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     ///
     /// Powód jest w treści: skróty to trzy–pięć wierszy tekstu i dwa takie mieszczą się
     /// obok siebie, a kafel z okna niesie wykres albo listę i w połowie panelu (200 pt)
-    /// robi się nieczytelny. To **domyślna wartość, nie przymus** — [U] przestawia każdą
+    /// robi się nieczytelny. To **domyślna wartość, nie przymus** — użytkownik przestawia każdą
     /// pozycję osobno.
     static func domyslnyRozmiar(_ m: ModulPanelu) -> RozmiarModulu {
         m.czyKafelOkna ? .cale : .pol
@@ -251,7 +252,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     /// Włącza i wyłącza moduł, zachowując kolejność z `ModulPanelu.allCases`.
     ///
     /// 🔴 **Ostatniego modułu nie da się wyłączyć.** Pusty panel wygląda dokładnie jak
-    /// zepsuty panel, a [U] nie miałby z niego drogi powrotnej do ustawień.
+    /// zepsuty panel, a użytkownik nie miałby z niego drogi powrotnej do ustawień.
     mutating func przelacz(_ modul: ModulPanelu) {
         var lista = wybrane
         if let idx = lista.firstIndex(of: modul) {
@@ -260,7 +261,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
         } else {
             lista.append(modul)
             // Po ręcznym ułożeniu nie sortujemy — nowa pozycja dokleja się na końcu,
-            // zamiast wskakiwać w środek i rozbijać pary, które [U] sam poustawiał.
+            // zamiast wskakiwać w środek i rozbijać pary, które użytkownik sam poustawiał.
             if !wlasnaKolejnosc {
                 let porzadek = ModulPanelu.allCases
                 lista.sort { a, b in
@@ -283,7 +284,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     /// > a nie obok Temperatur, musiał do 1.2.2 odznaczać i zaznaczać moduły w takiej
     /// > kolejności, żeby przypadkiem trafiły na jedną stronę — i tracił to przy
     /// > każdej zmianie wyboru, bo `przelacz` sortował listę z powrotem.
-    /// > Zgłoszenie [U] 2026-09-04: *„daj mi możliwość przesuwania w opcjach, żebym
+    /// > Zgłoszenie 2026-09-04: *„daj mi możliwość przesuwania w opcjach, żebym
     /// > to ja decydował jakie informacje są obok siebie"*.
     ///
     /// Poza zakres nie wychodzimy: przy pierwszym „w górę" i ostatnim „w dół" nic się
@@ -306,12 +307,12 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     /// > [!info] Po co to istnieje
     /// > Strzałki kolejności zmieniają listę, której w ekranie ustawień nie widać —
     /// > sekcje wypisują **wszystkie dostępne** moduły w stałym porządku, a nie wybrane
-    /// > w ich własnym. Zgłoszenie [U] 2026-09-04: *„klikając w strzałki ja nie widzę,
+    /// > w ich własnym. Zgłoszenie 2026-09-04: *„klikając w strzałki ja nie widzę,
     /// > gdzie teraz będzie stało okno"*. Bez tej informacji strzałka jest ruchem
     /// > w ciemno — widać skutek dopiero po zamknięciu ustawień.
     ///
     /// Liczone z tego samego `strony`, co realny układ panelu, więc podgląd nie ma
-    /// jak się rozjechać z tym, co [U] za chwilę zobaczy.
+    /// jak się rozjechać z tym, co użytkownik za chwilę zobaczy.
     func polozenie(_ modul: ModulPanelu) -> (strona: Int, opis: String)? {
         for (i, strona) in strony.enumerated() {
             guard let j = strona.firstIndex(of: modul) else { continue }
@@ -326,7 +327,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
         return nil
     }
 
-    /// Czy [U] ustawił kolejność ręcznie.
+    /// Czy użytkownik ustawił kolejność ręcznie.
     func czyMoznaWGore(_ m: ModulPanelu) -> Bool { (wybrane.firstIndex(of: m) ?? 0) > 0 }
     func czyMoznaWDol(_ m: ModulPanelu) -> Bool {
         guard let i = wybrane.firstIndex(of: m) else { return false }
@@ -341,7 +342,7 @@ nonisolated struct UstawieniaPanelu: Codable, Equatable, Sendable {
     /// (bez `rozmiary`) wywracałby dekodowanie **całej** `KonfiguracjaUkladu` — a razem
     /// z nią przepadałby układ kafli. Dokładnie ta usterka, którą zamknęło P13, tylko
     /// wejściem od innej strony. Wyszła z testu „Stary zapis bez rozmiarów wczytuje się",
-    /// zanim zdążyła trafić do [U].
+    /// zanim zdążyła trafić do użytkownika.
     init(from decoder: Decoder) throws {
         let k = try decoder.container(keyedBy: CodingKeys.self)
         moduly = try k.decodeIfPresent([ModulPanelu].self, forKey: .moduly) ?? Self.domyslne

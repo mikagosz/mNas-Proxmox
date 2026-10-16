@@ -5,25 +5,25 @@ import Observation
 /// Ikona mNas w pasku menu — `MenuBarExtra` w stylu `.window`, tak jak w TokenTime.
 ///
 /// > [!important] Trzy własnoręczne próby na `NSStatusItem` (1.0.22, 1.0.25, 1.0.28)
-/// > nie zadziałały u [U] mimo że każda była zmierzona i "naprawiona" po swojemu —
+/// > nie zadziałały u użytkownika mimo że każda była zmierzona i "naprawiona" po swojemu —
 /// > ostatnia hipoteza (`performClose` nie gasi `isShown` od razu) została **obalona
 /// > własnym testem** (`PopoverZamykanieTests`), więc błąd leżał w ścieżce zdarzeń
-/// > wokół popovera, nie w nim samym. Decyzja [U] 2026-08-23, po raz drugi: *„wchodzisz
+/// > wokół popovera, nie w nim samym. Decyzja 2026-08-23, po raz drugi: *„wchodzisz
 /// > w kod tokentime i patrzysz jak tam to działa"*. `MenuBarExtra(.window)` przełącza
 /// > panel natywnie — dokładnie to, co robił `TokenTime/App/ContentView.swift` bez
 /// > żadnego z tych błędów.
 /// >
 /// > 🔴 Powód, dla którego wcześniej trzymaliśmy się `NSStatusItem` — rozróżnianie
 /// > lewego i prawego kliknięcia, żeby prawy mógł otwierać okno na skróty —
-/// > **zniknął razem z dwuklikiem** (decyzja [U] 2026-08-23: *„wywal ten dwuklik,
+/// > **zniknął razem z dwuklikiem** (decyzja 2026-08-23: *„wywal ten dwuklik,
 /// > który nie działa — w okienku mam przycisk do wywołania głównego panelu"*).
 /// > `MenuBarExtra` nie rozróżnia kliknięć, więc prawy klik też przepada — zastępuje
-/// > go ten sam przycisk „Otwórz okno" w panelu. Decyzja [U] 2026-08-23: zejść na samo
+/// > go ten sam przycisk „Otwórz okno" w panelu. Decyzja 2026-08-23: zejść na samo
 /// > `MenuBarExtra`, bez zamiennika za prawy klik.
 ///
 /// > [!warning] `LSUIElement` zostaje wyłączony, ale Dock znika po zamknięciu okna
 /// > mNas startuje jak zwykły program okienkowy — z Dockiem i oknem. Po zamknięciu
-/// > okna **chowa się do paska menu** (decyzja [U] 2026-08-20: *„po to jest w menu bar
+/// > okna **chowa się do paska menu** (decyzja 2026-08-20: *„po to jest w menu bar
 /// > ikona"*), a wraca do Docka przy otwarciu okna. Robi to `NSApp.setActivationPolicy`,
 /// > nie `LSUIElement` — ten drugi znaczyłby „nigdy nie ma Docka" i byłby nie do
 /// > cofnięcia w trakcie działania. Cała mechanika: `Dock.swift`. `MenuBarExtra`
@@ -118,7 +118,7 @@ private struct OknoPanelu: NSViewRepresentable {
 
 /// Składa ikonę paska z trzech kawałków: **odznaki po lewej**, dysku i chmurki po prawej.
 ///
-/// Układ ustalony przez [U] 2026-08-20: `(●) 💾 💬3`
+/// Układ ustalony przez użytkownika 2026-08-20: `(●) 💾 💬3`
 ///
 /// Dlaczego rysowane ręcznie, a nie gotowym symbolem SF w rodzaju
 /// `externaldrive.fill.badge.checkmark`: te symbole mają **jedną** odznakę wbudowaną
@@ -131,7 +131,7 @@ private struct OknoPanelu: NSViewRepresentable {
 /// > bielą w trybie `.sourceAtop`. Na przezroczystym tle to działa — biel trafia tylko
 /// > tam, gdzie symbol ma alfę. **Ale odznaka ma pod spodem nieprzezroczyste kółko**,
 /// > więc `.sourceAtop` zamalowało cały prostokąt i zamiast ptaszka wychodził
-/// > **biały kwadrat**. Zgłoszenie [U]: „to kółko … słabo zielone z ptaszkiem".
+/// > **biały kwadrat**. Zgłoszenie: „to kółko … słabo zielone z ptaszkiem".
 /// > `SymbolConfiguration(paletteColors:)` koloruje sam kształt i nie ma tej pułapki.
 @MainActor
 enum RysunekIkony {
@@ -194,14 +194,14 @@ enum RysunekIkony {
     }
 
     /// Odznaka: pełne kółko w kolorze stanu, w środku biały znak.
-    /// Stoi po **lewej**, przy dolnej krawędzi — decyzja [U] 2026-08-20.
+    /// Stoi po **lewej**, przy dolnej krawędzi — decyzja 2026-08-20.
     private static func rysujOdznake(symbol: String, kolor: NSColor) {
         let kolo = NSRect(x: 0, y: 0, width: srednicaOdznaki, height: srednicaOdznaki)
         kolor.setFill()
         NSBezierPath(ovalIn: kolo).fill()
 
         // Znak w środku: **6,5 pt, waga `heavy`**. Przy cieńszej kresce ptaszek na kółku
-        // tej wielkości zlewa się w plamkę i [U] widzi „słabo zielone kółko" zamiast
+        // tej wielkości zlewa się w plamkę i użytkownik widzi „słabo zielone kółko" zamiast
         // informacji, że wszystko działa.
         let konfiguracja = NSImage.SymbolConfiguration(pointSize: 6.5, weight: .heavy)
             .applying(NSImage.SymbolConfiguration(paletteColors: [.white]))
@@ -213,7 +213,7 @@ enum RysunekIkony {
     }
 
     /// Licznik nieodczytanych — **osobne kółko po prawej stronie dysku**.
-    /// Decyzja [U] 2026-08-20: *„z prawej ma się pojawić osobne kółko z ilością
+    /// Decyzja 2026-08-20: *„z prawej ma się pojawić osobne kółko z ilością
     /// informacji nieodczytanych, jak nic nie ma to się ma nie pojawiać"*.
     ///
     /// Kółka **nie ma wcale** przy zerze — nie jest wygaszone ani puste. Widoczne zero
@@ -246,7 +246,7 @@ enum RysunekIkony {
 /// Wyliczane osobno od widoku, żeby dało się to sprawdzić testem bez paska menu —
 /// i faktycznie jest sprawdzane w `PrzebiegiTests`.
 ///
-/// Cztery odznaki, kolejność ustalona przez [U] 2026-08-20:
+/// Cztery odznaki, kolejność ustalona przez użytkownika 2026-08-20:
 ///
 /// | Odznaka | Kiedy | Znaczenie |
 /// |---|---|---|
@@ -282,7 +282,7 @@ nonisolated struct StanPaska: Sendable, Equatable {
     /// Liczba w chmurce po prawej. `0` = chmurki nie ma.
     var nieodczytane: Int
 
-    /// - Parameter odhaczone: klucze alarmów, które [U] zakwitował przyciskiem
+    /// - Parameter odhaczone: klucze alarmów, które użytkownik zakwitował przyciskiem
     ///   „Przyjęte". Puste = zachowanie sprzed 2026-08-23, czyli każdy alarm liczy się
     ///   do czerwieni. Patrz `PotwierdzoneAlerty.swift`.
     init(przebiegi: [Przebieg], polaczony: Bool, nieodczytane: Int = 0,
@@ -367,8 +367,8 @@ struct PanelPaskaMenu: View {
     @State private var pokazUstawienia = false
     /// Czy sterowanie stronami jest w tej chwili widoczne.
     ///
-    /// Zgłoszenie [U] po teście 1.1.1: strzałki i kropki leżą **na** treści, więc przy
-    /// kaflu wypełniającym stronę przykrywały ostatni wiersz. Decyzja [U]: *„chowane
+    /// Zgłoszenie po teście 1.1.1: strzałki i kropki leżą **na** treści, więc przy
+    /// kaflu wypełniającym stronę przykrywały ostatni wiersz. Decyzja: *„chowane
     /// dopóki nie rusza"* — sterowanie pojawia się na ruch myszy nad panelem i gaśnie
     /// samo, gdy ruch ustanie.
     @State private var sterowanieWidoczne = false
@@ -376,7 +376,7 @@ struct PanelPaskaMenu: View {
     /// zamiast dokładać kolejne — bez tego dziesięć drgnięć gasiłoby panel dziesięć razy.
     @State private var zegarSterowania: Task<Void, Never>?
 
-    /// Wybór [U]: co panel pokazuje. Leży w tym samym pliku config co układ kafli.
+    /// Wybór: co panel pokazuje. Leży w tym samym pliku config co układ kafli.
     private var ustawienia: UstawieniaPanelu { model.layout.panelPaska }
 
     var body: some View {
@@ -394,9 +394,9 @@ struct PanelPaskaMenu: View {
         }
         .frame(width: 340, height: 400)
         // Zmiana wyboru potrafi skrócić listę stron pod palcem — wracamy na pierwszą,
-        // zamiast zostawiać [U] na stronie, której już nie ma.
+        // zamiast zostawiać użytkownika na stronie, której już nie ma.
         .onChange(of: ustawienia.liczbaStron) { strona = 0 }
-        // Otwarcie panelu **jest** przeczytaniem: [U] właśnie patrzy na tę listę.
+        // Otwarcie panelu **jest** przeczytaniem: użytkownik właśnie patrzy na tę listę.
         // Chmurka gaśnie tutaj, a nie po upływie czasu — licznik ma mówić
         // „nie widziałeś tego", a nie „to się stało niedawno". Patrz `OknoPanelu`.
         .background(OknoPanelu { model.oznaczPrzebiegiJakoPrzeczytane() })
@@ -426,7 +426,7 @@ struct PanelPaskaMenu: View {
             .buttonStyle(.borderless)
             .help("Sprawdź przebiegi teraz")
         }
-        // Pod adresem mniej miejsca niż nad nazwą — zgłoszenie [U] po teście 1.1.0:
+        // Pod adresem mniej miejsca niż nad nazwą — zgłoszenie po teście 1.1.0:
         // pusty pas między adresem a belką odsuwał treść od nagłówka bez powodu.
         .padding(.horizontal, 12)
         .padding(.top, 12)
@@ -434,7 +434,7 @@ struct PanelPaskaMenu: View {
     }
 
     /// Pasek „Przyjęte" — stoi **pod nagłówkiem, nad listą**, bo odpowiada na
-    /// pierwsze pytanie, jakie [U] zadaje po zobaczeniu czerwonej ikony: co się pali
+    /// pierwsze pytanie, jakie użytkownik zadaje po zobaczeniu czerwonej ikony: co się pali
     /// i jak to zgasić. Schowany w stopce byłby odpowiedzią na końcu zdania.
     ///
     /// Znika sam, gdy nie ma czego odhaczać — pusty przycisk „potwierdź" przy zdrowym
@@ -483,7 +483,7 @@ struct PanelPaskaMenu: View {
 
     // MARK: - Strony panelu (P14)
     //
-    // Zgłoszenie [U] 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu
+    // Zgłoszenie 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu
     // bar, aby mógł dostosować co chcę, aby tam się wyświetlało — a najlepiej, jeżeli
     // chcę mieć dwa okna, to żeby to okienko dzieliło się na pół, dwie sekcje, lub też
     // jak chcę więcej, to do przewijania strzałkami"*.
@@ -493,7 +493,7 @@ struct PanelPaskaMenu: View {
     // = strzałki" da się sprawdzić testem, bez uruchamiania interfejsu.
 
     /// Zawartość jednej strony: pozycja „całe" sama, dwie „pół" jedna nad drugą.
-    /// Podziałem rządzi rozmiar wybrany przez [U], nie liczba pozycji.
+    /// Podziałem rządzi rozmiar wybrany przez użytkownika, nie liczba pozycji.
     @ViewBuilder private var zawartoscStrony: some View {
         let naStronie = ustawienia.moduly(naStronie: strona)
         VStack(spacing: 0) {
@@ -517,7 +517,7 @@ struct PanelPaskaMenu: View {
             // i zepsuła podział strony. Kafle z wykresami (Temp. rdzeni, Historia CPU)
             // mają w `.large` słupki i przebiegi o **stałej, dużej wysokości**, które nie
             // ustępują: pierwszy kafel rozpychał stronę, a drugi nie miał się gdzie zmieścić.
-            // Zgłoszenie [U] 2026-09-04: *„ustawiam dyski pół i mam cały kafelek"*.
+            // Zgłoszenie 2026-09-04: *„ustawiam dyski pół i mam cały kafelek"*.
             //
             // Listy odblokowane są teraz w samych kaflach (`ilePokazac`/`listaKafla`),
             // czyli tam, gdzie leżał prawdziwy problem — a nie przez podmianę wariantu.
@@ -532,7 +532,7 @@ struct PanelPaskaMenu: View {
 
     /// Strona z nałożonym sterowaniem: strzałki po bokach, kropki u dołu.
     ///
-    /// Zgłoszenie [U] po teście 1.1.0: *„na dole pasek 1 z 2 usuwamy i aktywne strzałki
+    /// Zgłoszenie po teście 1.1.0: *„na dole pasek 1 z 2 usuwamy i aktywne strzałki
     /// mają być na oknie, a zamiast 1 z 2 mają być kropki na dole"*. Sterowanie leży
     /// **na** treści, a nie pod nią, więc nie zabiera wysokości — panel ma 400 pt
     /// i osobny pasek zjadał z tego kilkanaście punktów na każdej stronie.
@@ -684,8 +684,8 @@ struct PanelPaskaMenu: View {
     ///
     /// 🔴 Ma prawo stać w panelu **dlatego, że to tutaj gaśnie chmurka**. Otwarcie panelu
     /// kasuje licznik nieodczytanych, a przed 2026-08-23 razem z nim znikała jedyna
-    /// informacja, że cokolwiek się wydarzyło — zgłoszenie [U]: *„jak otworzę okno to
-    /// powiadomienie znika i generalnie nie wiem co się dzieje"*. Gdyby [U] wyłączył ten
+    /// informacja, że cokolwiek się wydarzyło — zgłoszenie: *„jak otworzę okno to
+    /// powiadomienie znika i generalnie nie wiem co się dzieje"*. Gdyby użytkownik wyłączył ten
     /// moduł, chmurka dalej gaśnie — dlatego pełna historia jest też w oknie głównym.
     @ViewBuilder private var zawartoscZdarzen: some View {
         let lista = Array(model.rejestr.zdarzenia.prefix(5))
@@ -832,7 +832,7 @@ struct PanelPaskaMenu: View {
             }
             .help("Otwiera główne okno programu")
             Spacer()
-            // Wersja stoi tam, gdzie [U] i tak patrzy zamykając panel. Czytana z pakietu,
+            // Wersja stoi tam, gdzie użytkownik i tak patrzy zamykając panel. Czytana z pakietu,
             // nie wpisana — patrz `Wersja`.
             if let v = Wersja.krotka {
                 Text(v)
@@ -970,7 +970,7 @@ enum PrzebiegFormat {
 /// Ekran wyboru zawartości panelu spod ikony.
 ///
 /// > [!important] Lista jest **niezależna od kafli okna głównego**
-/// > Decyzja [U] 2026-08-29, potwierdzona wprost przy wznowieniu pracy. Powód: w oknie
+/// > Decyzja 2026-08-29, potwierdzona wprost przy wznowieniu pracy. Powód: w oknie
 /// > stoi osiemnaście kafli, z których większość w pasku szerokim na 340 pt nie ma sensu
 /// > (wykresy rdzeni, siatka maszyn), a zgłoszenie mówiło o tym, co ma być **w tym
 /// > okienku**. Gdyby to miał być podzbiór kafli, zmiana dotyczy `ModulPanelu`, nie tego
@@ -1095,7 +1095,7 @@ private struct EkranUstawienPanelu: View {
     @ViewBuilder private func wiersz(_ m: ModulPanelu) -> some View {
         let wybrany = ustawienia.zawiera(m)
         // 🔴 Ostatniego modułu nie da się wyłączyć — pusty panel wygląda dokładnie jak
-        // zepsuty panel, a [U] nie miałby z niego drogi powrotnej. Reguła stoi w modelu;
+        // zepsuty panel, a użytkownik nie miałby z niego drogi powrotnej. Reguła stoi w modelu;
         // tutaj tylko widać, dlaczego przycisk nie reaguje.
         let ostatni = wybrany && ustawienia.wybrane.count == 1
         VStack(alignment: .leading, spacing: 4) {

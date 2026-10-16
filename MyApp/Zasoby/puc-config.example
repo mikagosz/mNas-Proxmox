@@ -1,0 +1,35 @@
+# /etc/pve-update-check/config – ustawienia pve-update-check (składnia basha)
+
+CHECK_HOST=1            # sprawdzaj host PVE
+CHECK_CT=1              # sprawdzaj uruchomione kontenery LXC
+CHECK_VM=0              # 1 = sprawdzaj też VM z Linuksem (wymaga qemu-guest-agent)
+EXCLUDE_IDS=""          # ID do pominięcia, np. "105 110"
+TIMEOUT=300             # limit czasu na jedną maszynę (s)
+MAX_LIST=25             # ile pakietów maks. wypisać na maszynę
+NOTIFY_ALWAYS=0         # 1 = powiadamiaj także gdy wszystko aktualne
+MIN_FREE_MB=1024        # mniej wolnego miejsca na / maszyny = błąd w raporcie
+
+# --- powiadomienia (można włączyć kilka naraz) ---
+NTFY_URL=""             # np. https://ntfy.sh/jakis-dlugi-losowy-temat
+NTFY_TOKEN=""
+TELEGRAM_BOT_TOKEN=""   # od @BotFather
+TELEGRAM_CHAT_ID=""
+MAIL_TO=""              # wymaga działającej poczty na hoście (postfix PVE)
+
+GITHUB_TOKEN=""         # opcjonalnie: token GitHub (bez uprawnień) – większy limit API
+
+# --- instalowanie aktualizacji: pve-update-check -u (ręcznie, z pytaniami) ---
+SNAPSHOT=1              # snapshot CT/VM przed aktualizacją (storage musi to umieć: ZFS, LVM-thin, Ceph)
+REQUIRE_SNAPSHOT=1      # 1 = bez udanego snapshotu nie aktualizuj danej maszyny
+SNAPSHOT_KEEP=3         # ile snapshotów "puc_*" trzymać na maszynę
+BACKUP_STORAGE="local"  # gdy snapshot niemożliwy (storage "dir"): kopia vzdump na ten storage; "" = bez kopii
+BACKUP_KEEP=1           # ile takich kopii trzymać na maszynę (usuwa tylko własne, starsze)
+NC_MIN_FREE_MB=2048     # serwer Nextclouda: bez tylu MB wolnego miejsca updater nie rusza
+UPGRADE_TIMEOUT=3600
+NC_APPS_UPGRADE=1       # aplikacje Nextclouda (occ app:update --all)
+NC_SERVER_UPGRADE=0     # serwer Nextclouda przez updater.phar: 1 = zezwól (w -u i tak pyta)
+
+# --- automatycznie bez pytań: pve-update-check -u -y (np. z timera tygodniowego) ---
+AUTO_UPGRADE_IDS=""     # np. "101 103" albo "all"; puste = nic automatycznie
+AUTO_UPGRADE_HOST=0     # 1 = host PVE też automatycznie (niezalecane)
+AUTO_UPGRADE_APPS=0     # 1 = także komendy aktualizacji z apps.conf

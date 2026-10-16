@@ -4,7 +4,7 @@ import Foundation
 
 /// Kłódka na kaflu — blokada pozycji w trybie edycji układu.
 ///
-/// Zgłoszenie [U] 2026-08-23: *„dodaj w edycji kafelków kłódkę, które zablokują kafelek
+/// Zgłoszenie 2026-08-23: *„dodaj w edycji kafelków kłódkę, które zablokują kafelek
 /// w miejscu przy edycji i się nie będzie przesuwał, bo aktualnie potrafią kafelki się
 /// przestawiać jak tylko złapie inny do przesunięcia"*.
 ///
@@ -57,7 +57,7 @@ struct KlodkaKafliTests {
 
         let po = uklad.resolvedPositions(kafle)
         #expect(po[.fans] == celPower)
-        // To jest objaw zgłoszony przez [U]: kafel, którego nikt nie ruszał, zmienił pole.
+        // To jest objaw zgłoszony przez użytkownika: kafel, którego nikt nie ruszał, zmienił pole.
         #expect(po[.power] != celPower)
     }
 

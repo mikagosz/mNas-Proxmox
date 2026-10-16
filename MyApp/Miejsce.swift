@@ -3,13 +3,13 @@ import Foundation
 /// Miejsce na dyskach — nazwy i zajętość **liczone z serwera**, nie przepisane z komunikatu.
 ///
 /// > [!danger] Po co to powstało
-/// > Zgłoszenie [U] z 2026-08-23. mNas pokazywał w przebiegach gotowe zdanie:
+/// > Zgłoszenie z 2026-08-23. mNas pokazywał w przebiegach gotowe zdanie:
 /// > `/mnt/zasoby 78%,/mnt/wspolny 2% / mnt/multimedia 11%,/mnt/backup 9%` — czyli
 /// > **treść powiadomienia push**, sklejaną na hoście przez `/usr/local/bin/alarm-dyskow.sh`
 /// > (`df -h --output=target,pcent … | paste -sd', '`). Stąd surowe ścieżki zamiast nazw,
 /// > brak gigabajtów, łamanie w środku ścieżki i zero informacji, który nośnik zapalił alarm.
 /// >
-/// > Diagnoza [U] była trafna: *„wygląda tak jak byś wpisywał te dane do programu
+/// > Diagnoza użytkownika była trafna: *„wygląda tak jak byś wpisywał te dane do programu
 /// > a nie pobierały informacji prosto z proxmoxa"*.
 ///
 /// Dlatego **nazwy też są mierzone**, nie wpisane w kod. Tabela `/mnt/zasoby` → „Serwer"
@@ -67,7 +67,7 @@ nonisolated struct Udzial: Identifiable, Sendable, Hashable {
     ///   rezerwuje kilka procent dla roota) — tak samo liczy `StatsParsers.diskUsage`;
     /// - zaokrąglenie idzie **w górę**, bo tak liczy `df`. Przy zwykłym zaokrągleniu
     ///   `/mnt/zasoby` pokazywałby 77% wobec 78% w `df`, a `/mnt/multimedia` 10% wobec 11%.
-    ///   [U] porównuje te liczby z serwerem, więc rozjazd o jeden wygląda jak błąd.
+    ///   Użytkownik porównuje te liczby z serwerem, więc rozjazd o jeden wygląda jak błąd.
     var procent: Int {
         guard calosc > 0, zajete > 0 else { return 0 }
         return Int((Double(zajete) / Double(calosc) * 100).rounded(.up))
@@ -97,9 +97,9 @@ nonisolated enum Miejsce {
     /// Czyta wyjście `ServerCommands.nazwyMontowan()` i zwraca mapę
     /// „ścieżka na hoście → nazwa".
     ///
-    /// Kolejność źródeł jest **decyzją [U] z 2026-08-23**: „nazwy udziałów Samby".
+    /// Kolejność źródeł jest **decyzją z 2026-08-23**: „nazwy udziałów Samby".
     /// Gdy ta sama ścieżka jest i udziałem, i magazynem — wygrywa udział, bo to ta nazwa,
-    /// którą [U] widzi w Finderze.
+    /// którą użytkownik widzi w Finderze.
     static func nazwy(_ raw: String) -> [String: NazwaMontowania] {
         let sekcje = StatsParsers.splitSections(raw)
         var out: [String: NazwaMontowania] = [:]

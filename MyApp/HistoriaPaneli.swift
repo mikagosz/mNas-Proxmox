@@ -19,7 +19,7 @@ struct PrzelacznikZakladki: View {
 }
 
 /// Wykres warstwowy kontenerów + przerywana linia RAM hosta + tabela.
-/// Decyzja [U] 2026-10-04: warstwy „do obejrzenia” — może się zmienić po zobaczeniu.
+/// Decyzja 2026-10-04: warstwy „do obejrzenia” — może się zmienić po zobaczeniu.
 struct HistoriaRAMWidok: View {
     @Environment(AppModel.self) private var model
     @State private var okno: OknoRRD = .hour

@@ -1,0 +1,23 @@
+# apps.conf – aplikacje sprawdzane po numerze wersji.
+# Dla programów spoza repozytoriów systemu (binarki, /opt, instalacje z GitHuba).
+#
+# Format (pola rozdzielone "|"):
+#   ID | Nazwa | komenda wypisująca zainstalowaną wersję | źródło najnowszej wersji [| komenda aktualizacji]
+#
+#   ID       – numer CT/VM albo "host"
+#   komenda  – uruchamiana przez sh w kontenerze; liczy się pierwszy numer wersji (np. 1.32.7)
+#   źródło   – github:właściciel/repo   (najnowszy release z GitHuba)
+#              url:https://...          (strona zwracająca numer wersji)
+#              cmd:<komenda na hoście>  (dowolna komenda wypisująca wersję)
+#   komenda aktualizacji – OPCJONALNA, uruchamiana w tej maszynie przez "pve-update-check -u"
+#              (po snapshocie, tylko gdy jest nowa wersja). Bez niej aplikacja jest tylko zgłaszana.
+#
+# Przykłady (odkomentuj i popraw ID):
+# 105 | Vaultwarden   | vaultwarden --version                          | github:dani-garcia/vaultwarden
+# 106 | AdGuard Home  | /opt/AdGuardHome/AdGuardHome --version         | github:AdguardTeam/AdGuardHome
+# 107 | Gitea         | gitea --version                                | github:go-gitea/gitea
+# 108 | Uptime Kuma   | grep '"version"' /opt/uptime-kuma/package.json | github:louislam/uptime-kuma
+# 109 | Jakaś apka    | cat /opt/jakasapka_version.txt                 | github:autor/jakasapka
+# 110 | Apka z cs     | cat /opt/apka_version.txt                      | github:autor/apka | update
+#       (w kontenerach z community-scripts komenda "update" w CT aktualizuje aplikację –
+#        ale bywa interaktywna; sprawdź ręcznie zanim wpiszesz ją tutaj)

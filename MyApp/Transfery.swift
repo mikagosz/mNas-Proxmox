@@ -3,12 +3,12 @@ import Foundation
 /// Monitor transferów — co płynie przez łącze i kto to ciągnie.
 ///
 /// > [!info] Skąd to jest
-/// > Decyzja [U] 2026-08-23:
+/// > Decyzja 2026-08-23:
 /// > *„robimy do mnas bez dodatkowej strony www"*. Źródłem jest **RRD Proxmoksa**
 /// > (`/nodes/{n}/rrddata`, `/nodes/{n}/lxc/{vmid}/rrddata`), czyli ta sama maszyna,
 /// > z którą apka i tak rozmawia tokenem `root@pam!mnas`. **Żadnej nowej usługi na
 /// > serwerze, żadnego SSH** — wcześniejsze źródło (`/var/log/pomiar-ruchu`, timer
-/// > systemd co 10 s) [U] skasował 2026-08-29 i nie wraca.
+/// > systemd co 10 s) użytkownik skasował 2026-08-29 i nie wraca.
 ///
 /// > [!tip] 🟢 RRD podaje **prędkości**, nie liczniki narastające
 /// > Zmierzone 2026-08-29 na serwerze testowym: host `netin=2726.63`, `netout=6083.32` — to bajty
@@ -194,7 +194,7 @@ nonisolated struct Strumien: Identifiable, Sendable, Hashable {
 /// > Kafel „Transfery" mierzył wyłącznie łącze i to było poprawne — ale mylące.
 /// > Kopia z dysku na dysk **wewnątrz serwera** nie przechodzi przez żadną kartę
 /// > sieciową, więc kafel pokazywał ciszę w chwili, gdy dyski robiły 90 MB/s.
-/// > Zgłoszone przez [U] 2026-09-04 przy kopii folderu `PROJEKTY`: *„kafelek transfery
+/// > Zgłoszone przez użytkownika 2026-09-04 przy kopii folderu `PROJEKTY`: *„kafelek transfery
 /// > nie widzi aktualnego kopiowania"*.
 /// >
 /// > Zmierzone wtedy w tej samej sekundzie: `vmbr0` 7–65 kB/s, `nvme2n1` odczyt

@@ -11,7 +11,7 @@ enum OknoHistorii { static let id = "historia" }
 
 /// Ikona i kolor kafla — **jedno źródło** dla kafla i jego okna historii (od 1.2.14).
 ///
-/// Zgłoszenie [U] 2026-10-04: okna CPU, RAM i Transferów miały nagłówek z ikoną
+/// Zgłoszenie 2026-10-04: okna CPU, RAM i Transferów miały nagłówek z ikoną
 /// i kolorem swojego kafla, a okna historii nie miały żadnego, a wykres w każdym był
 /// domyślnie niebieski. *„Okno ma mieć kolory swojego kafelka, żeby było wiadomo
 /// od razu co jest od czego”*. Kafle w `DashboardView` biorą te same wartości, więc
@@ -25,6 +25,7 @@ extension DashTileID {
         case .przebiegi:  return "arrow.triangle.2.circlepath"
         case .disks:      return "internaldrive"
         case .miejsce:    return "externaldrive.connected.to.line.below"
+        case .aktualizacje: return "arrow.down.circle"
         default:          return "chart.xyaxis.line"
         }
     }
@@ -37,6 +38,7 @@ extension DashTileID {
         case .przebiegi:  return .teal
         case .disks:      return .cyan
         case .miejsce:    return .indigo
+        case .aktualizacje: return .green
         default:          return .accentColor
         }
     }
@@ -169,7 +171,7 @@ struct HistoriaTemperaturWidok: View {
             if let stan, stan != .dziala { BrakZbieracza(stan: stan) { Task { await odswiez() } } }
             if let blad { BladHistoriiWidok(opis: blad) }
             if !serie.isEmpty {
-                // Każdy rdzeń osobnym kolorem + wybór, które widać — zgłoszenie [U]
+                // Każdy rdzeń osobnym kolorem + wybór, które widać — zgłoszenie
                 // 2026-10-04: „klikam rdzeń 0 i rdzeń 3 i widzę tylko te dwa”.
                 // Kolor przypięty do miejsca na pełnej liście, nie na liście widocznych:
                 // wyłączenie rdzenia 1 nie przemalowuje rdzenia 2.
@@ -242,7 +244,7 @@ struct HistoriaMocyWidok: View {
 }
 
 /// Temperatury wszystkich dysków ze zbieracza na jednym wykresie (od 1.2.14).
-/// Zgłoszenie [U] 2026-10-04: historia temperatur dysków była tylko w panelu jednego
+/// Zgłoszenie 2026-10-04: historia temperatur dysków była tylko w panelu jednego
 /// dysku, a klik w kafel „Dyski” nic nie otwierał.
 struct HistoriaTemperaturDyskowWidok: View {
     @Environment(AppModel.self) private var model
@@ -308,7 +310,7 @@ struct HistoriaTemperaturDyskowWidok: View {
 }
 
 /// Uwaga przy każdej historii dysków: talerze są mierzone tylko w chwilach pracy.
-/// Prośba [U] 2026-10-04: *„trzeba dać informację, że historia dysków talerzowych
+/// Prośba 2026-10-04: *„trzeba dać informację, że historia dysków talerzowych
 /// jest pobierana w momencie aktywności dysków, że nie jest na bieżąco”*.
 struct UwagaTalerze: View {
     var body: some View {

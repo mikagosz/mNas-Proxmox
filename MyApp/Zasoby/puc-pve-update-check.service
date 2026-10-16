@@ -1,0 +1,9 @@
+[Unit]
+Description=Sprawdzanie aktualizacji Proxmox, kontenerów i aplikacji
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pve-update-check
+Nice=10

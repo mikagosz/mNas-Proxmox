@@ -3,7 +3,7 @@ import Foundation
 /// Rejestr zdarzeń — co się stało, kiedy i jak poszło.
 ///
 /// > [!danger] Po co to powstało
-/// > Zgłoszenie [U] z 2026-08-23: *„dostaje ikonka powiadomienia, ale jak otworzę okno
+/// > Zgłoszenie z 2026-08-23: *„dostaje ikonka powiadomienia, ale jak otworzę okno
 /// > to powiadomienie znika i generalnie nie wiem co się dzieje, wiem tylko że jedna akcja,
 /// > ale jak? Jak przebiegła — zero informacji"*.
 /// >
@@ -18,7 +18,7 @@ import Foundation
 ///
 /// Rejestr przeżywa restart programu (`UserDefaults`), bo mNas bywa zamykany częściej,
 /// niż zdarzają się kopie — historia trzymana wyłącznie w pamięci gasłaby razem z tym,
-/// o co [U] pyta.
+/// o co użytkownik pyta.
 
 // MARK: - Jedno zdarzenie
 
@@ -60,10 +60,10 @@ final class RejestrZdarzen {
 
     private(set) var zdarzenia: [Zdarzenie] = []
 
-    /// Kiedy [U] ostatnio wyczyścił rejestr. `nil` = nigdy.
+    /// Kiedy użytkownik ostatnio wyczyścił rejestr. `nil` = nigdy.
     ///
     /// > [!danger] 🔴 Bez tego kafel „Zdarzenia" kasował sam siebie
-    /// > Zgłoszenie [U] 2026-08-23: *„jak w głównym kliknąłem wyczyść to kafelek zniknął
+    /// > Zgłoszenie 2026-08-23: *„jak w głównym kliknąłem wyczyść to kafelek zniknął
     /// > i się nie pojawił"*. Kafel pokazywał się pod warunkiem `!zdarzenia.isEmpty`,
     /// > a przycisk „Wyczyść rejestr" stał **w środku tego kafla** — czyli czyszczenie
     /// > wyrzucało z ekranu własny przycisk razem z całym modułem. Wracał dopiero przy

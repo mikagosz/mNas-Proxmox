@@ -9,7 +9,7 @@ import Foundation
 struct TestyNieDotykajaDanychTests {
 
     /// E1-S-P1-01. Do 1.2.9 `UserDefaults.standard` pod testami = domena działającego
-    /// mNasa, więc każdy przebieg kasował historię zdarzeń [U].
+    /// mNasa, więc każdy przebieg kasował historię zdarzeń użytkownika.
     @Test("Rejestr zdarzeń i odhaczenia piszą do domeny testowej, nie do domeny programu")
     func osobnaDomena() {
         #expect(MagazynUstawien.domyslny !== UserDefaults.standard)

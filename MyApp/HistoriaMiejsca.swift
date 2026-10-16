@@ -2,13 +2,13 @@ import SwiftUI
 
 // Historia miejsca na dyskach (od 1.2.16) — okno z kafla „Miejsce”.
 //
-// Zgłoszenie [U] 2026-10-04: *„brakuje mi historii zapełniania miejsca i czyszczenia
+// Zgłoszenie 2026-10-04: *„brakuje mi historii zapełniania miejsca i czyszczenia
 // miejsca, ilości danych, które wchodziły na dyski”*. Trzy źródła:
 // 1. zbieracz `mnas-historia` od wersji 2 — zajętość udziałów i systemów plików na NVMe/SSD
 //    (`miejsce-*.rrd`) oraz bajty odczytane i zapisane na każdy dysk (`io-*.rrd`);
 // 2. RRD magazynów Proxmoksa — rok wstecz, także dysk kopii na talerzu, bo Proxmox
 //    i tak sprawdza go co 10 s.
-// Talerze zbieracz czyta tylko, gdy same pracują (licznik jądra drgnął) — decyzja [U] 2026-10-04.
+// Talerze zbieracz czyta tylko, gdy same pracują (licznik jądra drgnął) — decyzja 2026-10-04.
 
 /// Jedno miejsce na wykresie zajętości: seria „zajęte” + bilans w zakresie.
 private struct PozycjaMiejsca: Identifiable {

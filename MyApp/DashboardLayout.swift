@@ -15,6 +15,7 @@ nonisolated enum DashTileID: String, CaseIterable, Codable {
     case miejsce
     case zdarzenia
     case transfery
+    case aktualizacje
 
     var title: String {
         switch self {
@@ -36,6 +37,7 @@ nonisolated enum DashTileID: String, CaseIterable, Codable {
         case .miejsce:    return String(localized: "Miejsce")
         case .zdarzenia:  return String(localized: "Zdarzenia")
         case .transfery:  return String(localized: "Transfery")
+        case .aktualizacje: return String(localized: "Aktualizacje")
         }
     }
 }
@@ -99,7 +101,7 @@ nonisolated enum TileGeometry {
 /// wersji. Patrz `KonfiguracjaUkladu`.
 ///
 /// > [!danger] 🔴 Zapisujemy pozycje **nieprzycięte do szerokości okna**
-/// > To jest przyczyna zgłoszenia [U] z 2026-08-29 (*„z każdą nową wersją muszę sobie
+/// > To jest przyczyna zgłoszenia z 2026-08-29 (*„z każdą nową wersją muszę sobie
 /// > kafelki ustawiać na nowo"*), znaleziona w kodzie 2026-08-29 i naprawiona tutaj.
 /// >
 /// > `resolvedPositions` **przycina** (`clamp`) każdą pozycję do bieżącej liczby kolumn,
@@ -107,7 +109,7 @@ nonisolated enum TileGeometry {
 /// > na tym, że `place` i `toggleLock` wpisywały ten przycięty wynik z powrotem do
 /// > `positions` — czyli **do zapisu na dysku**.
 /// >
-/// > Skutek: układ [U] jest szeroki na pięć kolumn (`disks`, `alerts` i `miejsce` stoją
+/// > Skutek: układ użytkownika jest szeroki na pięć kolumn (`disks`, `alerts` i `miejsce` stoją
 /// > w kolumnie 4). Wystarczyło, że okno było chwilowo węższe — a przy starcie jest,
 /// > zanim widok zmierzy szerokość — żeby przy pierwszym przesunięciu kafla wszystkie
 /// > pozycje z kolumny 4 zapisały się jako kolumna 3. Zmierzone w pliku preferencji
@@ -127,7 +129,7 @@ final class DashboardLayout {
     /// Kafle **zablokowane kłódką** — nie dają się przesunąć i nigdy nie ustępują miejsca.
     ///
     /// > [!important] Po co to jest
-    /// > Zgłoszenie [U] 2026-08-23: *„aktualnie potrafią kafelki się przestawiać jak tylko
+    /// > Zgłoszenie 2026-08-23: *„aktualnie potrafią kafelki się przestawiać jak tylko
     /// > złapie inny do przesunięcia"*. Przyczyna siedzi w `place`: kafel nachodzący na
     /// > upuszczany był **wypychany** na pierwsze wolne pole. Przy ciasnym układzie jedno
     /// > nieprecyzyjne upuszczenie potrafiło więc przemeblować pół dashboardu.
@@ -137,7 +139,7 @@ final class DashboardLayout {
     /// > do skutku i kafel wraca tam, skąd go wzięto.
     private var lockedTiles: Set<DashTileID>
     /// Ustawienia panelu paska menu — P14. Trzymane razem z układem, bo to ten sam
-    /// plik konfiguracyjny i ta sama decyzja [U]: „co ma być widać i gdzie".
+    /// plik konfiguracyjny i ta sama decyzja: „co ma być widać i gdzie".
     var panelPaska: UstawieniaPanelu {
         didSet { if panelPaska != oldValue { persist() } }
     }
@@ -176,20 +178,21 @@ final class DashboardLayout {
         .przebiegi: .large,
         .miejsce: .large,
         .zdarzenia: .large,
-        .transfery: .large
+        .transfery: .large,
+        .aktualizacje: .medium
     ]
 
     private static let defaultOrder: [DashTileID] = [
         .cpu, .ram, .guests, .alerts, .storage, .disks,
         .cpuHistory, .coreUsage, .coreTemp, .fans, .power, .gpu, .tools, .services,
-        .przebiegi, .miejsce, .zdarzenia, .transfery
+        .przebiegi, .miejsce, .zdarzenia, .transfery, .aktualizacje
     ]
 
     init(magazyn: MagazynUkladu = .domyslny) {
         self.magazyn = magazyn
         let konf = magazyn.wczytaj() ?? Self.migracjaZUserDefaults()
 
-        // Kafle dodane w apce po tym, jak [U] zapisał sobie układ, dochodzą na koniec.
+        // Kafle dodane w apce po tym, jak użytkownik zapisał sobie układ, dochodzą na koniec.
         let zapisanaKolejnosc = konf.kolejnosc.compactMap(DashTileID.init(rawValue:))
         if zapisanaKolejnosc.isEmpty {
             order = Self.defaultOrder
@@ -236,7 +239,7 @@ final class DashboardLayout {
 
     /// Jednorazowe przeniesienie układu ze starego zapisu w `UserDefaults` do pliku.
     ///
-    /// 🔴 Starych kluczy **nie kasujemy**. Gdyby [U] wrócił do wcześniejszej wersji
+    /// 🔴 Starych kluczy **nie kasujemy**. Gdyby użytkownik wrócił do wcześniejszej wersji
     /// programu, zastanie swój układ na miejscu; plik jest wtedy po prostu ignorowany.
     /// Kasowanie zapisu, do którego nie mamy jak wrócić, jest drogą w jedną stronę.
     private static func migracjaZUserDefaults() -> KonfiguracjaUkladu {
@@ -264,7 +267,7 @@ final class DashboardLayout {
     /// Rozsuwa kafle, które w zapisie stoją na sobie.
     ///
     /// > [!danger] 🔴 To jest naprawa **danych**, nie kodu — i jest potrzebna raz
-    /// > Plik [U] przyszedł z `UserDefaults`, w których zderzenie już siedziało
+    /// > Plik użytkownika przyszedł z `UserDefaults`, w których zderzenie już siedziało
     /// > (`cpu` i `power` w kratce `{1, 0}`, zmierzone 2026-08-29). Sam poprawiony
     /// > `place` tego nie odkręci: on pilnuje, żeby nowych zderzeń nie tworzyć,
     /// > a stare zostałyby na dysku i dalej przestawiały siatkę przy każdym starcie.
@@ -320,13 +323,13 @@ final class DashboardLayout {
 
     /// Utrwala wyliczone miejsca kafli, **którym nikt jeszcze nie nadał pozycji**.
     ///
-    /// > [!danger] 🔴 To jest naprawa zgłoszenia [U] 2026-08-23: „już kolejny build i znów
+    /// > [!danger] 🔴 To jest naprawa zgłoszenia 2026-08-23: „już kolejny build i znów
     /// > pomieszane kafelki mam"
     /// > Zmierzone tego dnia w `UserDefaults`: pozycje miały **3 kafle z 18**. Pozostałe
     /// > 15 nie miało zapisanej pozycji w ogóle, więc przy każdym uruchomieniu układał je
     /// > od nowa `firstFree` — a jego wynik zależy od tego, **które kafle mają w tej chwili
     /// > dane**. Podczas łączenia z serwerem dane napływają kafel po kaflu, `visibleTiles`
-    /// > rośnie, i cała siatka przestawia się na oczach [U].
+    /// > rośnie, i cała siatka przestawia się na oczach użytkownika.
     /// >
     /// > Układ nie był więc „zapominany" — nigdy nie został zapisany. Zapisywało go
     /// > wyłącznie przeciągnięcie kafla albo kłódka, i tylko dla kafli widocznych **w tej
@@ -435,10 +438,10 @@ final class DashboardLayout {
 
         // 🔴 Zapisujemy **trzy różne rzeczy trzema różnymi regułami** i to nie jest
         // przesada — poprzednia wersja miała tu jedno `merge(resolved) { _, nowa in nowa }`
-        // i to ono gubiło układ [U] (zgłoszenie 2026-08-29, opis w nagłówku klasy).
+        // i to ono gubiło układ użytkownika (zgłoszenie 2026-08-29, opis w nagłówku klasy).
         //
         // 1. Kafel bez własnej pozycji dostaje tę, w której właśnie stoi. Bez tego reszta
-        //    spłynęłaby w dziurę, którą [U] celowo zostawił — zgłoszenie z 2026-08-23.
+        //    spłynęłaby w dziurę, którą użytkownik celowo zostawił — zgłoszenie z 2026-08-23.
         for (id, pos) in resolved where positions[id] == nil {
             positions[id] = pos
         }
@@ -457,7 +460,7 @@ final class DashboardLayout {
     ///
     /// 🔴 **Kafle pod kłódką zostają tam, gdzie stoją.** „Ściśnij" ma domknąć dziury,
     /// a nie obejść blokadę tylnymi drzwiami — inaczej jedno kliknięcie kasowałoby
-    /// wszystko, co [U] świadomie przygwoździł.
+    /// wszystko, co użytkownik świadomie przygwoździł.
     func repack() {
         positions = positions.filter { lockedTiles.contains($0.key) }
         persist()
@@ -490,7 +493,7 @@ final class DashboardLayout {
             // nie mogą tracić zapamiętanych miejsc.
             //
             // 🔴 `{ stara, _ in stara }`, nie odwrotnie: przypięte miejsce jest zapisem
-            // decyzji [U], a `resolvedPositions` zwraca je **przycięte do okna**.
+            // decyzji użytkownika, a `resolvedPositions` zwraca je **przycięte do okna**.
             // Zakładanie kłódki nie ma prawa przestawiać kafli, których nie dotyczy.
             positions.merge(resolvedPositions(tiles)) { stara, _ in stara }
             lockedTiles.insert(id)

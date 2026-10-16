@@ -304,7 +304,7 @@ nonisolated struct CPUStats: Sendable {
 ///
 /// API Proxmoksa podaje wyłącznie model i liczbę rdzeni. Reszta (wątki, cache, gniazda,
 /// taktowanie) jest tylko w systemie i wymaga SSH — a to właśnie o nią pyta się patrząc
-/// na kafel CPU (uwaga [U] 2026-08-17: „a co z wątkami, a co z ilością cache?").
+/// na kafel CPU (uwaga 2026-08-17: „a co z wątkami, a co z ilością cache?").
 nonisolated struct CPUDetails: Sendable, Equatable {
     var threads: Int? = nil           // CPU(s) — logiczne
     var coresPerSocket: Int? = nil
@@ -422,7 +422,7 @@ nonisolated struct DiskUsage: Sendable, Equatable {
     var mountedTotal: Int64 = 0
     /// Pojemność całego nośnika wg `lsblk` — i to jest mianownik procentu.
     ///
-    /// Zmienione 2026-08-19 na zgłoszenie [U]: koło sumowało systemy plików i
+    /// Zmienione 2026-08-19 na zgłoszenie: koło sumowało systemy plików i
     /// pokazywało 2 TB, choć w maszynie siedzi 3,26 TB dysków. Różnicę robiły
     /// nośnik odmontowany (1 TB) i pula LVM (141 GB), której `df` nie raportuje.
     /// „Ile mam miejsca" znaczy „ile mam na dyskach", więc mianownikiem jest dysk.

@@ -6,7 +6,7 @@ import Foundation
 /// > [!danger] 🔴 Pod testami — osobna domena, nie domena programu
 /// > Testy chodzą w procesie programu (`TEST_HOST`), więc `UserDefaults.standard` jest
 /// > tam domeną `com.mikagosz.mNasProxmox` — tą samą, w której działający mNas trzyma
-/// > historię zdarzeń [U]. Każdy przebieg testów ją kasował i nadpisywał danymi testowymi
+/// > historię zdarzeń użytkownika. Każdy przebieg testów ją kasował i nadpisywał danymi testowymi
 /// > („Kopia na media”). Audyt SBW 2026-09-24, E1-S-P1-01.
 /// >
 /// > Tak jak `MagazynUkladu`: **przekierowanie, nie wyłączenie** — zapis dalej działa
@@ -19,7 +19,7 @@ nonisolated enum MagazynUstawien {
     /// a SDK nie oznacza go jako `Sendable`. Wartość ustalana raz, potem tylko czytana.
     nonisolated(unsafe) static let domyslny: UserDefaults = {
         guard MagazynUkladu.podTestami else { return .standard }
-        // Bez awaryjnego `.standard`: po cichu wróciłoby kasowanie danych [U].
+        // Bez awaryjnego `.standard`: po cichu wróciłoby kasowanie danych użytkownika.
         guard let testowa = UserDefaults(suiteName: domenaTestowa) else {
             fatalError("Nie udało się otworzyć testowej domeny UserDefaults: \(domenaTestowa)")
         }

@@ -209,7 +209,7 @@ struct MiejsceTests {
 
     // MARK: - Odsiew spisu miejsca z podpisu przebiegu
 
-    /// Dokładnie ta wiadomość, którą [U] zobaczył 2026-08-23 o 11:57.
+    /// Dokładnie ta wiadomość, którą użytkownik zobaczył 2026-08-23 o 11:57.
     @Test("Spis procentów z czujki znika z podpisu przebiegu")
     func spisMiejscaOdsiany() {
         let msg = "/mnt/zasoby 78%,/mnt/wspolny 2% /mnt/multimedia 11%,/mnt/backup 9%"

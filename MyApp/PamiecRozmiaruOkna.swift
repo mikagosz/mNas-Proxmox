@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Okno pamięta swój rozmiar i położenie między otwarciami i uruchomieniami (od 1.2.16).
 ///
-/// Zgłoszenie [U] 2026-10-04: *„żeby program zapamiętywał, w jakiej wielkości użytkownik
+/// Zgłoszenie 2026-10-04: *„żeby program zapamiętywał, w jakiej wielkości użytkownik
 /// ustawi sobie okno”*. SwiftUI przy `WindowGroup(for:)` otwiera nowe okno zawsze
 /// w `defaultSize` — ramki nie zapisuje. Robi to AppKit, gdy okno ma `frameAutosaveName`:
 /// najpierw `setFrameUsingName` (odczyt zapisanej ramki), potem `setFrameAutosaveName`

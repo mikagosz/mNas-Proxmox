@@ -1,9 +1,9 @@
 import Foundation
 
-/// Alarmy, które [U] odhaczył — „widziałem, wiem, nie świeć mi już na czerwono".
+/// Alarmy, które użytkownik odhaczył — „widziałem, wiem, nie świeć mi już na czerwono".
 ///
 /// > [!important] Po co to powstało
-/// > Zgłoszenie [U] 2026-08-23: *„powinien być przycisk że zapoznałem się z alertem,
+/// > Zgłoszenie 2026-08-23: *„powinien być przycisk że zapoznałem się z alertem,
 /// > żeby ikona w menu bar zmieniła się z czerwonej na zieloną — w tym małym okienku
 /// > oraz na głównym w kafelku z tymi info"*.
 /// >
@@ -51,7 +51,7 @@ nonisolated enum KluczAlertu {
 /// Zbiór odhaczonych alarmów, przeżywający restart programu.
 ///
 /// Przeżywa świadomie: bez tego zamknięcie i otwarcie mNas przywracałoby czerwień
-/// dla czegoś, co [U] już przeczytał — czyli dokładnie zachowanie, które zgłosił.
+/// dla czegoś, co użytkownik już przeczytał — czyli dokładnie zachowanie, które zgłosił.
 @MainActor
 @Observable
 final class PotwierdzoneAlerty {

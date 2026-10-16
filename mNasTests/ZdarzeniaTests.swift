@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import mNas
 
-/// Testy rejestru zdarzeń — odpowiedź na zgłoszenie [U] z 2026-08-23:
+/// Testy rejestru zdarzeń — odpowiedź na zgłoszenie z 2026-08-23:
 /// *„dostaje ikonka powiadomienia, ale jak otworzę okno to powiadomienie znika
 /// i generalnie nie wiem co się dzieje, wiem tylko że jedna akcja, ale jak?"*.
 ///
@@ -70,7 +70,7 @@ struct ZdarzeniaTests {
 
     // MARK: - Kafel nie kasuje sam siebie
     //
-    // Zgłoszenie [U] 2026-08-23: *„jak w głównym kliknąłem wyczyść to kafelek zniknął
+    // Zgłoszenie 2026-08-23: *„jak w głównym kliknąłem wyczyść to kafelek zniknął
     // i się nie pojawił"*. Przycisk „Wyczyść rejestr" stał w kaflu, który pokazywał się
     // wyłącznie przy niepustym rejestrze — więc kasował z ekranu sam siebie.
 
@@ -161,7 +161,7 @@ struct ZdarzeniaTests {
     }
 
     /// mNas bywa zamykany częściej, niż zdarzają się kopie — historia trzymana wyłącznie
-    /// w pamięci gasłaby razem z tym, o co [U] pyta.
+    /// w pamięci gasłaby razem z tym, o co użytkownik pyta.
     @Test("Rejestr przeżywa restart programu")
     func przezywaRestart() {
         let r = czystyRejestr()

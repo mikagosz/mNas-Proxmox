@@ -4,7 +4,7 @@ import os
 /// Układ dashboardu zapisany w **pliku**, a nie w `UserDefaults`.
 ///
 /// > [!important] Skąd to jest
-/// > Zgłoszenie [U] 2026-08-29: *„bardzo mnie denerwuje to, że z każdą nową wersją ja
+/// > Zgłoszenie 2026-08-29: *„bardzo mnie denerwuje to, że z każdą nową wersją ja
 /// > muszę sobie zasrane kafelki ustawiać na nowo, trzeba to zmienić, musi się
 /// > zapisywać jakiś dokument config albo coś, żeby tego nie było"*.
 /// >
@@ -84,7 +84,7 @@ nonisolated struct KonfiguracjaUkladu: Codable, Equatable, Sendable {
 /// > tak jak robi to `Keychain.podTestami`. Skutek był taki, że testy trwałości układu
 /// > („kłódki przeżywają restart") zaczęły przechodzić **z powodu braku zapisu**,
 /// > czyli sprawdzały nic. Dziś przebieg testów dostaje własny plik w katalogu
-/// > tymczasowym: prawdziwy układ [U] jest tak samo nietykalny, a zapis dalej da się
+/// > tymczasowym: prawdziwy układ użytkownika jest tak samo nietykalny, a zapis dalej da się
 /// > zmierzyć. To jest dokładnie ta pułapka, przed którą ostrzega reguła
 /// > „zero z sita bez kontroli dodatniej znaczy «nie wiem»".
 nonisolated struct MagazynUkladu: Sendable {
@@ -92,13 +92,13 @@ nonisolated struct MagazynUkladu: Sendable {
     var plik: URL
 
     /// Magazyn używany przez program. Pod testami wskazuje katalog tymczasowy,
-    /// **nigdy** prawdziwy plik [U].
+    /// **nigdy** prawdziwy plik użytkownika.
     static var domyslny: MagazynUkladu {
         MagazynUkladu(plik: podTestami ? plikTestowy : plikProdukcyjny)
     }
 
     /// `Application Support`, nie `Documents` — to jest stan programu, a nie dokument
-    /// użytkownika, mimo że [U] nazwał go „dokumentem config".
+    /// użytkownika, mimo że użytkownik nazwał go „dokumentem config".
     static var katalogProdukcyjny: URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Library/Application Support")

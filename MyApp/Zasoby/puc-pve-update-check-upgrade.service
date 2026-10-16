@@ -1,0 +1,9 @@
+[Unit]
+Description=Automatyczna instalacja aktualizacji (tylko maszyny z AUTO_UPGRADE_IDS)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pve-update-check -u -y
+TimeoutStartSec=6h

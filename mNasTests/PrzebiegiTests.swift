@@ -314,7 +314,7 @@ enum FixturesPrzebiegi {
     """
 }
 
-/// Testy paska postępu i prędkości — dołożonych 2026-08-20 na prośbę [U]
+/// Testy paska postępu i prędkości — dołożonych 2026-08-20 na prośbę
 /// („mogę widzieć pasek postępu i prędkość?").
 @Suite("Postęp i prędkość kopii")
 struct PostepIPredkoscTests {

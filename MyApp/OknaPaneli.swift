@@ -1,7 +1,7 @@
 import SwiftUI
 
 // Panele, które do 1.2.13 były arkuszami (`.sheet`) przyklejonymi do okna programu:
-// CPU, RAM, Transfery i panel pojedynczego dysku. Zgłoszenie [U] 2026-10-04: okna historii
+// CPU, RAM, Transfery i panel pojedynczego dysku. Zgłoszenie 2026-10-04: okna historii
 // CPU i Transferów „wiszą na oknie programu i nie da się ich przesuwać”, a okna
 // pozostałych historii (`OknoHistorii`) da się. Od 1.2.14 to zwykłe okna macOS —
 // ten sam wzór co `OknoHistorii`: `WindowGroup(for:)`, ponowny klik wyciąga

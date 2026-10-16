@@ -273,7 +273,7 @@ nonisolated struct ServerCommands: Sendable {
     /// Mechanizmy, które host naprawdę uruchamia — cron, timery systemd i ich dzienniki.
     ///
     /// > [!danger] Po co to powstało
-    /// > Zgłoszenie [U] z 2026-08-23: w przebiegach zostawały mechanizmy, których już nie
+    /// > Zgłoszenie z 2026-08-23: w przebiegach zostawały mechanizmy, których już nie
     /// > było, bo program pokazywał dane **wpisane w kod** (ścieżkę dziennika kopii na
     /// > Macu), zamiast brać je z serwera. Zadanie wygaszono, a wiersz dalej wisiał.
     /// >
@@ -328,6 +328,162 @@ nonisolated struct ServerCommands: Sendable {
         done
         exit 0
         """#, timeout: timeout)
+    }
+
+    // MARK: - Aktualizacje serwera (pve-update-check, od 1.2.30)
+
+    /// Wersja narzędzia, oba pliki stanu i koniec logu trwającej aktualizacji — jeden
+    /// przebieg SSH. Ścieżkę logu bierzemy z `aktualizacja.json` na serwerze, ale `tail`
+    /// dostaje ją tylko, gdy leży w katalogu logów narzędzia.
+    static func poleceniOdczytuAktualizacji() -> String {
+        let d = NarzedzieAktualizacji.katalogStanu
+        return #"""
+        echo "@@WERSJA $(\#(NarzedzieAktualizacji.sciezka) -v 2>/dev/null)"
+        echo '@@STAN'; cat \#(d)/stan.json 2>/dev/null || echo '@@BRAK'
+        echo '@@POSTEP'; cat \#(d)/aktualizacja.json 2>/dev/null || echo '@@BRAK'
+        echo '@@KONIEC'
+        systemctl is-active --quiet \#(NarzedzieAktualizacji.jednostka) && echo '@@JEDNOSTKA active'
+        # „trwa”, a procesu z `pid` już nie ma (albo pid dostał ktoś inny) — @@MARTWY
+        pid=$(sed -n 's/^ *"pid" *: *\([0-9][0-9]*\),\{0,1\}$/\1/p' \#(d)/aktualizacja.json 2>/dev/null | head -n1)
+        if [ -n "$pid" ] && grep -q '^ *"stan" *: *"trwa"' \#(d)/aktualizacja.json 2>/dev/null; then
+          { kill -0 "$pid" 2>/dev/null && tr '\0' ' ' </proc/"$pid"/cmdline 2>/dev/null | grep -qF \#(NarzedzieAktualizacji.sciezka); } || echo '@@MARTWY'
+        fi
+        # Czy po wyniku jest jeszcze do czego wrócić: snapshot puc_ albo PLIK kopii vzdump.
+        # Lista `kopie` pamięta kopię także po jej skasowaniu — „Cofnij…” odpowiadało wtedy
+        # „nie ma do czego wrócić” (2026-10-16). @@COFNIJ <id> 1|0
+        perl -MJSON::PP -0777 -ne 'my $j = eval { decode_json($_) } or exit;
+          for (@{$j->{wyniki} || []}) { next unless $_->{snapshot} || $_->{kopia};
+            print join("\t", $_->{typ} // "", $_->{id} // "", $_->{snapshot} // "", $_->{kopia} // ""), "\n" }' \
+          \#(d)/aktualizacja.json 2>/dev/null |
+        while IFS="$(printf '\t')" read -r typ id snap vol; do
+          case $id in ''|*[!0-9]*) continue ;; esac
+          t=pct; [ "$typ" = vm ] && t=qm
+          jest=0
+          if [ -n "$snap" ] && $t listsnapshot "$id" 2>/dev/null | grep -qF "$snap"; then jest=1
+          elif [ -n "$vol" ] && p=$(pvesm path "$vol" 2>/dev/null) && [ -e "$p" ]; then jest=1; fi
+          echo "@@COFNIJ $id $jest"
+        done
+        for u in pve-update-check.service \#(NarzedzieAktualizacji.jednostka)-sprawdz; do
+          systemctl is-active --quiet "$u" && { echo '@@TIMER active'; break; }
+        done
+        log=$(sed -n 's/^ *"log" *: *"\(.*\)",\{0,1\}$/\1/p' \#(d)/aktualizacja.json 2>/dev/null | head -n1)
+        case $log in
+          \#(NarzedzieAktualizacji.katalogLogow)*.log) case $log in *..*) ;; *) echo '@@LOG'; tail -n 12 "$log" 2>/dev/null ;; esac ;;
+        esac
+        exit 0
+        """#
+    }
+
+    func odczytajAktualizacje() async -> SSHRunner.Result {
+        await runner.run(escalated("bash -c \(Self.shellQuote(Self.poleceniOdczytuAktualizacji()))"),
+                         timeout: 20, forceTTY: needsSudo)
+    }
+
+    /// Wspólny wstęp startu w tle: nic, gdy już coś chodzi (aktualizacja, cofnięcie,
+    /// sprawdzanie z timera albo z mNas) — narzędzie i tak trzyma blokadę, ale tak mNas
+    /// dostaje jasne `@@ZAJETE` zamiast cichego niepowodzenia jednostki.
+    private static let wstepStartu = """
+        for u in \(NarzedzieAktualizacji.jednostka) \(NarzedzieAktualizacji.jednostka)-sprawdz pve-update-check.service pve-update-check-upgrade.service; do
+          systemctl is-active --quiet "$u" && { echo '@@ZAJETE'; exit 0; }
+        done
+        systemctl reset-failed \(NarzedzieAktualizacji.jednostka) \(NarzedzieAktualizacji.jednostka)-sprawdz 2>/dev/null
+        """
+
+    /// Aktualizacja jednej maszyny w tle (`systemd-run`) — wraca od razu, a aktualizacja
+    /// trwa dalej, nawet gdy Mac uśnie. `nil`, gdy ID nie przeszło walidacji.
+    static func poleceniStartuAktualizacji(id: String, zakres: ZakresAktualizacji, serwerNextcloud: Bool) -> String? {
+        guard AktualizacjeParsers.poprawneID(id) else { return nil }
+        var argumenty = "-u -y -t \(id)"
+        if zakres != .wszystko { argumenty += " -o \(zakres.rawValue)" }
+        if serwerNextcloud && zakres != .pakiety { argumenty += " -S" }
+        return """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=3h \
+          \(NarzedzieAktualizacji.sciezka) \(argumenty) >/dev/null && echo '@@START'
+        """
+    }
+
+    /// Powrót do snapshotu `puc_` albo kopii vzdump sprzed ostatniej aktualizacji.
+    static func poleceniCofniecia(id: String) -> String? {
+        guard AktualizacjeParsers.poprawneID(id) else { return nil }
+        return """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=3h \
+          \(NarzedzieAktualizacji.sciezka) -r \(id) -y >/dev/null && echo '@@START'
+        """
+    }
+
+    /// Ręczne sprzątanie po aktualizacji, której weryfikacja coś wykryła. Narzędzie kasuje
+    /// wyłącznie to, co samo zapisało w `sprzatanie-<ID>` — mNas nie wysyła żadnych ścieżek.
+    static func poleceniSprzatania(id: String) -> String? {
+        guard AktualizacjeParsers.poprawneID(id) else { return nil }
+        return """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=30min \
+          \(NarzedzieAktualizacji.sciezka) -c \(id) -y >/dev/null && echo '@@START'
+        """
+    }
+
+    /// Ponowne uruchomienie usług ze starymi bibliotekami (`-R`) albo całego kontenera (`-B`).
+    /// Listę usług narzędzie ustala samo na świeżo — mNas podaje tylko numer.
+    static func poleceniRestartu(id: String, calyKontener: Bool) -> String? {
+        guard AktualizacjeParsers.poprawneID(id) else { return nil }
+        return """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=30min \
+          \(NarzedzieAktualizacji.sciezka) \(calyKontener ? "-B" : "-R") \(id) -y >/dev/null && echo '@@START'
+        """
+    }
+
+    /// Restart hosta przez narzędzie (`-H`, root po SSH) — API odmawia, bo token mNas nie ma
+    /// `Sys.PowerMgmt`. Narzędzie samo sprawdza kopie, DKMS i ustawia start na nowym jądrze.
+    static func poleceniRestartuHosta() -> String {
+        """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=10min \
+          \(NarzedzieAktualizacji.sciezka) -H -y >/dev/null && echo '@@START'
+        """
+    }
+
+    /// Sprawdzenie teraz, bez czekania na timer — także w tle, ~1 min przy kilkunastu kontenerach.
+    static func poleceniSprawdzenia() -> String {
+        """
+        \(wstepStartu)
+        systemd-run --unit=\(NarzedzieAktualizacji.jednostka)-sprawdz --collect --property=RuntimeMaxSec=30min \
+          \(NarzedzieAktualizacji.sciezka) -n >/dev/null && echo '@@START'
+        """
+    }
+
+    func uruchomWTle(_ polecenie: String) async -> SSHRunner.Result {
+        await runner.run(escalated("bash -c \(Self.shellQuote(polecenie))"), timeout: 30, forceTTY: needsSudo)
+    }
+
+    /// Instalacja albo aktualizacja narzędzia. Treść w base64, jak przy zbieraczu.
+    /// `config` i `apps.conf` tylko, gdy ich nie ma — to ustawienia użytkownika.
+    /// Na koniec pierwsze sprawdzenie w tle, żeby kafel od razu miał co pokazać.
+    static func poleceniInstalacjiNarzedziaAktualizacji() -> String {
+        func b64(_ s: String) -> String { Data(s.utf8).base64EncodedString() }
+        var linie = [
+            "set -e",
+            "command -v pveversion >/dev/null || { echo 'To nie jest host Proxmox VE.' >&2; exit 1; }",
+            "install -d -m 755 /usr/local/lib/pve-update-check /etc/pve-update-check /etc/pve-update-check/checks.d /var/log/pve-update-check",
+        ]
+        for p in NarzedzieAktualizacji.pliki {
+            let zapis = "echo '\(b64(NarzedzieAktualizacji.zasob(p.zasob)))' | base64 -d > \(p.cel) && chmod \(p.tryb) \(p.cel)"
+            linie.append(p.tylkoNowy ? "[ -f \(p.cel) ] || { \(zapis); }" : zapis)
+        }
+        linie += [
+            "systemctl daemon-reload",
+            "systemctl enable --now pve-update-check.timer >/dev/null",
+            "\(NarzedzieAktualizacji.sciezka) -v",
+            "systemctl is-active --quiet pve-update-check.service || systemd-run --unit=\(NarzedzieAktualizacji.jednostka)-sprawdz --collect \(NarzedzieAktualizacji.sciezka) -n >/dev/null 2>&1 || true",
+        ]
+        return linie.joined(separator: "\n")
+    }
+
+    func instalujNarzedzieAktualizacji() async -> SSHRunner.Result {
+        await runner.run(escalated("bash -c \(Self.shellQuote(Self.poleceniInstalacjiNarzedziaAktualizacji()))"),
+                         timeout: 120, forceTTY: needsSudo)
     }
 
     // MARK: - Historia (zbieracz mnas-historia)
@@ -404,7 +560,7 @@ nonisolated struct ServerCommands: Sendable {
     // MARK: - Monitor transferów — przeniesiony na REST
     //
     // 🔴 Tu stały cztery polecenia czytające `/var/log/pomiar-ruchu` i `/var/log/pomiar-polaczen`
-    // po SSH. [U] skasował oba źródła na hoście 2026-08-29, a monitor poszedł na RRD
+    // po SSH. Użytkownik skasował oba źródła na hoście 2026-08-29, a monitor poszedł na RRD
     // Proxmoksa (`ProxmoxClient.rrdWezla` / `rrdGoscia`, interpretacja w `Transfery.swift`).
     // Nie odtwarzaj ich tutaj: taki licznik służy do diagnozy sprzętu sieci
     // (rozdzielczość 10 s, ramki PAUSE), a nie do kafla w mNasie.

@@ -35,7 +35,7 @@ extension View {
 /// Każdy kafel dostaje **własną współrzędną kratki** i stoi dokładnie tam — także
 /// wtedy, gdy obok zostaje puste miejsce. Wcześniej siatka pakowała kafle po kolei
 /// i sama domykała dziury, przez co nie dało się zostawić wolnego pola tam, gdzie
-/// user chciał (zgłoszenie [U] 2026-08-17). Wyliczanie pozycji siedzi
+/// user chciał (zgłoszenie 2026-08-17). Wyliczanie pozycji siedzi
 /// w `DashboardLayout` — tutaj zostaje samo rozstawianie.
 nonisolated struct TileGrid: Layout {
     var cell: CGFloat = TileGeometry.cell

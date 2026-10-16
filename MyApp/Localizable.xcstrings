@@ -129,6 +129,22 @@
         }
       }
     },
+    "%@ wróci do snapshotu %@ sprzed aktualizacji. Kontener zostanie na chwilę zatrzymany i uruchomiony ponownie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will return to snapshot %@ taken before the update. The container will be stopped briefly and started again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ wróci do snapshotu %@ sprzed aktualizacji. Kontener zostanie na chwilę zatrzymany i uruchomiony ponownie."
+          }
+        }
+      }
+    },
     "%@ z %@": {
       "localizations": {
         "en": {
@@ -189,6 +205,38 @@
           "stringUnit": {
             "state": "new",
             "value": "%1$@ z %2$@ · %3$@ wolnego"
+          }
+        }
+      }
+    },
+    "%@ zostanie przywrócony z kopii %@. Wszystko, co zmieniło się w nim po kopii, przepadnie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will be restored from backup %@. Anything that changed in it after the backup will be lost."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ zostanie przywrócony z kopii %@. Wszystko, co zmieniło się w nim po kopii, przepadnie."
+          }
+        }
+      }
+    },
+    "%@ zostanie uruchomiony ponownie — wszystkie jego usługi znikną na kilkanaście sekund. Nie w trakcie kopii zapasowej (narzędzie to sprawdza).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ will be restarted — all its services will be gone for a dozen or so seconds. Not during a backup (the tool checks for that)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ zostanie uruchomiony ponownie — wszystkie jego usługi znikną na kilkanaście sekund. Nie w trakcie kopii zapasowej (narzędzie to sprawdza)."
           }
         }
       }
@@ -633,6 +681,22 @@
         }
       }
     },
+    "%lld min %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min %lld s"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min %lld s"
+          }
+        }
+      }
+    },
     "%lld obrotów na minutę": {
       "localizations": {
         "en": {
@@ -681,6 +745,38 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld pak.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pkg."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pak."
+          }
+        }
+      }
+    },
+    "%lld pak. (%lld bezp.)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pkg. (%lld security)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld pak. (%lld bezp.)"
           }
         }
       }
@@ -969,6 +1065,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
           }
         }
       }
@@ -1794,6 +1906,54 @@
         }
       }
     },
+    "Aktualizacja nie ruszyła na serwerze. Szczegóły: journalctl -u %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The update did not start on the server. Details: journalctl -u %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacja nie ruszyła na serwerze. Szczegóły: journalctl -u %@"
+          }
+        }
+      }
+    },
+    "Aktualizacja z błędami": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update finished with errors"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacja z błędami"
+          }
+        }
+      }
+    },
+    "Aktualizacja zakończona": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update finished"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacja zakończona"
+          }
+        }
+      }
+    },
     "Aktualizacje": {
       "localizations": {
         "en": {
@@ -1806,6 +1966,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aktualizacje"
+          }
+        }
+      }
+    },
+    "Aktualizacje serwera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server updates"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacje serwera"
+          }
+        }
+      }
+    },
+    "Aktualizacje wymagają połączenia SSH z hostem.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates require an SSH connection to the host."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacje wymagają połączenia SSH z hostem."
+          }
+        }
+      }
+    },
+    "Aktualne — Nextcloud %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to date — Nextcloud %@."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualne — Nextcloud %@."
+          }
+        }
+      }
+    },
+    "Aktualne.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to date."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualne."
+          }
+        }
+      }
+    },
+    "Aktualne: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Up to date: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualne: %@"
           }
         }
       }
@@ -2450,6 +2690,86 @@
         }
       }
     },
+    "Cofnij": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roll back"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnij"
+          }
+        }
+      }
+    },
+    "Cofnij do stanu sprzed aktualizacji…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roll back to the state before the update…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnij do stanu sprzed aktualizacji…"
+          }
+        }
+      }
+    },
+    "Cofnięcie nie wyszło": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rollback failed"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnięcie nie wyszło"
+          }
+        }
+      }
+    },
+    "Cofnięto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rolled back"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnięto"
+          }
+        }
+      }
+    },
+    "Cofnąć ostatnią aktualizację?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Roll back the last update?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnąć ostatnią aktualizację?"
+          }
+        }
+      }
+    },
     "Cykle zasilania": {
       "localizations": {
         "en": {
@@ -2530,6 +2850,38 @@
         }
       }
     },
+    "Czeka nowe jądro %@ (teraz %@) — sterownik karty sieciowej jest gotowy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New kernel %@ is waiting (now %@) — the network card driver is ready."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Czeka nowe jądro %@ (teraz %@) — sterownik karty sieciowej jest gotowy."
+          }
+        }
+      }
+    },
+    "Czeka nowe jądro %@, ale sterownik karty sieciowej (DKMS) nie jest dla niego zbudowany — po restarcie serwer mógłby wstać bez sieci.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New kernel %@ is waiting, but the network card driver (DKMS) isn't built for it — after a restart the server could come up without network."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Czeka nowe jądro %@, ale sterownik karty sieciowej (DKMS) nie jest dla niego zbudowany — po restarcie serwer mógłby wstać bez sieci."
+          }
+        }
+      }
+    },
     "Czujniki i wentylatory: `apt install lm-sensors && sensors-detect --auto`. Bez tego kafle temperatur i obrotów zostaną puste.": {
       "localizations": {
         "en": {
@@ -2574,6 +2926,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Czytam RRD z Proxmoksa…"
+          }
+        }
+      }
+    },
+    "Czytam stan z serwera…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading status from the server…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Czytam stan z serwera…"
+          }
+        }
+      }
+    },
+    "Dalej…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalej…"
           }
         }
       }
@@ -3266,6 +3650,22 @@
         }
       }
     },
+    "Host uruchamiasz ponownie ręcznie — po nowym jądrze według procedury (DKMS, przypięcie jądra).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart the host manually — after a new kernel, follow the procedure (DKMS, kernel pin)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Host uruchamiasz ponownie ręcznie — po nowym jądrze według procedury (DKMS, przypięcie jądra)."
+          }
+        }
+      }
+    },
     "Identyfikator albo sekret tokenu zawiera znak nowej linii lub znak sterujący. Najczęstsza przyczyna: skopiowanie wartości razem z łamaniem wiersza. Wklej ją ponownie, w jednym kawałku.": {
       "localizations": {
         "en": {
@@ -3536,6 +3936,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jedna pozycja — zajmie całe okienko."
+          }
+        }
+      }
+    },
+    "Jest nowa wersja główna. To duży skok — instaluj świadomie, po sprawdzeniu, czy Twoje aplikacje Nextclouda ją obsługują (zaznacz „Także serwer Nextclouda”).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A new major version is available. It's a big jump — install it deliberately, after checking that your Nextcloud apps support it (tick “Also the Nextcloud server”)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jest nowa wersja główna. To duży skok — instaluj świadomie, po sprawdzeniu, czy Twoje aplikacje Nextclouda ją obsługują (zaznacz „Także serwer Nextclouda”)."
           }
         }
       }
@@ -4615,6 +5031,22 @@
         }
       }
     },
+    "Na serwerze jest pve-update-check %@, mNas ma %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server has pve-update-check %@, mNas has %@."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na serwerze jest pve-update-check %@, mNas ma %@."
+          }
+        }
+      }
+    },
     "Na serwerze jest starsza wersja zbieracza historii.": {
       "localizations": {
         "en": {
@@ -4627,6 +5059,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Na serwerze jest starsza wersja zbieracza historii."
+          }
+        }
+      }
+    },
+    "Na serwerze już coś trwa (sprawdzanie albo aktualizacja) — spróbuj za chwilę.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something is already running on the server (a check or an update) — try again in a moment."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na serwerze już coś trwa (sprawdzanie albo aktualizacja) — spróbuj za chwilę."
+          }
+        }
+      }
+    },
+    "Na serwerze nie ma narzędzia, które sprawdza i instaluje aktualizacje.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server has no tool that checks for and installs updates."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na serwerze nie ma narzędzia, które sprawdza i instaluje aktualizacje."
           }
         }
       }
@@ -4727,6 +5191,22 @@
         }
       }
     },
+    "Najpierw snapshot kontenera, a gdy jego dysk tego nie umie — kopia vzdump. Bez niej nic się nie zmieni.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First a container snapshot, or a vzdump backup if its disk can't take snapshots. Without one nothing is changed."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najpierw snapshot kontenera, a gdy jego dysk tego nie umie — kopia vzdump. Bez niej nic się nie zmieni."
+          }
+        }
+      }
+    },
     "Najważniejsze przyciski stoją na górze okna głównego.": {
       "localizations": {
         "en": {
@@ -4823,6 +5303,22 @@
         }
       }
     },
+    "Nextcloud: aplikacja %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nextcloud: app %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nextcloud: aplikacja %@"
+          }
+        }
+      }
+    },
     "Nic nie pasuje do filtra.": {
       "localizations": {
         "en": {
@@ -4835,6 +5331,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nic nie pasuje do filtra."
+          }
+        }
+      }
+    },
+    "Nic nie zostało skasowane. Do ręcznego skasowania:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing was deleted. Left for manual deletion:"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nic nie zostało skasowane. Do ręcznego skasowania:"
           }
         }
       }
@@ -5027,6 +5539,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nie udało się zainstalować nowej wersji. Program działa dalej w obecnej."
+          }
+        }
+      }
+    },
+    "Niepoprawny numer maszyny.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid machine number."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niepoprawny numer maszyny."
           }
         }
       }
@@ -5431,6 +5959,22 @@
         }
       }
     },
+    "Okno można zamknąć — aktualizacja idzie dalej na serwerze, także gdy Mac uśnie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can close this window — the update keeps running on the server, even if the Mac goes to sleep."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Okno można zamknąć — aktualizacja idzie dalej na serwerze, także gdy Mac uśnie."
+          }
+        }
+      }
+    },
     "Ostatni odczyt: %@ — zbieracz na serwerze stoi?": {
       "localizations": {
         "en": {
@@ -5667,6 +6211,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Oznacz alert jako przeczytany"
+          }
+        }
+      }
+    },
+    "Pakiety (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packages (%lld)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pakiety (%lld)"
           }
         }
       }
@@ -6115,6 +6675,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pomoc"
+          }
+        }
+      }
+    },
+    "Ponowne uruchomienie nie wyszło": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart failed"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponowne uruchomienie nie wyszło"
           }
         }
       }
@@ -7275,6 +7851,38 @@
         }
       }
     },
+    "Restart węzła — nie teraz: na serwerze trwa kopia, aktualizacja albo sprawdzanie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Node restart — not now: a backup, update or check is running on the server."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart węzła — nie teraz: na serwerze trwa kopia, aktualizacja albo sprawdzanie."
+          }
+        }
+      }
+    },
+    "Restart węzła — nie udało się. %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Node restart — failed. %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart węzła — nie udało się. %@"
+          }
+        }
+      }
+    },
     "Rok": {
       "localizations": {
         "en": {
@@ -7643,6 +8251,22 @@
         }
       }
     },
+    "Sam Proxmox aktualizuj w SSH (pve-update-check -u -t host): nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update Proxmox itself over SSH (pve-update-check -u -t host): a new kernel needs headers and a rebuilt network card driver, and the host can't be snapshotted."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sam Proxmox aktualizuj w SSH (pve-update-check -u -t host): nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować."
+          }
+        }
+      }
+    },
     "Sam dysk zgłasza, że jest z nim źle. To nie jest ocena programu ani serwera — to werdykt elektroniki dysku o samej sobie.": {
       "localizations": {
         "en": {
@@ -7803,6 +8427,22 @@
         }
       }
     },
+    "Serwer Nextclouda będzie kilka minut w trybie konserwacji.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Nextcloud server will be in maintenance mode for a few minutes."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serwer Nextclouda będzie kilka minut w trybie konserwacji."
+          }
+        }
+      }
+    },
     "Serwer nie oddał historii (kod %d).": {
       "localizations": {
         "en": {
@@ -7835,6 +8475,38 @@
         }
       }
     },
+    "Serwer nie oddał stanu aktualizacji (kod %d).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server did not return the update status (code %d)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serwer nie oddał stanu aktualizacji (kod %d)."
+          }
+        }
+      }
+    },
+    "Serwer nie oddał stanu aktualizacji w limicie czasu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server did not return the update status in time."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serwer nie oddał stanu aktualizacji w limicie czasu."
+          }
+        }
+      }
+    },
     "Serwer nie odpowiedział na czas (%@).": {
       "localizations": {
         "en": {
@@ -7847,6 +8519,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Serwer nie odpowiedział na czas (%@)."
+          }
+        }
+      }
+    },
+    "Serwer nie przyjął zlecenia (kod %d). %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server did not accept the request (code %d). %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Serwer nie przyjął zlecenia (kod %d). %@"
           }
         }
       }
@@ -7947,6 +8635,38 @@
         }
       }
     },
+    "Skasować ręcznie to, czego aktualizacja nie posprzątała?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete what the update didn't clean up?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skasować ręcznie to, czego aktualizacja nie posprzątała?"
+          }
+        }
+      }
+    },
+    "Skasuj": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skasuj"
+          }
+        }
+      }
+    },
     "Skonfiguruj dostęp SSH": {
       "localizations": {
         "en": {
@@ -7991,6 +8711,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sprawdzaj aktualizacje raz w miesiącu"
+          }
+        }
+      }
+    },
+    "Sprawdzanie aktualizacji na wszystkich maszynach…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checking updates on all machines…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdzanie aktualizacji na wszystkich maszynach…"
+          }
+        }
+      }
+    },
+    "Sprawdzono %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checked %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdzono %@"
           }
         }
       }
@@ -8071,6 +8823,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sprawdź, że nic nie zniknęło: `ssh-keygen -lf /root/.ssh/authorized_keys` ma wypisać klucze **wszystkich** maszyn, nie tylko tej ostatniej."
+          }
+        }
+      }
+    },
+    "Sprzątanie nie wyszło": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleanup failed"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprzątanie nie wyszło"
           }
         }
       }
@@ -8427,6 +9195,22 @@
         }
       }
     },
+    "System zgłasza, że potrzebny jest restart.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The system reports that a restart is needed."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System zgłasza, że potrzebny jest restart."
+          }
+        }
+      }
+    },
     "Szczegóły techniczne": {
       "localizations": {
         "en": {
@@ -8583,6 +9367,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Taktowanie"
+          }
+        }
+      }
+    },
+    "Także serwer Nextclouda (kilka minut trybu konserwacji)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Also the Nextcloud server (a few minutes of maintenance mode)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Także serwer Nextclouda (kilka minut trybu konserwacji)"
           }
         }
       }
@@ -8759,6 +9559,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teraz"
+          }
+        }
+      }
+    },
+    "Teraz działa %@, wstanie %@. Sterownik karty sieciowej (DKMS) jest zbudowany dla nowego jądra. Start na nim jest jednorazowy — gdyby serwer nie wrócił do sieci w 5 minut, wyłącz go i włącz przyciskiem: wstanie na sprawdzonym jądrze. Po udanym starcie narzędzie przypnie nowe jądro na stałe.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Running now: %@, will boot: %@. The network card driver (DKMS) is built for the new kernel. Booting it is one-time — if the server isn't back on the network within 5 minutes, power it off and on with the button: it will boot the proven kernel. After a successful boot the tool pins the new kernel permanently."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz działa %@, wstanie %@. Sterownik karty sieciowej (DKMS) jest zbudowany dla nowego jądra. Start na nim jest jednorazowy — gdyby serwer nie wrócił do sieci w 5 minut, wyłącz go i włącz przyciskiem: wstanie na sprawdzonym jądrze. Po udanym starcie narzędzie przypnie nowe jądro na stałe."
           }
         }
       }
@@ -9179,6 +9995,22 @@
         }
       }
     },
+    "Tylko aplikacje": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apps only"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tylko aplikacje"
+          }
+        }
+      }
+    },
     "Tylko błędy": {
       "localizations": {
         "en": {
@@ -9207,6 +10039,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tylko błędy i cisza"
+          }
+        }
+      }
+    },
+    "Tylko pakiety systemu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System packages only"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tylko pakiety systemu"
           }
         }
       }
@@ -9307,6 +10155,22 @@
         }
       }
     },
+    "Uruchamianie na serwerze…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting on the server…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchamianie na serwerze…"
+          }
+        }
+      }
+    },
     "Uruchom": {
       "localizations": {
         "en": {
@@ -9387,6 +10251,86 @@
         }
       }
     },
+    "Uruchom ponownie kontener…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart container…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchom ponownie kontener…"
+          }
+        }
+      }
+    },
+    "Uruchom ponownie na nowym jądrze": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart on the new kernel"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchom ponownie na nowym jądrze"
+          }
+        }
+      }
+    },
+    "Uruchom ponownie serwer…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart server…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchom ponownie serwer…"
+          }
+        }
+      }
+    },
+    "Uruchom ponownie usługi…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart services…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchom ponownie usługi…"
+          }
+        }
+      }
+    },
+    "Uruchomiono ponownie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restarted"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchomiono ponownie"
+          }
+        }
+      }
+    },
     "Uruchomić": {
       "localizations": {
         "en": {
@@ -9447,6 +10391,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uruchomić krótki test SMART?"
+          }
+        }
+      }
+    },
+    "Uruchomić ponownie cały kontener?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart the whole container?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchomić ponownie cały kontener?"
+          }
+        }
+      }
+    },
+    "Uruchomić ponownie serwer?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart the server?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchomić ponownie serwer?"
+          }
+        }
+      }
+    },
+    "Uruchomić ponownie usługi?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart the services?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uruchomić ponownie usługi?"
           }
         }
       }
@@ -9579,6 +10571,22 @@
         }
       }
     },
+    "Usługi ze starymi bibliotekami w pamięci: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services with old libraries in memory: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usługi ze starymi bibliotekami w pamięci: %@"
+          }
+        }
+      }
+    },
     "Ułóż kafle ciasno, bez dziur. Kafle pod kłódką zostają na miejscu.": {
       "localizations": {
         "en": {
@@ -9659,6 +10667,38 @@
         }
       }
     },
+    "W %@ zostanie skasowane: %@. Zrób to dopiero, gdy sprawdzisz, co wykryła weryfikacja.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In %@ the following will be deleted: %@. Do this only after you've checked what the verification found."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W %@ zostanie skasowane: %@. Zrób to dopiero, gdy sprawdzisz, co wykryła weryfikacja."
+          }
+        }
+      }
+    },
+    "W %@ zostaną uruchomione ponownie: %@. Każda zniknie na chwilę.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In %@ the following will be restarted: %@. Each will be gone for a moment."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W %@ zostaną uruchomione ponownie: %@. Każda zniknie na chwilę."
+          }
+        }
+      }
+    },
     "W konsoli serwera dopisz klucz do konta root (w miejsce KLUCZ wklej skopiowany klucz):": {
       "localizations": {
         "en": {
@@ -9687,6 +10727,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "W konsoli serwera:"
+          }
+        }
+      }
+    },
+    "W kontenerze jest tylko %lld MB wolnego miejsca — updater Nextclouda potrzebuje ok. 2 GB i bez tego się nie uruchomi (pakiety i aplikacje tak).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The container has only %lld MB of free space — the Nextcloud updater needs about 2 GB and won't start without it (packages and apps will)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W kontenerze jest tylko %lld MB wolnego miejsca — updater Nextclouda potrzebuje ok. 2 GB i bez tego się nie uruchomi (pakiety i aplikacje tak)."
           }
         }
       }
@@ -10251,6 +11307,22 @@
         }
       }
     },
+    "Wstanie nowe jądro — na pewno?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A new kernel will boot — are you sure?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wstanie nowe jądro — na pewno?"
+          }
+        }
+      }
+    },
     "Wszystkie": {
       "localizations": {
         "en": {
@@ -10263,6 +11335,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wszystkie"
+          }
+        }
+      }
+    },
+    "Wszystko": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wszystko"
+          }
+        }
+      }
+    },
+    "Wszystko aktualne.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything is up to date."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wszystko aktualne."
           }
         }
       }
@@ -10327,6 +11431,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wyczyszczone (%lld)"
+          }
+        }
+      }
+    },
+    "Wyczyszczono": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleaned up"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wyczyszczono"
           }
         }
       }
@@ -10407,6 +11527,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wyczyść rejestr…"
+          }
+        }
+      }
+    },
+    "Wyczyść ręcznie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean up manually…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wyczyść ręcznie…"
           }
         }
       }
@@ -10523,6 +11659,38 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "Wymaga ponownego uruchomienia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs a restart"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wymaga ponownego uruchomienia"
+          }
+        }
+      }
+    },
+    "Wymaga połączenia SSH.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requires an SSH connection."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wymaga połączenia SSH."
           }
         }
       }
@@ -10784,6 +11952,22 @@
         }
       }
     },
+    "Zainstalować na serwerze narzędzie aktualizacji?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install the update tool on the server?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zainstalować na serwerze narzędzie aktualizacji?"
+          }
+        }
+      }
+    },
     "Zainstalować na serwerze zbieracz historii?": {
       "localizations": {
         "en": {
@@ -10832,6 +12016,22 @@
         }
       }
     },
+    "Zainstaluj narzędzie na serwerze…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install the tool on the server…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zainstaluj narzędzie na serwerze…"
+          }
+        }
+      }
+    },
     "Zainstaluj zbieranie historii": {
       "localizations": {
         "en": {
@@ -10844,6 +12044,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zainstaluj zbieranie historii"
+          }
+        }
+      }
+    },
+    "Zainstaluj…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zainstaluj…"
           }
         }
       }
@@ -10944,6 +12160,70 @@
         }
       }
     },
+    "Zaktualizowano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizowano"
+          }
+        }
+      }
+    },
+    "Zaktualizowano — weryfikacja przed sprzątaniem coś wykryła": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated — the pre-cleanup check found something"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizowano — weryfikacja przed sprzątaniem coś wykryła"
+          }
+        }
+      }
+    },
+    "Zaktualizować %@?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update %@?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizować %@?"
+          }
+        }
+      }
+    },
+    "Zaktualizuj narzędzie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update the tool…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuj narzędzie…"
+          }
+        }
+      }
+    },
     "Zaktualizuj zbieranie historii": {
       "localizations": {
         "en": {
@@ -10956,6 +12236,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zaktualizuj zbieranie historii"
+          }
+        }
+      }
+    },
+    "Zaktualizuję pakiety systemu i aplikacje.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System packages and apps will be updated."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuję pakiety systemu i aplikacje."
+          }
+        }
+      }
+    },
+    "Zaktualizuję tylko aplikacje.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only apps will be updated."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuję tylko aplikacje."
+          }
+        }
+      }
+    },
+    "Zaktualizuję tylko pakiety systemu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only system packages will be updated."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuję tylko pakiety systemu."
           }
         }
       }
@@ -11164,6 +12492,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatrzymaj (shutdown)"
+          }
+        }
+      }
+    },
+    "Zatrzymają się wszystkie kontenery i usługi na serwerze. Serwer wróci po ok. 2–3 minutach, a mNas połączy się sam. Restart nie ruszy, gdy trwa kopia zapasowa albo aktualizacja.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All containers and services on the server will stop. The server will be back in about 2–3 minutes and mNas will reconnect by itself. The restart won't start while a backup or an update is running."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatrzymają się wszystkie kontenery i usługi na serwerze. Serwer wróci po ok. 2–3 minutach, a mNas połączy się sam. Restart nie ruszy, gdy trwa kopia zapasowa albo aktualizacja."
           }
         }
       }
@@ -11941,6 +13285,22 @@
         }
       }
     },
+    "dbus i systemd odświeżą się dopiero przy ponownym uruchomieniu całego kontenera.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dbus and systemd only refresh when the whole container restarts."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dbus i systemd odświeżą się dopiero przy ponownym uruchomieniu całego kontenera."
+          }
+        }
+      }
+    },
     "do sprawdzenia": {
       "localizations": {
         "en": {
@@ -12153,6 +13513,22 @@
         }
       }
     },
+    "kopia updatera Nextclouda %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nextcloud updater backup %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kopia updatera Nextclouda %@"
+          }
+        }
+      }
+    },
     "kopiuje": {
       "localizations": {
         "en": {
@@ -12281,6 +13657,22 @@
         }
       }
     },
+    "mNas wgra pve-update-check %@ do /usr/local/bin i timer systemd (sprawdzanie codziennie o 7:30). Samo sprawdzanie niczego nie aktualizuje — odświeża tylko listy pakietów w kontenerach. Istniejące ustawienia w /etc/pve-update-check zostają.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas will install pve-update-check %@ in /usr/local/bin and a systemd timer (check every day at 7:30). Checking updates nothing — it only refreshes package lists in the containers. Existing settings in /etc/pve-update-check are kept."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas wgra pve-update-check %@ do /usr/local/bin i timer systemd (sprawdzanie codziennie o 7:30). Samo sprawdzanie niczego nie aktualizuje — odświeża tylko listy pakietów w kontenerach. Istniejące ustawienia w /etc/pve-update-check zostają."
+          }
+        }
+      }
+    },
     "mNas zapamięta certyfikat serwera. Jeśli kiedyś się zmieni, program przerwie połączenie i zapyta, czy nowemu ufać.": {
       "localizations": {
         "en": {
@@ -12377,6 +13769,38 @@
         }
       }
     },
+    "maszyn z aktualizacjami": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "machines with updates"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "maszyn z aktualizacjami"
+          }
+        }
+      }
+    },
+    "maszyn, %lld poprawek bezp.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "machines, %lld security fixes"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "maszyn, %lld poprawek bezp."
+          }
+        }
+      }
+    },
     "maszyna": {
       "localizations": {
         "en": {
@@ -12425,6 +13849,22 @@
         }
       }
     },
+    "narzędzie nie jest zainstalowane": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tool not installed"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "narzędzie nie jest zainstalowane"
+          }
+        }
+      }
+    },
     "nieznany": {
       "localizations": {
         "en": {
@@ -12437,6 +13877,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "nieznany"
+          }
+        }
+      }
+    },
+    "nowa wersja główna Nextcloud %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "new major version Nextcloud %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nowa wersja główna Nextcloud %@"
           }
         }
       }
@@ -12565,6 +14021,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "pierwsza synchronizacja gotowa"
+          }
+        }
+      }
+    },
+    "pobrane pakiety apt (/var/cache/apt)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "downloaded apt packages (/var/cache/apt)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pobrane pakiety apt (/var/cache/apt)"
           }
         }
       }
@@ -12745,6 +14217,54 @@
         }
       }
     },
+    "restart": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "restart"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "restart"
+          }
+        }
+      }
+    },
+    "restart kontenera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "container restart"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "restart kontenera"
+          }
+        }
+      }
+    },
+    "restart usług: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "service restart: %lld"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "restart usług: %lld"
+          }
+        }
+      }
+    },
     "sama na stronie": {
       "localizations": {
         "en": {
@@ -12777,6 +14297,22 @@
         }
       }
     },
+    "serwer Nextcloud %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nextcloud server %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "serwer Nextcloud %@"
+          }
+        }
+      }
+    },
     "smartctl nie odpowiedział w limicie czasu — dysk mógł być uśpiony.": {
       "localizations": {
         "en": {
@@ -12805,6 +14341,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "smartctl wymaga sudo bez hasła. Nadaj NOPASSWD dla %@ albo uruchom smartctl ręcznie."
+          }
+        }
+      }
+    },
+    "sprawdzanie lub start…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "checking or starting…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sprawdzanie lub start…"
+          }
+        }
+      }
+    },
+    "sprawdzono %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "checked %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sprawdzono %@"
           }
         }
       }
@@ -12985,6 +14553,22 @@
         }
       }
     },
+    "trwa %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "running for %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "trwa %@"
+          }
+        }
+      }
+    },
     "trwa nietypowo długo": {
       "localizations": {
         "en": {
@@ -13109,6 +14693,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "wstrzymywanie kontenera"
+          }
+        }
+      }
+    },
+    "wszystko aktualne": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "all up to date"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wszystko aktualne"
           }
         }
       }
@@ -13605,6 +15205,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "„%@” to całe łącze: Proxmox liczy tam wyłącznie karty fizyczne, więc mostki i kontenery nie wchodzą do tej sumy dwa razy."
+          }
+        }
+      }
+    },
+    "• %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• %@"
+          }
+        }
+      }
+    },
+    "…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "…"
           }
         }
       }

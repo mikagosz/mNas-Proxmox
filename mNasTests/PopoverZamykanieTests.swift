@@ -4,7 +4,7 @@ import AppKit
 
 /// Pomiar mechanizmu, na którym poległy **dwie** naprawy przełączania panelu w pasku menu.
 ///
-/// Zgłoszenie [U] 2026-08-23, po drugiej nieudanej próbie: *„klikam raz — okienko się
+/// Zgłoszenie 2026-08-23, po drugiej nieudanej próbie: *„klikam raz — okienko się
 /// pojawia, klikam drugi raz — chowa się, kliknę trzeci raz — okienko ma się pojawić.
 /// Nadal jest ten sam błąd"*. Czyli **co drugie kliknięcie martwe**.
 ///
@@ -74,7 +74,7 @@ struct PopoverZamykanieTests {
         #expect(!p.isShown)
     }
 
-    /// 🔴 Próba odtworzenia zgłoszenia [U] na gołym `NSPopover`: **objaw NIE odtwarza się**.
+    /// 🔴 Próba odtworzenia zgłoszenia na gołym `NSPopover`: **objaw NIE odtwarza się**.
     /// Sama logika „pytaj `isShown`, zamykaj `performClose`" daje poprawne
     /// otwórz–zamknij–otwórz. Czyli winna jest ścieżka **zdarzeń wokół** popovera,
     /// nie on sam. Ten test pilnuje, żeby ten wniosek nie wyparował.

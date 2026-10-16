@@ -282,7 +282,7 @@ actor ProxmoxClient {
     /// Która liczba znaczy „wolna pamięć".
     ///
     /// 🔴 **`available`, nie `free`** — i to jest cała naprawa migającego kafla RAM
-    /// (zgłoszenie [U] 2026-08-20: „co 5 sekund na sekundę RAM prawie cały zajęty").
+    /// (zgłoszenie 2026-08-20: „co 5 sekund na sekundę RAM prawie cały zajęty").
     /// Kafel dostaje w każdej turze najpierw pomiar z API, a chwilę później ten z SSH;
     /// dopóki mierzyły dwie różne rzeczy, różnica była widoczna jako migotanie.
     ///
@@ -363,7 +363,7 @@ actor ProxmoxClient {
                 size: FlexibleInt(d.size),
                 // Oba pola przychodziły z API od początku i były tu wyrzucane. Bez nich
                 // kafel „Dyski" umiał tylko zapalić trójkąt na temperaturze i nie miał
-                // czym powiedzieć, co się stało — zgłoszenie [U] z 2026-08-23.
+                // czym powiedzieć, co się stało — zgłoszenie z 2026-08-23.
                 health: d.health,
                 wearout: d.wearout
             )
@@ -409,7 +409,7 @@ actor ProxmoxClient {
     // MARK: - Transfery (RRD)
     //
     // Jedyne źródło monitora transferów od 2026-08-29. Poprzednie (`/var/log/pomiar-ruchu`
-    // po SSH) [U] skasował tego dnia; RRD mierzy to samo, tylko sam. Cała interpretacja
+    // po SSH) użytkownik skasował tego dnia; RRD mierzy to samo, tylko sam. Cała interpretacja
     // liczb — a zwłaszcza to, że host sumuje wyłącznie karty fizyczne — siedzi
     // w `Transfery.swift` i tam trzeba czytać, zanim się te wywołania podepnie gdzie indziej.
     //

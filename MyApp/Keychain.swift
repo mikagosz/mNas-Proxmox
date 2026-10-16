@@ -22,7 +22,7 @@ enum Keychain {
     /// Czy jesteśmy w środku przebiegu testów.
     ///
     /// > [!danger] Dlaczego testy nie mają prawa dotknąć pęku kluczy
-    /// > Zgłoszenie [U] 2026-08-23: *„ciągle wyskakuje mi okno do wpisywania hasła
+    /// > Zgłoszenie 2026-08-23: *„ciągle wyskakuje mi okno do wpisywania hasła
     /// > systemowego, CIĄGLE"*. Treść okna, ze zrzutu: *„Aplikacja mNas Proxmox potrzebuje
     /// > dostępu do klucza «com.mikagosz.mNasProxmox» w Twoim pęku kluczy"*.
     /// >
@@ -89,7 +89,7 @@ enum Keychain {
 
     static func deleteAPIKey() {
         // Kasowanie też pod blokadą — przebieg testów nie ma prawa ruszyć zapisanego
-        // tokenu [U]. To by było gorsze niż samo okienko.
+        // tokenu użytkownika. To by było gorsze niż samo okienko.
         guard !podTestami else { return }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,

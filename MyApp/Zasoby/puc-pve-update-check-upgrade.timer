@@ -1,0 +1,10 @@
+[Unit]
+Description=Tygodniowa automatyczna aktualizacja (pve-update-check -u -y)
+
+[Timer]
+OnCalendar=Sun *-*-* 04:00
+RandomizedDelaySec=20m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

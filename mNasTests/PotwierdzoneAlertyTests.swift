@@ -4,7 +4,7 @@ import Foundation
 
 /// Odhaczanie alertów — „zapoznałem się", czyli gaszenie czerwieni bez kasowania historii.
 ///
-/// Zgłoszenie [U] 2026-08-23: *„powinien być przycisk że zapoznałem się z alertem, żeby
+/// Zgłoszenie 2026-08-23: *„powinien być przycisk że zapoznałem się z alertem, żeby
 /// ikona w menu bar zmieniła się z czerwonej na zieloną"*.
 ///
 /// 🔴 Najważniejszy test w tym pliku to `kolejnaAwariaZapalaOdNowa`. Odhaczenie, które

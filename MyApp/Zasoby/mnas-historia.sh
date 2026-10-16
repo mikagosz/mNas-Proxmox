@@ -11,7 +11,7 @@
 # Rozstrzyga pole udev ID_ATA_ROTATION_RATE_RPM (0 = SSD), czytane z bazy udev,
 # bez jednego polecenia wysłanego do dysku. NIE queue/rotational: za mostkiem USB
 # wszystkie dyski mają tam 1, także SSD (zmierzone 2026-10-04). Brak pola = pomijamy.
-# Talerze — TYLKO GDY WŁAŚNIE PRACUJĄ (decyzja [U] 2026-10-04: „żeby sam zbieracz go
+# Talerze — TYLKO GDY WŁAŚNIE PRACUJĄ (decyzja 2026-10-04: „żeby sam zbieracz go
 # nie wybudzał”). Co minutę porównujemy licznik jądra /sys/block/sdX/stat z poprzednią
 # minutą — to odczyt z pamięci jądra, do dysku nie idzie nic. Licznik drgnął = dysk
 # kręci się i tak (kopia, zapis), więc wtedy czytamy temperaturę i zajętość. Licznik

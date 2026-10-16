@@ -1,7 +1,7 @@
 import SwiftUI
 import AppKit
 
-/// Język interfejsu wybierany w programie (zgłoszenie [U] 2026-10-04: *„w oknie programu
+/// Język interfejsu wybierany w programie (zgłoszenie 2026-10-04: *„w oknie programu
 /// ma być zębatka i tam mają być ustawienia, a w nich zmiana języka”*).
 ///
 /// Wybór zapisujemy jako `AppleLanguages` w **domenie programu** — tę samą wartość
@@ -136,7 +136,7 @@ struct PolecenieUstawien: View {
     }
 }
 
-/// Aktualizacje w Ustawieniach — zawsze opcjonalne (decyzja [U] 2026-10-01): przełącznik
+/// Aktualizacje w Ustawieniach — zawsze opcjonalne (decyzja 2026-10-01): przełącznik
 /// comiesięcznego sprawdzania i ręczne „Sprawdź teraz”, które działa także przy wyłączonym.
 struct SekcjaAktualizacji: View {
     @ObservedObject private var aktualizacje = Updates.shared

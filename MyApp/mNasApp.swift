@@ -12,7 +12,7 @@ struct mNasApp: App {
     /// pilnuje wyłącznie tego, żeby AppKit nie dorysował swojego szerokiego paska tam,
     /// gdzie został jeszcze goły `ScrollView` — np. w bloku wyjścia terminala.
     ///
-    /// W Ustawieniach systemu [U] ma „Pokaż paski przewijania: **Zawsze**". W tym
+    /// W Ustawieniach systemu użytkownika ma „Pokaż paski przewijania: **Zawsze**". W tym
     /// trybie AppKit rysuje paski w stylu klasycznym: szerokie, wrośnięte w układ
     /// (zabierają szerokość treści) i widoczne bez przerwy. `scrollIndicators(.never)`
     /// tego nie ruszy — decyduje styl paska, nie widoczność wskaźnika.
@@ -63,8 +63,14 @@ struct mNasApp: App {
         }
         .defaultSize(width: 720, height: 560)
 
+        // Aktualizacje serwera (od 1.2.30) — klik w kafel „Aktualizacje”.
+        Window("Aktualizacje serwera", id: OknoAktualizacji.id) {
+            OknoAktualizacji().environment(model)
+        }
+        .defaultSize(width: 640, height: 640)
+
         // Panele CPU, Transfery i dysku — do 1.2.13 arkusze, od 1.2.14 zwykłe okna
-        // (zgłoszenie [U] 2026-10-04, `OknaPaneli.swift`).
+        // (zgłoszenie 2026-10-04, `OknaPaneli.swift`).
         WindowGroup("Panel", id: OknoPaneluTrwalego.id, for: OknoPaneluTrwalego.Cel.self) { $cel in
             if let cel {
                 OknoPaneluTrwalegoWidok(cel: cel).environment(model)
@@ -131,7 +137,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func uruchomPasekMenu(model: AppModel, otworzOkno: @escaping () -> Void) {
         self.otworzOkno = otworzOkno
         sledzZamykanieOkien()
-        Updates.shared.isBusy = { [weak model] in model?.instalujeZbieracz ?? false }
+        Updates.shared.isBusy = { [weak model] in (model?.instalujeZbieracz ?? false) || (model?.instalujeNarzedzieAktualizacji ?? false) }
     }
 
     /// Aktualizacje ruszają raz, przy starcie — niezależnie od tego, czy okno się otworzy

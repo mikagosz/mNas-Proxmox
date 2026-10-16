@@ -11,7 +11,7 @@ import UniformTypeIdentifiers
 /// > gdy ktoś odpali starszą kopię z DerivedData obok nowej z Aplikacji.
 ///
 /// `nil`, gdy kluczy nie ma: wtedy wiersz **znika**, zamiast pokazywać pustkę albo „—".
-/// Zgłoszenie [U] 2026-09-04: *„nigdzie nie ma informacji jaka jest aktualna wersja
+/// Zgłoszenie 2026-09-04: *„nigdzie nie ma informacji jaka jest aktualna wersja
 /// programu"*.
 enum Wersja {
     static var pelna: String? {
@@ -92,7 +92,7 @@ struct DashboardView: View {
     /// Tryb rysowania.
     ///
     /// > [!important] 🔴 Kafel w panelu paska menu to **ten sam widok**, nie jego kopia
-    /// > Zgłoszenie [U] po teście 1.0.39: *„chcę móc dodać 1:1 kafelek z pełnego ekranu"*.
+    /// > Zgłoszenie po teście 1.0.39: *„chcę móc dodać 1:1 kafelek z pełnego ekranu"*.
     /// > Tryb `.panel` rysuje jedno `tileContent` i nic poza nim — bez siatki, nagłówka,
     /// > trybu układania i **bez arkuszy**: panel ma 340 × 400 pt i nie ma gdzie ich
     /// > otworzyć, a znika przy utracie skupienia. Kliknięcie w kafel w panelu nic więc
@@ -164,13 +164,16 @@ struct DashboardView: View {
             //
             // 🔴 Ale rejestr wyczyszczony **ręcznie** to co innego niż nigdy niezapełniony:
             // kafel zostaje, bo inaczej przycisk „Wyczyść rejestr" kasował z ekranu sam
-            // siebie. Zgłoszenie [U] 2026-08-23, patrz `RejestrZdarzen.wyczyszczonoKiedy`.
+            // siebie. Zgłoszenie 2026-08-23, patrz `RejestrZdarzen.wyczyszczonoKiedy`.
             case .zdarzenia: return !model.rejestr.zdarzenia.isEmpty
                                   || model.rejestr.wyczyszczonoKiedy != nil
             // Kafel stoi także wtedy, gdy licznik na hoście milczy — bo „nie ma danych"
             // jest informacją, a pusty dashboard nią nie jest.
             case .transfery: return !model.strumienie.isEmpty || model.transferyZywe
                                     || !model.kopie.isEmpty || !model.przeplywyDyskow.isEmpty
+            // Bez SSH nie ma czego czytać; brak narzędzia na serwerze to też informacja
+            // (kafel proponuje instalację w oknie).
+            case .aktualizacje: return model.aktualizacje != nil
             default:         return true
             }
         }
@@ -189,7 +192,7 @@ struct DashboardView: View {
     /// którą dał panel.
     ///
     /// > [!danger] 🔴 Tu NIE wolno owinąć kafla w `ThinScrollView`
-    /// > Do 1.2.0 właśnie tak było — i to jedna linijka odpowiadała za zgłoszenie [U]
+    /// > Do 1.2.0 właśnie tak było — i to jedna linijka odpowiadała za zgłoszenie
     /// > z 2026-09-04: *„miejsce powinno być na sztywno i informacje przesuwać się
     /// > w oknie, a nie że ja przesuwam okno"*.
     /// >
@@ -206,7 +209,7 @@ struct DashboardView: View {
             tileContent(kafelPanelu, rozmiarPanelu)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 // 🔴 Margines liczy się razem z wypełnieniem kafla (4 pt).
-                // Zgłoszenie [U] 2026-09-04: *„informacje wchodzą na ramki okna"* —
+                // Zgłoszenie 2026-09-04: *„informacje wchodzą na ramki okna"* —
                 // przy panelu 340 pt szerokości długie wiersze („Intel(R) Core(TM)
                 // i5-8500T CPU @ 2.10GHz", „0.8–3.5 GHz") dochodziły do samej krawędzi.
                 .padding(.horizontal, 12)
@@ -565,6 +568,7 @@ struct DashboardView: View {
         case .miejsce:    miejsceTile(size)
         case .zdarzenia:  zdarzeniaTile(size)
         case .transfery:  transferyTile(size)
+        case .aktualizacje: aktualizacjeTile(size)
         }
     }
 
@@ -576,7 +580,7 @@ struct DashboardView: View {
             }
             .help("Zmień rozmiar kafla")
             // Kłódka — kafel zostaje na swoim polu i nie ustępuje przy przeciąganiu
-            // innych. Zgłoszenie [U] 2026-08-23. Patrz `DashboardLayout.place`.
+            // innych. Zgłoszenie 2026-08-23. Patrz `DashboardLayout.place`.
             Button {
                 withAnimation(.snappy) { layout.toggleLock(id, among: visibleTiles) }
             } label: {
@@ -606,7 +610,7 @@ struct DashboardView: View {
             switch size {
             case .small:
                 // Pierścień z procentem wchodzi tu bez problemu — sama liczba
-                // marnowała kafel (uwaga [U] 2026-08-17).
+                // marnowała kafel (uwaga 2026-08-17).
                 HStack { Spacer(); cpuRing(usage, diameter: 84); Spacer() }
             case .medium:
                 HStack(spacing: 12) {
@@ -964,7 +968,7 @@ struct DashboardView: View {
             switch size {
             case .small:
                 // Sześć wąskich słupków mieści się w 124 pt — sama średnia była
-                // stratą kafla (uwaga [U] 2026-08-17).
+                // stratą kafla (uwaga 2026-08-17).
                 HStack {
                     Spacer()
                     CoreUsageBars(values: values, barWidth: 10, barSpacing: 4,
@@ -1245,7 +1249,7 @@ struct DashboardView: View {
 
     // MARK: - Miejsce — udziały i magazyny, liczone z wartości
     //
-    // Kafel powstał 2026-08-23 ze zgłoszenia [U]. Przedtem jedyną informacją o miejscu
+    // Kafel powstał 2026-08-23 ze zgłoszenia. Przedtem jedyną informacją o miejscu
     // była linijka w kaflu „Przebiegi”:
     //   `/mnt/zasoby 78%,/mnt/wspolny 2% / mnt/multimedia 11%,/mnt/backup 9%`
     // — czyli **treść powiadomienia push**, sklejana przez czujkę na hoście. Tutaj
@@ -1290,14 +1294,14 @@ struct DashboardView: View {
                 }
             }
         }
-        // Od 1.2.16: historia zajętości i zapisów na dyski. Zgłoszenie [U] 2026-10-04.
+        // Od 1.2.16: historia zajętości i zapisów na dyski. Zgłoszenie 2026-10-04.
         .contentShape(Rectangle())
         .onTapGesture { if !editingLayout { openWindow(id: OknoHistorii.id, value: DashTileID.miejsce) } }
     }
 
     /// Wiersz miejsca: nazwa ludzka, rodzaj, pasek i „zajęte z całości".
     ///
-    /// Ścieżki `/mnt/…` tu **nie ma** świadomie — [U] wybrał 2026-08-23 nazwy udziałów,
+    /// Ścieżki `/mnt/…` tu **nie ma** świadomie — użytkownik wybrał 2026-08-23 nazwy udziałów,
     /// czyli to, co widać w Finderze. Ścieżka wraca w podpowiedzi pod kursorem, żeby
     /// dało się ją sprawdzić, gdy naprawdę jest potrzebna.
     private func udzialRow(_ u: Udzial) -> some View {
@@ -1345,7 +1349,7 @@ struct DashboardView: View {
 
     // MARK: - Zdarzenia — historia, nie stan
     //
-    // Kafel powstał 2026-08-23 ze zgłoszenia [U]: *„dostaje ikonka powiadomienia, ale jak
+    // Kafel powstał 2026-08-23 ze zgłoszenia: *„dostaje ikonka powiadomienia, ale jak
     // otworzę okno to powiadomienie znika i generalnie nie wiem co się dzieje"*.
     //
     // 🔴 To **nie jest** druga lista przebiegów. „Przebiegi" pokazują stan **teraz**,
@@ -1406,7 +1410,7 @@ struct DashboardView: View {
     ///
     /// Rozróżnia dwa różne „nic tu nie ma": *jeszcze* nic się nie wydarzyło, a *już*
     /// wyczyszczone ręcznie. Bez tego rozróżnienia świeżo wyczyszczony kafel wyglądałby
-    /// jak zepsuty — [U] właśnie kliknął przycisk i zobaczyłby pustkę bez wyjaśnienia.
+    /// jak zepsuty — użytkownik właśnie kliknął przycisk i zobaczyłby pustkę bez wyjaśnienia.
     @ViewBuilder private var pustyRejestr: some View {
         if let kiedy = model.rejestr.wyczyszczonoKiedy {
             Text("Wyczyszczono o \(Self.godzinaZdarzenia.string(from: kiedy)). Kolejne zdarzenie dopisze się samo.")
@@ -1473,7 +1477,7 @@ struct DashboardView: View {
     //
     // Źródło: RRD Proxmoksa, cała interpretacja w `Transfery.swift`. Kafel odpowiada
     // naraz na dwa pytania — **ile płynie teraz** i **co się działo przez ostatnią
-    // godzinę** — decyzja [U] 2026-08-29. Powód jest w danych: próbka RRD ma minutę,
+    // godzinę** — decyzja 2026-08-29. Powód jest w danych: próbka RRD ma minutę,
     // więc sama liczba nie mówi, czy to szczyt, czy ogon kończącego się transferu.
     //
     // 🔴 Węzeł nie jest jednym ze strumieni — on **jest** łączem (Proxmox sumuje do jego
@@ -1494,7 +1498,7 @@ struct DashboardView: View {
                     .foregroundStyle(.mint)
                 Spacer(minLength: 0)
                 // 🔴 „cisza" nie może stać, gdy trwa kopiowanie dysk→dysk. Dokładnie to
-                // zgłosił [U] 2026-09-04: kafel mówił „cisza", a serwer kopiował 90 MB/s.
+                // zgłosił 2026-09-04: kafel mówił „cisza", a serwer kopiował 90 MB/s.
                 Text(etykietaRuchu(aktywne.count))
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(model.kopie.isEmpty ? Color.secondary : Color.mint)
@@ -1660,7 +1664,7 @@ struct DashboardView: View {
 
             if !zwiezle {
                 HStack(spacing: 6) {
-                    // „Ile skopiował" i „ile zostało" — dokładnie to, o co prosił [U].
+                    // „Ile skopiował" i „ile zostało" — dokładnie to, o co prosił użytkownik.
                     Text("\(Format.shortBytes(k.zapisano)) z \(Format.shortBytes(k.calosc))")
                         .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
                     if let zostalo = k.zostaloBajtow {
@@ -1812,7 +1816,7 @@ struct DashboardView: View {
         // 🔴 Limit 8 był tu z czasów, gdy w panelu paska menu przewijał się cały kafel
         // i długa lista wyjeżdżała za ekran. Od 1.2.1 kafel stoi w ramce strony, a lista
         // ma własne przewijanie — obcinanie zabierałoby dostęp do reszty, nie ratowało
-        // układu. Ta sama zmiana co przy Dyskach i Miejscu, zgłoszenie [U] 2026-09-04.
+        // układu. Ta sama zmiana co przy Dyskach i Miejscu, zgłoszenie 2026-09-04.
         let ile = size == .large ? lista.count : (size == .medium ? 3 : 0)
 
         tile(size) {
@@ -1842,7 +1846,7 @@ struct DashboardView: View {
                     }
                 }
                 if lista.count > doPokazania.count { moreLine(lista.count - doPokazania.count) }
-                // Ten sam przycisk co w panelu spod ikony (`PasekMenu.swift`) — decyzja [U]
+                // Ten sam przycisk co w panelu spod ikony (`PasekMenu.swift`) — decyzja
                 // 2026-08-23: „w tym małym okienku **oraz** na głównym w kafelku z tymi info".
                 // Gasi czerwień na ikonie; wiersze wyżej i wpisy w „Zdarzeniach" zostają.
                 if !model.alarmyDoOdhaczenia.isEmpty {
@@ -1862,6 +1866,62 @@ struct DashboardView: View {
         // Okno historii (od 1.2.13). Ponowny klik wyciąga to samo okno, nie otwiera drugiego.
         .contentShape(Rectangle())
         .onTapGesture { if !editingLayout { openWindow(id: OknoHistorii.id, value: DashTileID.przebiegi) } }
+    }
+
+    // MARK: Aktualizacje serwera (pve-update-check, od 1.2.30)
+
+    @ViewBuilder private func aktualizacjeTile(_ size: TileSize) -> some View {
+        let odczyt = model.aktualizacje
+        // Najpilniejsze na górze; „tylko wersja główna” to maszyny aktualne — liczą się osobno.
+        let maszyny = (odczyt?.stan?.doAktualizacji ?? []).sorted { $0.pilnosc > $1.pilnosc }
+        let doZrobienia = maszyny.filter { $0.pilnosc >= .aktualizacje }
+        let bezp = maszyny.reduce(0) { $0 + $1.bezpieczenstwo }
+        let bledy = (odczyt?.stan?.maszyny ?? []).filter { !$0.bledy.isEmpty }
+        let kolor: Color = !bledy.isEmpty || bezp > 0 ? .orange : (doZrobienia.isEmpty ? .blue : .yellow)
+        let kiedy = AktualizacjeParsers.data(odczyt?.stan?.sprawdzono)
+            .map { String(localized: "sprawdzono \($0.formatted(date: .omitted, time: .shortened))") }
+
+        tile(size) {
+            head("Aktualizacje", DashTileID.aktualizacje.ikona, DashTileID.aktualizacje.kolor, size, trailing: kiedy)
+            if case .brak = odczyt?.narzedzie {
+                bigValue("—", "narzędzie nie jest zainstalowane", color: .secondary)
+            } else if model.aktualizacjaTrwa {
+                let p = odczyt?.postep
+                VStack(alignment: .leading, spacing: 4) {
+                    Spacer(minLength: 0)
+                    Text(p?.trwa == true ? "\(p?.postep ?? 0)%" : "…")
+                        .font(.system(size: size == .small ? 22 : 26, weight: .bold)).monospacedDigit()
+                        .foregroundStyle(.green)
+                    Text(p?.trwa == true ? (p?.etap ?? String(localized: "trwa")) : String(localized: "sprawdzanie lub start…"))
+                        .font(.caption2).foregroundStyle(.secondary).lineLimit(size == .small ? 1 : 2)
+                    PasekPostepu(ulamek: p?.trwa == true ? p!.ulamek : 0.02, kolor: .green)
+                }
+            } else if size == .small || doZrobienia.isEmpty {
+                bigValue(doZrobienia.isEmpty ? "✓" : "\(doZrobienia.count)",
+                         doZrobienia.isEmpty ? "wszystko aktualne" : (bezp > 0 ? "maszyn, \(bezp) poprawek bezp." : "maszyn z aktualizacjami"),
+                         color: kolor)
+            } else {
+                ThinScrollView {
+                    VStack(alignment: .leading, spacing: 5) {
+                        ForEach(Array(maszyny.prefix(size == .large ? 40 : 4))) { m in
+                            HStack(alignment: .top, spacing: 6) {
+                                Circle().fill(OknoAktualizacji.kolor(m))
+                                    .frame(width: 7, height: 7).padding(.top, 4)
+                                VStack(alignment: .leading, spacing: 1) {
+                                    Text(m.etykieta).font(.caption.bold()).lineLimit(1)
+                                    Text(OknoAktualizacji.opis(m)).font(.caption2).foregroundStyle(.secondary).lineLimit(2)
+                                }
+                                // Wiersz na całą szerokość — bez tego lista (i jej pasek) kończyła się w połowie kafla.
+                                Spacer(minLength: 0)
+                            }
+                        }
+                    }
+                }
+                if size != .large && maszyny.count > 4 { moreLine(maszyny.count - 4) }
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { if !editingLayout { openWindow(id: OknoAktualizacji.id) } }
     }
 
     private func przebiegRow(_ p: Przebieg, pelny: Bool) -> some View {
@@ -1941,7 +2001,7 @@ struct DashboardView: View {
         let temps = model.temperatures.values.map { $0 }
         // Ostrzeżenie nie jest już „któryś dysk przekroczył 55 °C" — to lista wpisów
         // z nazwą nośnika, wskaźnikiem, wartością, progiem i godziną pomiaru.
-        // Zgłoszenie [U] 2026-08-23: „ZERO INFORMACJI O TYM CO SIE DZIEJE".
+        // Zgłoszenie 2026-08-23: „ZERO INFORMACJI O TYM CO SIE DZIEJE".
         let ostrzezenia = OstrzezeniaDyskow.zbierz(disks: model.disks,
                                                    temperatures: model.temperatures,
                                                    czas: model.lastSuccessfulRefresh ?? Date())
@@ -1954,7 +2014,7 @@ struct DashboardView: View {
                 Text("Dyski")
                     .font(size == .small ? .caption2.bold() : .subheadline.bold())
                     .foregroundStyle(.cyan)
-                // Trójkąt jest **przyciskiem**, nie ozdobą: [U] wybrał 2026-08-23, żeby
+                // Trójkąt jest **przyciskiem**, nie ozdobą: użytkownik wybrał 2026-08-23, żeby
                 // kliknięcie w ostrzeżenie otwierało okno z pełną treścią.
                 Image(systemName: ok ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                     .font(.caption2)
@@ -2016,7 +2076,7 @@ struct DashboardView: View {
             }
         }
         // Od 1.2.14: klik w kafel (poza wierszem dysku i ostrzeżeniem, które mają własne
-        // okna) otwiera temperatury wszystkich dysków. Zgłoszenie [U] 2026-10-04: „klikam
+        // okna) otwiera temperatury wszystkich dysków. Zgłoszenie 2026-10-04: „klikam
         // po całym kafelku, nic nie dostaję” — historia była tylko w panelu jednego dysku.
         .contentShape(Rectangle())
         .onTapGesture { if !editingLayout { openWindow(id: OknoHistorii.id, value: DashTileID.disks) } }
@@ -2121,7 +2181,7 @@ struct DashboardView: View {
             }
         }
         // Od 1.2.16: klik w kafel poza wierszem otwiera okno ze wszystkimi usługami.
-        // Zgłoszenie [U] 2026-10-04: w średnim kaflu „+18 więcej” nie dawało się rozwinąć.
+        // Zgłoszenie 2026-10-04: w średnim kaflu „+18 więcej” nie dawało się rozwinąć.
         .contentShape(Rectangle())
         .onTapGesture { if !editingLayout { openWindow(id: OknoPaneluTrwalego.id, value: OknoPaneluTrwalego.Cel.uslugi) } }
     }
@@ -2464,7 +2524,7 @@ struct DashboardView: View {
     /// > pozycji plus „+N więcej" jest tam właściwe, bo pełna lista jest o jedno
     /// > kliknięcie dalej, w wariancie dużym. W panelu paska menu takiego przejścia
     /// > nie ma: „+4 więcej" niczego nie otwiera, więc reszta listy była **niedostępna**.
-    /// > Zgłoszenie [U] 2026-09-04: *„ruszam oknem nie widząc żadnych więcej informacji
+    /// > Zgłoszenie 2026-09-04: *„ruszam oknem nie widząc żadnych więcej informacji
     /// > prócz pierwszych trzech"*.
     private func ilePokazac(_ wOknie: Int, z ilu: Int) -> Int {
         wPanelu ? ilu : wOknie
@@ -2490,7 +2550,7 @@ struct DashboardView: View {
     /// Ramka kafla.
     ///
     /// > [!important] W panelu paska menu kafel NIE ma własnego tła ani obramowania
-    /// > Zgłoszenie [U] 2026-09-04: *„zamiast w okno wstawiać okna to wstaw po prostu
+    /// > Zgłoszenie 2026-09-04: *„zamiast w okno wstawiać okna to wstaw po prostu
     /// > informacje z kafelka"*. Panel sam jest już okienkiem z tłem i zaokrągleniem —
     /// > kafel dokładał do tego drugie, więc treść siedziała w ramce wewnątrz ramki,
     /// > z podwójnym marginesem. W oknie chrome zostaje: tam kafle leżą obok siebie

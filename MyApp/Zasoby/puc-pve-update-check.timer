@@ -1,0 +1,12 @@
+[Unit]
+Description=Codzienne sprawdzanie aktualizacji (pve-update-check)
+
+[Timer]
+OnCalendar=*-*-* 07:30
+# także po starcie hosta – inaczej stan sprzed restartu wisi do 7:30 („wymaga restartu” po restarcie)
+OnBootSec=5min
+RandomizedDelaySec=15m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

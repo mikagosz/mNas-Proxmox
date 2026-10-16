@@ -2,7 +2,7 @@ import Testing
 import Foundation
 @testable import mNas
 
-/// Testy listy mechanizmów hosta — odpowiedź na zgłoszenie [U] z 2026-08-23:
+/// Testy listy mechanizmów hosta — odpowiedź na zgłoszenie z 2026-08-23:
 /// *„w przebiegach nadal są rzeczy których już nie ma… wygląda tak jakbyś wpisywał
 /// te dane do programu, a nie pobierały informacji prosto z proxmoxa"*.
 ///
@@ -74,7 +74,7 @@ struct MechanizmyHostaTests {
         #expect(!mechanizmy().contains { $0.skrypt.contains("kopia-dokumentow-na-hdd") })
     }
 
-    @Test("Zadania spoza /usr/local/bin nie wchodzą — to nie są mechanizmy [U]")
+    @Test("Zadania spoza /usr/local/bin nie wchodzą — to nie są mechanizmy użytkownika")
     func tylkoWlasneSkrypty() {
         #expect(mechanizmy().allSatisfy { $0.skrypt.hasPrefix("/usr/local/bin/") })
         #expect(!mechanizmy().contains { $0.skrypt.contains("e2scrub") })

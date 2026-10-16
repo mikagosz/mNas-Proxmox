@@ -3,7 +3,7 @@ import SwiftUI
 /// Ostrzeżenia o dyskach — z treścią, nie samym trójkątem.
 ///
 /// > [!danger] Po co to powstało
-/// > Zgłoszenie [U] z 2026-08-23, zapisane wersalikami: *„miałem ostrzeżenie w Dyskach
+/// > Zgłoszenie z 2026-08-23, zapisane wersalikami: *„miałem ostrzeżenie w Dyskach
 /// > ale wiedziałem tylko że jest, zero informacji o tym który dysk i co się stało —
 /// > ZERO INFORMACJI O TYM CO SIE DZIEJE"*.
 /// >
@@ -145,7 +145,7 @@ nonisolated enum OstrzezeniaDyskow {
 
 /// Okno otwierane kliknięciem w ostrzeżenie na kaflu „Dyski".
 ///
-/// Układ wybrany przez [U] 2026-08-23: *„skoro ostrzeżenie jest na dyskach to logiczne
+/// Układ wybrany przez użytkownika 2026-08-23: *„skoro ostrzeżenie jest na dyskach to logiczne
 /// że kliknięcie w okno Dyski w ostrzeżenia powinno odpalić okienko i pokazać dokładnie
 /// i zrozumiale o co cały hałas"*. Stąd pełne zdania zamiast skrótów i osobne pola
 /// „co to znaczy" / „co zrobić" — nie sama tabelka z liczbami.

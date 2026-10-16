@@ -1,7 +1,7 @@
 import SwiftUI
 
 // Okna z pełną listą dla kafli, które pokazują tylko początek: Zdarzenia i Usługi
-// (od 1.2.16). Zgłoszenie [U] 2026-10-04: Przebiegi mają „swoje okno duże, fajne,
+// (od 1.2.16). Zgłoszenie 2026-10-04: Przebiegi mają „swoje okno duże, fajne,
 // gdzie można szukać i sprawdzać”, a Zdarzenia nie mają żadnego; w średnim kaflu
 // Usług widać pierwsze kilka, a „+18 więcej” nie dawało się otworzyć.
 

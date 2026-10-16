@@ -295,7 +295,7 @@ struct ProxmoxTests {
         #expect(out["sdc"] == .brakOdpowiedzi)    // śpi, więc nic nie wiemy
     }
 
-    /// Regresja ze zgłoszenia [U] 2026-09-06: po restarcie serwera przy NONAME-ie C50
+    /// Regresja ze zgłoszenia 2026-09-06: po restarcie serwera przy NONAME-ie C50
     /// pojawiło się 50 °C, choć ten dysk temperatury nie podaje w ogóle. Litery `sd*`
     /// przetasowały się i stara wartość poprzedniego lokatora `sdb` została pokazana
     /// przy nowym. Klucz po serialu plus kasowanie przy `brakCzujnika` to zamykają.

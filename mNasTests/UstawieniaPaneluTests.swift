@@ -4,7 +4,7 @@ import Foundation
 
 /// Ustawienia panelu paska menu — P14.
 ///
-/// Zgłoszenie [U] 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu bar,
+/// Zgłoszenie 2026-08-29: *„chcę dodać ustawienia do małego okienka z ikony menu bar,
 /// aby mógł dostosować co chcę, aby tam się wyświetlało — a najlepiej, jeżeli chcę mieć
 /// dwa okna, to żeby to okienko dzieliło się na pół, dwie sekcje, lub też jak chcę
 /// więcej, to do przewijania strzałkami"*.
@@ -20,8 +20,8 @@ struct UstawieniaPaneluTests {
 
     // MARK: - Rozmiar decyduje o podziale, nie liczba pozycji
 
-    /// 🔴 Zgłoszenie [U] po teście 1.0.39: *„teraz jest wymuszenie tylko na pół"*.
-    /// Podział bierze się z **rozmiaru wybranego przez [U]**, a nie z tego, ile rzeczy
+    /// 🔴 Zgłoszenie po teście 1.0.39: *„teraz jest wymuszenie tylko na pół"*.
+    /// Podział bierze się z **rozmiaru wybranego przez użytkownika**, a nie z tego, ile rzeczy
     /// zaznaczył. Ten test pilnuje, żeby wymuszenie nie wróciło.
     @Test("Pozycja ustawiona na „całe” zajmuje stronę sama, choć obok są inne")
     func caleNieDzieliSiePolem() {
@@ -70,7 +70,7 @@ struct UstawieniaPaneluTests {
 
     // MARK: - Kafle z okna głównego
 
-    /// Zgłoszenie [U]: *„chcę móc dodać 1:1 kafelek z pełnego ekranu"*. Lista panelu
+    /// Zgłoszenie: *„chcę móc dodać 1:1 kafelek z pełnego ekranu"*. Lista panelu
     /// obejmuje **wszystkie** kafle okna, nie garść wybranych przeze mnie.
     @Test("Lista panelu zna wszystkie kafle okna głównego")
     func wszystkieKafleNaLiscie() {
@@ -147,7 +147,7 @@ struct UstawieniaPaneluTests {
 
     // MARK: - Wybór
 
-    /// 🔴 Pusty panel wygląda dokładnie jak zepsuty panel, a [U] nie miałby z niego
+    /// 🔴 Pusty panel wygląda dokładnie jak zepsuty panel, a użytkownik nie miałby z niego
     /// drogi powrotnej do ustawień.
     @Test("Ostatniego modułu nie da się wyłączyć")
     func ostatniZostaje() {
@@ -163,7 +163,7 @@ struct UstawieniaPaneluTests {
         #expect(u.wybrane == [.transfery])
     }
 
-    /// Kolejność w panelu ma być stała, a nie taka, w jakiej [U] klikał — inaczej
+    /// Kolejność w panelu ma być stała, a nie taka, w jakiej użytkownik klikał — inaczej
     /// odznaczenie i ponowne zaznaczenie przestawiałoby moduły pod ręką.
     @Test("Włączony moduł wraca na swoje miejsce w kolejności, nie na koniec")
     func kolejnoscStala() {
@@ -172,7 +172,7 @@ struct UstawieniaPaneluTests {
         #expect(u.wybrane == [.wToku, .zdarzenia, .miejsce])
     }
 
-    /// [U], który nigdy nie otworzył ustawień, ma dostać dokładnie to, co panel
+    /// Użytkownik, który nigdy nie otworzył ustawień, ma dostać dokładnie to, co panel
     /// pokazywał przed P14.
     @Test("Pusty wybór znaczy układ domyślny, nie pusty panel")
     func pustyWyborToDomyslne() {
@@ -208,7 +208,7 @@ struct TrwaloscUstawienPaneluTests {
         #expect(uklad.panelPaska.wybrane == UstawieniaPanelu.domyslne)
     }
 
-    @Test("Wybór [U] wraca po ponownym uruchomieniu")
+    @Test("Wybór wraca po ponownym uruchomieniu")
     func wyborPrzezywaRestart() {
         let magazyn = UkladTestowy.magazyn("panel-trwalosc")
         let uklad = DashboardLayout(magazyn: magazyn)
@@ -225,7 +225,7 @@ struct TrwaloscUstawienPaneluTests {
 
 /// Ręczna kolejność pozycji panelu (1.2.2).
 ///
-/// Zgłoszenie [U] 2026-09-04: *„daj mi możliwość przesuwania w opcjach, żebym to ja
+/// Zgłoszenie 2026-09-04: *„daj mi możliwość przesuwania w opcjach, żebym to ja
 /// decydował jakie informacje są obok siebie"*. Kolejność ma znaczenie, bo pozycje
 /// „pół" idą **parami na stronę** — to ona decyduje, co z czym sąsiaduje.
 @Suite("Panel: kolejność ustawia użytkownik")
@@ -319,7 +319,7 @@ struct KolejnoscPanelutests {
 
 /// Podgląd rozmieszczenia w ustawieniach panelu (1.2.4).
 ///
-/// Zgłoszenie [U] 2026-09-04: *„klikając w strzałki ja nie widzę, gdzie teraz będzie
+/// Zgłoszenie 2026-09-04: *„klikając w strzałki ja nie widzę, gdzie teraz będzie
 /// stało okno"*. Strzałki zmieniały listę, której w ekranie ustawień nie było widać —
 /// sekcje wypisują wszystkie dostępne moduły w stałym porządku.
 @Suite("Panel: widać, gdzie pozycja wyląduje")

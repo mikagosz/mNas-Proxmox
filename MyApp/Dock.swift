@@ -2,8 +2,8 @@ import AppKit
 
 /// Obecność mNas w Docku — włączana i wyłączana w trakcie działania programu.
 ///
-/// Decyzja [U] 2026-08-20: **zamknięcie głównego okna chowa program z Docka.**
-/// Uzasadnienie [U], dosłownie: *„po to jest w menu bar ikona"*. Program nie kończy
+/// Decyzja 2026-08-20: **zamknięcie głównego okna chowa program z Docka.**
+/// Uzasadnienie, dosłownie: *„po to jest w menu bar ikona"*. Program nie kończy
 /// się przy zamknięciu okna — żyje dalej w pasku menu i dalej pilnuje przebiegów.
 ///
 /// > [!warning] To NIE jest `LSUIElement`
@@ -13,7 +13,7 @@ import AppKit
 /// > okna i wraca przy jego otwarciu. Robi to `NSApp.setActivationPolicy`, i tylko ono.
 /// >
 /// > Poprzednia wersja dokumentacji tego modułu mówiła „nie przestawiaj polityki
-/// > aktywacji na `.accessory`". **Odwołane decyzją [U] 2026-08-20** — dokładnie o to
+/// > aktywacji na `.accessory`". **Odwołane decyzją 2026-08-20** — dokładnie o to
 /// > przestawienie chodzi. `LSUIElement` nadal zostaje wyłączony.
 ///
 /// > [!note] Czego `.accessory` kosztuje

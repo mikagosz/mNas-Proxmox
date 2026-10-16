@@ -25,7 +25,7 @@ struct RootView: View {
         //
         // 🔴 Musi być `.never`, nie `.hidden`. `.hidden` jest **sugestią**, którą system
         // nadpisuje, gdy w Ustawieniach stoi „Pokaż paski przewijania: Zawsze" — a tak
-        // jest ustawione u [U]. W tym trybie macOS rysuje klasyczne paski, które
+        // jest ustawione u użytkownika. W tym trybie macOS rysuje klasyczne paski, które
         // zabierają szerokość układu (stąd „kabanosy"). `.never` znaczy nigdy.
         .scrollIndicators(.never)
     }

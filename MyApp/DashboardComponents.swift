@@ -167,7 +167,7 @@ struct DonutChart: View {
 
 /// Łuk 270° z wartością w środku (jak „Usage" w TrueNAS).
 ///
-/// Kropka na końcu postępu **usunięta 2026-08-16** (polecenie [U]): przy zerowym
+/// Kropka na końcu postępu **usunięta 2026-08-16** (polecenie): przy zerowym
 /// wypełnieniu wisiała samotnie na początku łuku i wyglądała jak usterka, a przy
 /// wypełnionym niczego nie dodawała — koniec łuku i tak jest zaokrąglony.
 struct ArcGauge: View {

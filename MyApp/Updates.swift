@@ -18,7 +18,7 @@ enum UpdateSetting {
 /// `downloads.fractal8.eu/mNas/api/error-update/version-check`. Plik w korzeniu należy do
 /// Master info i wydania mNas go nie dotykają.
 ///
-/// Aktualizacje są opcjonalne (decyzja [U] 2026-10-01): przełącznik w Ustawieniach, nic nie
+/// Aktualizacje są opcjonalne (decyzja 2026-10-01): przełącznik w Ustawieniach, nic nie
 /// instaluje się bez kliknięcia. Raportowanie awarii wyłączone (`reportingOptIn: false`) —
 /// raport niesie ścieżki ze stosu, a ścieżka pod `/Users/<nazwa>/` zdradza nazwę konta.
 

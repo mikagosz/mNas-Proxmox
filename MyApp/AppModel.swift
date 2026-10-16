@@ -131,7 +131,7 @@ final class AppModel {
     /// Historia zdarzeń — co się stało, kiedy i jak poszło. Przeżywa zgaszenie chmurki
     /// **i** restart programu. Patrz `Zdarzenia.swift`.
     let rejestr = RejestrZdarzen()
-    /// Alarmy odhaczone przez [U] — „wiem o tym, zgaś czerwień". Patrz
+    /// Alarmy odhaczone przez użytkownika — „wiem o tym, zgaś czerwień". Patrz
     /// `PotwierdzoneAlerty.swift`; odhaczenie dotyczy jednego wystąpienia, nie mechanizmu.
     let potwierdzone = PotwierdzoneAlerty()
     /// Układ kafli — kolejność, rozmiary, pozycje na siatce i kłódki.
@@ -152,7 +152,7 @@ final class AppModel {
     /// Mechanizmy, które się uruchamiają i kończą — zadania serwera, nocna kopia
     /// z tego Maca, monitory push w Uptime Kumie. Zbierane w `Przebiegi.swift`.
     var przebiegi: [Przebieg] = []
-    /// Przebiegi, które się domknęły, a [U] jeszcze na nie nie patrzył — liczba w chmurce
+    /// Przebiegi, które się domknęły, a użytkownik jeszcze na nie nie patrzył — liczba w chmurce
     /// przy ikonie w pasku menu. Czyszczone otwarciem panelu, nie upływem czasu.
     private(set) var nieodczytane: Set<String> = []
     var lastError: String?
@@ -201,7 +201,7 @@ final class AppModel {
 
     // MARK: Odstępy odpytywania REST — po co one są
 
-    /// 🔴 **mNas ma być oknem pokazującym stan, nie odpytywaczem.** Polecenie [U]
+    /// 🔴 **mNas ma być oknem pokazującym stan, nie odpytywaczem.** Polecenie
     /// 2026-09-11, dosłownie: *„to ma działać jak okno pokazujące informacje, a nie że
     /// będzie budzić i pytać wszystko co chwila — nie taki był zamysł całej aplikacji"*.
     ///
@@ -436,6 +436,10 @@ final class AppModel {
         nieodczytane = []
         lastKumaRead = .distantPast
         lastMechanizmyRead = .distantPast
+        lastAktualizacjeRead = .distantPast
+        aktualizacje = nil
+        zleconoAktualizacje = nil
+        bladAktualizacji = nil
         mechanizmyWczytane = false
         kumaWczytana = false
         lastTransferyRead = .distantPast
@@ -506,7 +510,9 @@ final class AppModel {
             applyAPIMeasurements(node)
 
             // Lista dysków raz na 10 minut: model, rozmiar i serial się nie zmieniają.
-            if minelo(&lastDisksRead, Self.disksInterval) {
+            // Pusta lista = serwer jeszcze wstawał (zaraz po restarcie hosta) — ponów po 30 s,
+            // nie po 10 min — kafel Dyski długo czekał na pierwszy odczyt (2026-10-16).
+            if minelo(&lastDisksRead, disks.isEmpty ? 30 : Self.disksInterval) {
                 // Pełny SMART z API **tylko** gdy SSH jest wyłączony i minęło pół godziny —
                 // każde takie zapytanie budzi talerzowe dyski. Przy działającym SSH kondycja
                 // idzie ścieżką `-n standby`, która ich nie rusza.
@@ -552,6 +558,7 @@ final class AppModel {
             // Przebiegi: zadania serwera co turę (to one łapią moment startu), Kuma
             // i kopia z Maca rzadziej — własne odstępy pilnuje `odswiezPrzebiegi`.
             await odswiezPrzebiegi()
+            await odswiezAktualizacjeWPetli()
             // Narzędzie z nieistniejącego już kontenera znika **natychmiast**, bez
             // czekania na powolne `pct exec`: listę gości mamy z tej samej tury.
             let running = Set(guests.filter(\.running).map(\.vmid))
@@ -619,7 +626,7 @@ final class AppModel {
         // zostaje puste i to jest poprawny stan, nie brak danych.
         //
         // 🔴 `node.memoryFree` niesie **`MemAvailable`**, nie `MemFree` — i to jest warunek
-        // tego, żeby kafel nie migał. Zgłoszenie [U] 2026-08-20: „RAM co 5 sekund na sekundę
+        // tego, żeby kafel nie migał. Zgłoszenie 2026-08-20: „RAM co 5 sekund na sekundę
         // pokazuje się prawie cały zajęty". Przyczyną było, że API i SSH mierzyły **dwie
         // różne rzeczy**, a piszą do jednego pola w tej samej turze: API dawał `MemFree`
         // (zmierzone na serwerze testowym: 309 MB, czyli 96% zajęcia), sekundę później SSH nadpisywał
@@ -813,7 +820,7 @@ final class AppModel {
     ///
     /// > [!info] Po co, skoro kafel „Transfery" ma już RRD
     /// > Bo RRD mierzy **łącze**, a kopia z dysku na dysk wewnątrz hosta przez łącze
-    /// > nie przechodzi. Zgłoszenie [U] 2026-09-04: kafel pokazywał 16 kB/s w chwili,
+    /// > nie przechodzi. Zgłoszenie 2026-09-04: kafel pokazywał 16 kB/s w chwili,
     /// > gdy dyski robiły 90 MB/s. Ani kafel, ani RRD nie kłamały — po prostu nie o tym
     /// > mówiły. Pola `diskread`/`diskwrite` ma w RRD wyłącznie kontener, nie węzeł.
     ///
@@ -922,6 +929,10 @@ final class AppModel {
 
     /// Zadania serwera, które chodzą **teraz**.
     private var przebiegiTrwajace: [Przebieg] = []
+    /// Ile razy serwer nie podał wyniku zadania, które zniknęło z aktywnych (np. w czasie restartu hosta).
+    private var probyWynikuZadania: [String: Int] = [:]
+    /// Tury są co 15 s i tylko przy połączeniu — 20 prób to ok. 5 minut z serwerem na linii.
+    private static let maksProbWynikuZadania = 20
     /// Ostatnio zakończone zadania serwera — pamiętane, żeby po starcie apki było widać,
     /// czy nocna kopia przeszła. Trzymamy kilka, nie wszystkie: to kafel, nie dziennik.
     private var przebiegiZakonczone: [Przebieg] = []
@@ -957,7 +968,7 @@ final class AppModel {
 
     /// Zadania trwające teraz + wyłapanie tych, które właśnie się skończyły.
     ///
-    /// 🔴 **Odstęp 15 s, nie co turę** — zmiana 2026-09-11 na polecenie [U]. Poprzednio
+    /// 🔴 **Odstęp 15 s, nie co turę** — zmiana 2026-09-11 na polecenie. Poprzednio
     /// leciało to w **każdej** turze odświeżania, czyli co 5 s, i razem z `rrddata`
     /// odpowiadało za ~69% całego ruchu apki do serwera (zmierzone w logu `pveproxy`).
     ///
@@ -1005,11 +1016,29 @@ final class AppModel {
         let sa = Set(nowe.map(\.id))
         for upid in byly.subtracting(sa) {
             guard var skonczony = przebiegiTrwajace.first(where: { $0.id == upid }) else { continue }
-            let wynik = await client.wynikZadania(upid: upid)
-            skonczony.stan = (wynik?.exitstatus == "OK") ? .udany : .bledny
+            // Brak odpowiedzi to nie błąd zadania: przy restarcie hosta zatrzymania kontenerów
+            // znikały z listy aktywnych razem z serwerem, a w Proxmoksie kończyły się OK —
+            // mNas pokazywał „Zatrzymanie kontenera … błąd” (2026-10-16).
+            // Zostaje „trwa” i pytamy znowu w następnej turze, aż do limitu prób.
+            guard let e = await client.wynikZadania(upid: upid)?.exitstatus else {
+                let proby = (probyWynikuZadania[upid] ?? 0) + 1
+                if proby < Self.maksProbWynikuZadania {
+                    probyWynikuZadania[upid] = proby
+                    nowe.append(skonczony)
+                } else {
+                    probyWynikuZadania[upid] = nil
+                    skonczony.stan = .nieznany
+                    skonczony.koniec = Date()
+                    skonczony.faza = nil
+                    zapamietajZakonczony(skonczony)
+                }
+                continue
+            }
+            probyWynikuZadania[upid] = nil
+            skonczony.stan = e == "OK" ? .udany : .bledny
             skonczony.koniec = Date()
             skonczony.faza = nil
-            if let e = wynik?.exitstatus, e != "OK" { skonczony.opis = e }
+            if e != "OK" { skonczony.opis = e }
             zapamietajZakonczony(skonczony)
         }
         przebiegiTrwajace = nowe
@@ -1251,10 +1280,150 @@ final class AppModel {
         return .success(())
     }
 
+    // MARK: - Aktualizacje serwera (pve-update-check, od 1.2.30)
+    //
+    // Stan zmienia się raz na dobę (timer 7:30) albo po aktualizacji, więc czytamy go
+    // co 30 minut. Co turę (5 s) tylko wtedy, gdy coś na serwerze trwa — aktualizacja,
+    // cofnięcie albo sprawdzanie — bo wtedy pasek postępu ma się ruszać.
+
+    /// `nil` = jeszcze nie czytane (albo bez SSH).
+    private(set) var aktualizacje: OdczytAktualizacji?
+    private(set) var bladAktualizacji: String?
+    /// Chwila zlecenia startu z mNas — póki serwer nie potwierdzi, kafel pokazuje „startuje”.
+    private(set) var zleconoAktualizacje: Date?
+    private var lastAktualizacjeRead = Date.distantPast
+    /// Komunikat „nie ruszyło” zostaje do następnego zlecenia, a nie znika przy pierwszym odczycie.
+    private var startNieRuszyl = false
+    /// Co 5 min — to jeden `cat` małego pliku, a stan zmienia się też poza mNas (sprawdzanie
+    /// po starcie hosta, ręczne `pve-update-check`). Przy 30 min kafel po restarcie hosta
+    /// pokazywał przez pół godziny stan sprzed restartu (2026-10-16).
+    private static let aktualizacjeInterval: TimeInterval = 5 * 60
+
+    var aktualizacjaTrwa: Bool {
+        guard let a = aktualizacje else { return zleconoAktualizacje != nil }
+        return a.zajete || a.sprawdzaTeraz || a.postep?.trwa == true || zleconoAktualizacje != nil
+    }
+
+    private func odswiezAktualizacjeWPetli() async {
+        guard gpuSSHEnabled, status == .connected else { return }
+        let odstep = aktualizacjaTrwa ? 0 : Self.aktualizacjeInterval
+        guard minelo(&lastAktualizacjeRead, odstep) else { return }
+        await odswiezAktualizacje()
+    }
+
+    func odswiezAktualizacje() async {
+        guard gpuSSHEnabled, status == .connected else { return }
+        lastAktualizacjeRead = Date()
+        let r = await commands.odczytajAktualizacje()
+        guard r.ok else {
+            bladAktualizacji = r.timedOut ? String(localized: "Serwer nie oddał stanu aktualizacji w limicie czasu.")
+                                          : String(localized: "Serwer nie oddał stanu aktualizacji (kod \(r.code)).")
+            return
+        }
+        let nowy = AktualizacjeParsers.odczyt(r.output)
+        // Zlecenie jest potwierdzone, gdy serwer ma nowszy start albo coś już chodzi;
+        // po 2 minutach bez potwierdzenia uznajemy, że nie ruszyło (log jest w journalu).
+        if let z = zleconoAktualizacje {
+            let start = AktualizacjeParsers.data(nowy.postep?.start) ?? .distantPast
+            if nowy.zajete || nowy.sprawdzaTeraz || start >= z.addingTimeInterval(-5) {
+                zleconoAktualizacje = nil
+            } else if Date().timeIntervalSince(z) > 120 {
+                zleconoAktualizacje = nil
+                startNieRuszyl = true
+                bladAktualizacji = String(localized: "Aktualizacja nie ruszyła na serwerze. Szczegóły: journalctl -u \(NarzedzieAktualizacji.jednostka)")
+            }
+        }
+        if let stary = aktualizacje?.postep, stary.trwa, let p = nowy.postep, !p.trwa {
+            zapiszWynikAktualizacji(p)
+        }
+        aktualizacje = nowy
+        if zleconoAktualizacje == nil, !startNieRuszyl { bladAktualizacji = nil }
+    }
+
+    /// Koniec aktualizacji albo cofnięcia — wpis w dzienniku programu. Rejestr zdarzeń
+    /// zna tylko przebiegi; wynik i tak zostaje na serwerze w `aktualizacja.json`.
+    private func zapiszWynikAktualizacji(_ p: PostepAktualizacji) {
+        let tekst = p.podsumowanie?.components(separatedBy: "\n").first(where: { !$0.isEmpty })
+            ?? String(localized: "Aktualizacja zakończona")
+        Log.ssh.notice("pve-update-check: \(p.stan, privacy: .public) – \(tekst, privacy: .public)")
+    }
+
+    enum WynikZlecenia: Equatable { case start, zajete, blad(String) }
+
+    func zainstalujAktualizacje(id: String, zakres: ZakresAktualizacji, serwerNextcloud: Bool) async -> WynikZlecenia {
+        guard let polecenie = ServerCommands.poleceniStartuAktualizacji(id: id, zakres: zakres, serwerNextcloud: serwerNextcloud) else {
+            return .blad(String(localized: "Niepoprawny numer maszyny."))
+        }
+        return await zlec(polecenie)
+    }
+
+    func cofnijAktualizacje(id: String) async -> WynikZlecenia {
+        guard let polecenie = ServerCommands.poleceniCofniecia(id: id) else {
+            return .blad(String(localized: "Niepoprawny numer maszyny."))
+        }
+        return await zlec(polecenie)
+    }
+
+    func wyczyscPoAktualizacji(id: String) async -> WynikZlecenia {
+        guard let polecenie = ServerCommands.poleceniSprzatania(id: id) else {
+            return .blad(String(localized: "Niepoprawny numer maszyny."))
+        }
+        return await zlec(polecenie)
+    }
+
+    func uruchomPonownie(id: String, calyKontener: Bool) async -> WynikZlecenia {
+        guard let polecenie = ServerCommands.poleceniRestartu(id: id, calyKontener: calyKontener) else {
+            return .blad(String(localized: "Niepoprawny numer maszyny."))
+        }
+        return await zlec(polecenie)
+    }
+
+    func uruchomPonownieHost() async -> WynikZlecenia {
+        await restorePWMAuto()
+        return await zlec(ServerCommands.poleceniRestartuHosta())
+    }
+
+    func sprawdzAktualizacjeTeraz() async -> WynikZlecenia {
+        await zlec(ServerCommands.poleceniSprawdzenia())
+    }
+
+    private func zlec(_ polecenie: String) async -> WynikZlecenia {
+        guard gpuSSHEnabled, status == .connected else { return .blad(String(localized: "Wymaga połączenia SSH.")) }
+        let r = await commands.uruchomWTle(polecenie)
+        if r.output.contains("@@ZAJETE") { return .zajete }
+        guard r.ok, r.output.contains("@@START") else {
+            let szczegol = (r.error + r.output).trimmingCharacters(in: .whitespacesAndNewlines).suffix(300)
+            return .blad(String(localized: "Serwer nie przyjął zlecenia (kod \(r.code)). \(szczegol)"))
+        }
+        zleconoAktualizacje = Date()
+        startNieRuszyl = false
+        bladAktualizacji = nil
+        await odswiezAktualizacje()
+        return .start
+    }
+
+    private(set) var instalujeNarzedzieAktualizacji = false
+
+    func zainstalujNarzedzieAktualizacji() async -> Result<Void, BladHistorii> {
+        guard gpuSSHEnabled, status == .connected else {
+            return .failure(BladHistorii(opis: String(localized: "Instalacja wymaga połączenia SSH.")))
+        }
+        instalujeNarzedzieAktualizacji = true
+        defer { instalujeNarzedzieAktualizacji = false }
+        let r = await commands.instalujNarzedzieAktualizacji()
+        guard r.ok else {
+            let szczegol = r.error.trimmingCharacters(in: .whitespacesAndNewlines).suffix(300)
+            return .failure(BladHistorii(opis: String(localized: "Instalacja nie wyszła (kod \(r.code)). \(szczegol)")))
+        }
+        Log.ssh.notice("Zainstalowano pve-update-check \(NarzedzieAktualizacji.wersja, privacy: .public)")
+        await odswiezAktualizacje()
+        return .success(())
+    }
+
     /// Zadania, które host naprawdę uruchamia — cron, timery systemd i ich dzienniki.
     ///
     /// > [!danger] Ta lista ma **powstawać z serwera**, nie stać w kodzie
-    /// > Zgłoszenie [U] z 2026-08-23: *„program nie reaguje na zmiany, wygląda tak jakbyś
+    /// > Zgłoszenie z 2026-08-23: *„program nie reaguje na zmiany, wygląda tak jakbyś
     /// > wpisywał te dane do programu, a nie pobierały informacji prosto z proxmoxa"*.
     /// > Nic tu nie jest wpisane: nazwa bierze się z komentarza nad zadaniem w
     /// > `/etc/cron.d`, harmonogram z wyrażenia cron, a dziennik z linii `LOG=` w samym
@@ -1373,7 +1542,7 @@ final class AppModel {
 
             // Do rejestru idzie **każda** zmiana, także wejście w `trwa`: to jest historia,
             // a nie licznik nieprzeczytanych. Chmurka gaśnie po otwarciu panelu, ten wpis
-            // zostaje — o to poszło zgłoszenie [U] z 2026-08-23 („wiem tylko że jedna
+            // zostaje — o to poszło zgłoszenie z 2026-08-23 („wiem tylko że jedna
             // akcja, ale jak? Jak przebiegła — zero informacji").
             rejestr.dopisz(przebieg: p, poprzedniStan: poprzedni)
 
@@ -1406,7 +1575,7 @@ final class AppModel {
         return mechanizmyWczytane && (kumaWczytana || !jestKuma)
     }
 
-    /// Wywoływane, gdy [U] otworzy panel spod ikony — czyli **zobaczy** te wiadomości.
+    /// Wywoływane, gdy użytkownik otworzy panel spod ikony — czyli **zobaczy** te wiadomości.
     func oznaczPrzebiegiJakoPrzeczytane() {
         guard !nieodczytane.isEmpty else { return }
         nieodczytane.removeAll()
@@ -1421,15 +1590,15 @@ final class AppModel {
         przebiegi.filter { potwierdzone.alarmuje($0) }
     }
 
-    /// [U] przeczytał alerty i kwituje je. Ikona gaśnie z czerwonej na zieloną —
+    /// Użytkownik przeczytał alerty i kwituje je. Ikona gaśnie z czerwonej na zieloną —
     /// **razem z liczbą w chmurce obok dysku**.
     ///
-    /// 🔴 Chmurka gaśnie tutaj, a nie wyłącznie przy otwarciu panelu. Zgłoszenie [U]
+    /// 🔴 Chmurka gaśnie tutaj, a nie wyłącznie przy otwarciu panelu. Zgłoszenie
     /// 2026-08-25: *„kiedy już zapoznam się z alertami i kliknę zapoznałem się, to
     /// zostaje jeszcze liczba komunikatów"*. W kodzie były to dwa niezależne znaczniki
     /// — odhaczone alarmy (kolor odznaki) i nieodczytane domknięcia (liczba) — a na
     /// ikonie czytają się jak jeden stan „coś jest do obejrzenia". Kwitowanie gasiło
-    /// połowę i zostawiało drugą, czyli mówiło [U], że nie skończył czegoś, co zrobił.
+    /// połowę i zostawiało drugą, czyli mówiło użytkownikowi, że nie skończył czegoś, co zrobił.
     ///
     /// Historii to nie rusza, tak samo jak wcześniej: wiersze w „Przebiegach" i wpisy
     /// w „Zdarzeniach" zostają, znika sam znacznik. Kolejna zmiana stanu zapala oba
@@ -1581,7 +1750,7 @@ final class AppModel {
 
         // Zajętość liczymy z tego samego `@@DF`, które już przyszło wyżej — bez nazw też,
         // bo lepiej pokazać ścieżkę niż nic. Kafel „Miejsce" ma pokazywać **wartości**,
-        // nie gotowe zdanie z czujki (zgłoszenie [U] 2026-08-23).
+        // nie gotowe zdanie z czujki (zgłoszenie 2026-08-23).
         if let df = sections["DF"] {
             let parsed = Miejsce.udzialy(nazwy: nazwyMontowan, df: df)
             if !parsed.isEmpty { udzialy = parsed }
@@ -1712,7 +1881,7 @@ final class AppModel {
     /// Ostatnia akcja na serwerze, która się nie udała — baner na dashboardzie.
     ///
     /// Osobno od `lastError`, bo ten czyści każda udana tura odświeżania: komunikat
-    /// zniknąłby, zanim [U] by go zobaczył. Do 1.2.9 błąd akcji ginął w `try?`
+    /// zniknąłby, zanim użytkownik by go zobaczył. Do 1.2.9 błąd akcji ginął w `try?`
     /// i kafel po kliknięciu wyglądał tak samo jak przed nim — przy „Restart węzła”
     /// czekało się na restart, którego nie było. Audyt SBW 2026-09-24, E1-S-P2-01.
     var bladAkcji: String?
@@ -1763,6 +1932,16 @@ final class AppModel {
     }
 
     func rebootServer() async {
+        // Przez narzędzie aktualizacji (root po SSH), gdy jest: API odmawia restartu, bo token mNas
+        // nie ma `Sys.PowerMgmt` — 2026-10-16 przycisk „nie działał”. Narzędzie sprawdza też kopie i DKMS.
+        if gpuSSHEnabled, case .jest(_)? = aktualizacje?.narzedzie {
+            switch await uruchomPonownieHost() {
+            case .start: bladAkcji = nil
+            case .zajete: bladAkcji = String(localized: "Restart węzła — nie teraz: na serwerze trwa kopia, aktualizacja albo sprawdzanie.")
+            case .blad(let e): bladAkcji = String(localized: "Restart węzła — nie udało się. \(e)")
+            }
+            return
+        }
         // Serwer zniknie za chwilę — oddaj wentylatory układowi, zanim padnie kanał.
         await restorePWMAuto()
         await wykonajAkcje(String(localized: "Restart węzła")) { try await $0.rebootNode() }

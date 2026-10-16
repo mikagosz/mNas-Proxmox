@@ -285,7 +285,7 @@ struct TransferyTests {
 ///
 /// Wejście to **prawdziwe wyjście serwera testowego** zdjęte 2026-09-04 w trakcie kopii folderu
 /// `PROJEKTY` (452 GB, z NVMe na dysk USB). Ta sesja zaczęła się od zgłoszenia
-/// [U]: kafel „Transfery" pokazywał 16 kB/s w chwili, gdy dyski robiły 90 MB/s — bo
+/// użytkownika: kafel „Transfery" pokazywał 16 kB/s w chwili, gdy dyski robiły 90 MB/s — bo
 /// kopia host→host nie przechodzi przez żadną kartę sieciową.
 ///
 /// 🔴 Czego te testy pilnują przede wszystkim: **`rsync` to trzy procesy o identycznej

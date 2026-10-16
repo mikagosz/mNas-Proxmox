@@ -299,7 +299,7 @@ nonisolated enum PrzebiegiParsers {
     /// Czy wiadomość monitora to **sam spis zajętości** punktów montowania.
     ///
     /// > [!warning] Po co odsiew zamiast skasowania wszystkich podpisów
-    /// > Zgłoszenie [U] z 2026-08-23 dotyczyło jednej linijki — tej z monitora
+    /// > Zgłoszenie z 2026-08-23 dotyczyło jednej linijki — tej z monitora
     /// > „Dyski pve — miejsce i SMART":
     /// > `/mnt/zasoby 78%,/mnt/wspolny 2% /mnt/multimedia 11%,/mnt/backup 9%`.
     /// > To jest treść powiadomienia push, a nie dane, i od 2026-08-23 te same wartości
@@ -393,7 +393,7 @@ nonisolated enum PrzebiegiParsers {
         /// Ta sama zasada dotyczy hosta: `alarm-dyskow.sh` co 10 minut i
         /// `pomiar-ruchu.sh` co 10 sekund **nie są przebiegami**, tylko czujkami.
         /// Wpuszczenie ich na listę zamieniłoby kafel w ścianę wierszy, które nigdy
-        /// się nie kończą — a [U] pyta tam o jedno: czy ostatnia kopia przeszła.
+        /// się nie kończą — a użytkownik pyta tam o jedno: czy ostatnia kopia przeszła.
         var czujka: Bool
         /// Ostatni wpis z dziennika mechanizmu. `nil`, gdy mechanizm dziennika nie prowadzi.
         var ostatni: WpisKopii?
@@ -425,7 +425,7 @@ nonisolated enum PrzebiegiParsers {
             if tresc.hasPrefix("#") {
                 // 🔴 Wyłączone zadanie zaczyna się od `#` i **ma zostać wyłączone**.
                 // To jest dokładnie ten przypadek: `#30 4 * * * root …kopia-dokumentow-na-hdd.sh`
-                // wisiał na liście po wygaszeniu 2026-08-22 i to była połowa zgłoszenia [U].
+                // wisiał na liście po wygaszeniu 2026-08-22 i to była połowa zgłoszenia.
                 if blokKomentarza[plik] == nil { blokKomentarza[plik] = opisZKomentarza(tresc) }
                 continue
             }

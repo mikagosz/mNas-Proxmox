@@ -4,7 +4,7 @@ import Foundation
 
 /// Trwałość układu kafli — czy dashboard pamięta, gdzie co postawiono.
 ///
-/// Zgłoszenie [U] 2026-08-23: *„dlaczego program nie pamięta ustawień kafelków? Już kolejny
+/// Zgłoszenie 2026-08-23: *„dlaczego program nie pamięta ustawień kafelków? Już kolejny
 /// build i znów pomieszane kafelki mam"*.
 ///
 /// 🔴 Zmierzona przyczyna, nie zgadnięta: w `UserDefaults` pozycje miały **3 kafle z 18**
@@ -89,7 +89,7 @@ struct PamiecUkladuTests {
         uklad.utrwalPozycje(wszystkie)
         let przebiegiPrzed = uklad.resolvedPositions(wszystkie)[.przebiegi]
 
-        // Serwer milknie: widać tylko dwa kafle. [U] przestawia jeden z nich.
+        // Serwer milknie: widać tylko dwa kafle. Użytkownik przestawia jeden z nich.
         uklad.place(.cpu, at: GridPos(col: 3, row: 3), among: [.cpu, .ram])
 
         // Kafel, którego wtedy nie było, ma **zachować swój zapis**.
@@ -155,7 +155,7 @@ struct PamiecUkladuTests {
         #expect(uklad.resolvedPositions(wszystkie)[.disks] == GridPos(col: 0, row: 4))
     }
 
-    // MARK: - Zgłoszenie [U] 2026-08-29: układ ginie z każdą nową wersją
+    // MARK: - Zgłoszenie 2026-08-29: układ ginie z każdą nową wersją
 
     /// > [!danger] 🔴 To jest test na przyczynę, nie na objaw
     /// > `resolvedPositions` przycina pozycje do szerokości okna. Poprzednia wersja
@@ -169,7 +169,7 @@ struct PamiecUkladuTests {
         let uklad = czystyUklad(columns: 6)
         let kafle: [DashTileID] = [.cpu, .ram, .disks, .przebiegi]
 
-        // [U] stawia `disks` w prawym górnym rogu szerokiego układu — czyli tam, gdzie
+        // Użytkownik stawia `disks` w prawym górnym rogu szerokiego układu — czyli tam, gdzie
         // sam by nie trafił. Wiersz 4 celowo: gdyby cel pokrywał się z miejscem
         // naturalnym, `place` słusznie nie robiłby nic i test nie mierzyłby niczego.
         uklad.place(.disks, at: GridPos(col: 4, row: 4), among: kafle)
@@ -208,7 +208,7 @@ struct PamiecUkladuTests {
 
     // MARK: - Naprawa zderzeń w już zapisanym pliku
 
-    /// Plik [U] przyszedł z `UserDefaults`, w których `cpu` i `power` **siedziały
+    /// Plik użytkownika przyszedł z `UserDefaults`, w których `cpu` i `power` **siedziały
     /// w tej samej kratce** `{col: 1, row: 0}` — zmierzone 2026-08-29.
     @Test("Dwa kafle w jednej kratce: drugi traci przypięcie, pierwszy zostaje")
     func naprawaZderzenia() {
