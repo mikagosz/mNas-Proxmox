@@ -30,7 +30,9 @@ struct PodgladIkonyTests {
             ("polaczony-3", StanPaska(przebiegi: [], polaczony: true, nieodczytane: 3)),
             ("trwa-12", StanPaska(przebiegi: [
                 Przebieg(id: "a", nazwa: "Kopia zapasowa", zrodlo: .serwer, stan: .trwa)
-            ], polaczony: true, nieodczytane: 12))
+            ], polaczony: true, nieodczytane: 12)),
+            ("aktualizacje", StanPaska(przebiegi: [], polaczony: true, doZainstalowania: 2)),
+            ("aktualizacje-3", StanPaska(przebiegi: [], polaczony: true, nieodczytane: 3, doZainstalowania: 1))
         ]
 
         // Skala 4×, bo ikona ma 18 pt wysokości — w oryginale nie da się ocenić,
@@ -66,5 +68,14 @@ struct PodgladIkonyTests {
         print("PODGLĄD IKONY: \(sciezka.path)")
         print("PODGLĄD KOLEJNOŚĆ: \(stany.map(\.0).joined(separator: ", "))")
         #expect(FileManager.default.fileExists(atPath: sciezka.path))
+    }
+
+    @Test("Znak aktualizacji: pojawia się tylko przy czymś do zainstalowania i poszerza ikonę")
+    func znakAktualizacji() {
+        let bez = StanPaska(przebiegi: [], polaczony: true)
+        let z = StanPaska(przebiegi: [], polaczony: true, doZainstalowania: 2)
+        #expect(!bez.opis.contains("aktualizacje"))
+        #expect(z.opis.contains("aktualizacje na serwerze: 2"))
+        #expect(RysunekIkony.zbuduj(z).size.width > RysunekIkony.zbuduj(bez).size.width)
     }
 }

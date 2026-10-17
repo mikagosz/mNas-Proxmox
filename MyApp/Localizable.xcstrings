@@ -1540,6 +1540,23 @@
         }
       }
     },
+    "**Sprawdź teraz** odświeża listę od razu; serwer sprawdza też sam, codziennie rano.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Check Now** refreshes the list right away; the server also checks by itself every morning."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Sprawdź teraz** odświeża listę od razu; serwer sprawdza też sam, codziennie rano."
+          }
+        }
+      }
+    },
     "**Teraz** albo **Historia** temperatur dysku.": {
       "localizations": {
         "en": {
@@ -1601,6 +1618,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "**Token API**: użytkownik, realm i nazwa tokenu, np. **root@pam!mnas**."
+          }
+        }
+      }
+    },
+    "**Zainstaluj…** najpierw robi kopię kontenera, potem instaluje i pokazuje postęp w karcie. Gdy coś pójdzie źle, wrócisz do stanu sprzed aktualizacji.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Install…** first backs up the container, then installs and shows progress in the card. If something goes wrong, you can go back to how it was before."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**Zainstaluj…** najpierw robi kopię kontenera, potem instaluje i pokazuje postęp w karcie. Gdy coś pójdzie źle, wrócisz do stanu sprzed aktualizacji."
           }
         }
       }
@@ -1702,6 +1736,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    ", aktualizacje na serwerze: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ", updates on the server: %lld"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ", aktualizacje na serwerze: %lld"
           }
         }
       }
@@ -1918,6 +1968,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Aktualizacja nie ruszyła na serwerze. Szczegóły: journalctl -u %@"
+          }
+        }
+      }
+    },
+    "Aktualizacja przerwana": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update interrupted"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktualizacja przerwana"
           }
         }
       }
@@ -2690,6 +2756,22 @@
         }
       }
     },
+    "Codzienne sprawdzanie:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily check:"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codzienne sprawdzanie:"
+          }
+        }
+      }
+    },
     "Cofnij": {
       "localizations": {
         "en": {
@@ -2734,6 +2816,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cofnięcie nie wyszło"
+          }
+        }
+      }
+    },
+    "Cofnięcie przerwane": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rollback interrupted"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cofnięcie przerwane"
           }
         }
       }
@@ -3410,6 +3508,22 @@
         }
       }
     },
+    "Gdy mNas ma nowszą wersję narzędzia, w tym samym miejscu pokaże **Zaktualizuj narzędzie…**. Twoje ustawienia zostają.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When mNas has a newer version of the tool, the same place shows **Update the tool…**. Your settings stay."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gdy mNas ma nowszą wersję narzędzia, w tym samym miejscu pokaże **Zaktualizuj narzędzie…**. Twoje ustawienia zostają."
+          }
+        }
+      }
+    },
     "Gdy nvidia-smi pisze błąd komunikacji ze sterownikiem, tu sprawdzisz czemu i spróbujesz podpiąć moduł.": {
       "localizations": {
         "en": {
@@ -3651,6 +3765,7 @@
       }
     },
     "Host uruchamiasz ponownie ręcznie — po nowym jądrze według procedury (DKMS, przypięcie jądra).": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3716,6 +3831,7 @@
       }
     },
     "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3727,6 +3843,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii."
+          }
+        }
+      }
+    },
+    "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii. Pomarańczowe kółko ze strzałką przy ikonie znaczy, że na serwerze czekają aktualizacje.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The menu bar icon opens a panel. Closing the window hides mNas in the menu bar — it keeps watching your backups. An orange circle with an arrow next to the icon means updates are waiting on the server."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii. Pomarańczowe kółko ze strzałką przy ikonie znaczy, że na serwerze czekają aktualizacje."
           }
         }
       }
@@ -4084,6 +4216,23 @@
         }
       }
     },
+    "Kafel **Aktualizacje** otwiera okno, w którym sprawdzisz i zainstalujesz aktualizacje kontenerów i Nextclouda. Za pierwszym razem mNas zaproponuje wgranie narzędzia na serwer.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The **Updates** tile opens a window where you check and install updates for your containers and Nextcloud. The first time, mNas offers to put its helper tool on the server."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kafel **Aktualizacje** otwiera okno, w którym sprawdzisz i zainstalujesz aktualizacje kontenerów i Nextclouda. Za pierwszym razem mNas zaproponuje wgranie narzędzia na serwer."
+          }
+        }
+      }
+    },
     "Kafel z okna głównego, jeden do jednego.": {
       "localizations": {
         "en": {
@@ -4214,6 +4363,54 @@
         }
       }
     },
+    "Kliknij **Sprawdź teraz**, żeby odświeżyć listę od razu. Bez tego serwer sprawdza sam codziennie o 7:30.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click **Check Now** to refresh the list right away. Otherwise the server checks on its own every day at 7:30."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kliknij **Sprawdź teraz**, żeby odświeżyć listę od razu. Bez tego serwer sprawdza sam codziennie o 7:30."
+          }
+        }
+      }
+    },
+    "Kliknij **Sprawdź teraz**. Na liście pojawią się host i wszystkie uruchomione kontenery — narzędzie znajduje je samo, niczego nie trzeba dopisywać.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click **Check Now**. The list shows the host and every running container — the tool finds them on its own, nothing to add by hand."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kliknij **Sprawdź teraz**. Na liście pojawią się host i wszystkie uruchomione kontenery — narzędzie znajduje je samo, niczego nie trzeba dopisywać."
+          }
+        }
+      }
+    },
+    "Kliknij **Zainstaluj…** przy kontenerze. mNas zrobi kopię, zainstaluje i pokaże postęp. Gdy coś pójdzie źle, kliknij **Cofnij do stanu sprzed aktualizacji…**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click **Install…** next to a container. mNas makes a backup, installs and shows the progress. If something goes wrong, click **Roll back to the state before the update…**."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kliknij **Zainstaluj…** przy kontenerze. mNas zrobi kopię, zainstaluje i pokaże postęp. Gdy coś pójdzie źle, kliknij **Cofnij do stanu sprzed aktualizacji…**."
+          }
+        }
+      }
+    },
     "Kliknij dysk na kaflu Dyski albo Pamięć masowa — otworzy się jego okno.": {
       "localizations": {
         "en": {
@@ -4226,6 +4423,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kliknij dysk na kaflu Dyski albo Pamięć masowa — otworzy się jego okno."
+          }
+        }
+      }
+    },
+    "Kliknij kafel **Aktualizacje**, potem **Zainstaluj narzędzie na serwerze…** i **Zainstaluj**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click the **Updates** tile, then **Install the tool on the server…** and **Install**."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kliknij kafel **Aktualizacje**, potem **Zainstaluj narzędzie na serwerze…** i **Zainstaluj**."
           }
         }
       }
@@ -4455,6 +4668,38 @@
         }
       }
     },
+    "Kontener do pominięcia — wpisz jego numer, kilka oddziel spacją:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To skip a container, enter its number; separate several with spaces:"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontener do pominięcia — wpisz jego numer, kilka oddziel spacją:"
+          }
+        }
+      }
+    },
+    "Kontenery do sprawdzania muszą być uruchomione. Zatrzymane narzędzie pomija i wypisuje w raporcie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Containers must be running to be checked. The tool skips stopped ones and lists them in the report."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontenery do sprawdzania muszą być uruchomione. Zatrzymane narzędzie pomija i wypisuje w raporcie."
+          }
+        }
+      }
+    },
     "Kopia kontenerów": {
       "localizations": {
         "en": {
@@ -4467,6 +4712,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kopia kontenerów"
+          }
+        }
+      }
+    },
+    "Kopia przed aktualizacją: na dyskach ZFS, LVM-thin i Ceph narzędzie robi snapshot. Na zwykłym katalogu robi kopię vzdump na storage z **BACKUP_STORAGE** — wpisz taki, na którym jest miejsce na cały kontener:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup before updating: on ZFS, LVM-thin and Ceph the tool takes a snapshot. On a plain directory it makes a vzdump backup to the storage in **BACKUP_STORAGE** — enter one with room for the whole container:"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopia przed aktualizacją: na dyskach ZFS, LVM-thin i Ceph narzędzie robi snapshot. Na zwykłym katalogu robi kopię vzdump na storage z **BACKUP_STORAGE** — wpisz taki, na którym jest miejsce na cały kontener:"
           }
         }
       }
@@ -4567,6 +4828,22 @@
         }
       }
     },
+    "Kopiuj ścieżkę": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Path"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kopiuj ścieżkę"
+          }
+        }
+      }
+    },
     "Kroki na serwerze (raz)": {
       "localizations": {
         "en": {
@@ -4579,6 +4856,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kroki na serwerze (raz)"
+          }
+        }
+      }
+    },
+    "Kropka: pomarańczowa — poprawki bezpieczeństwa, żółta — zwykłe aktualizacje, niebieska — wszystko aktualne.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dot: orange — security fixes, yellow — regular updates, blue — everything is up to date."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kropka: pomarańczowa — poprawki bezpieczeństwa, żółta — zwykłe aktualizacje, niebieska — wszystko aktualne."
           }
         }
       }
@@ -4675,6 +4969,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Log zapory"
+          }
+        }
+      }
+    },
+    "Log: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log: %@"
           }
         }
       }
@@ -4819,6 +5129,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Maszyny i kontenery"
+          }
+        }
+      }
+    },
+    "Maszyny wirtualne z Linuksem — włącz je (w maszynie musi działać qemu-guest-agent):": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Linux virtual machines — turn them on (qemu-guest-agent must be running in the VM):"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maszyny wirtualne z Linuksem — włącz je (w maszynie musi działać qemu-guest-agent):"
           }
         }
       }
@@ -5187,6 +5513,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Najbardziej obciążające procesy"
+          }
+        }
+      }
+    },
+    "Najpierw raz przygotuj serwer: wgraj narzędzie i ustaw, co ma sprawdzać — kroki pod „Więcej”. Potem kliknij kafel **Aktualizacje**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First set up the server once: install the tool and choose what it checks — steps under “More”. Then click the **Updates** tile."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najpierw raz przygotuj serwer: wgraj narzędzie i ustaw, co ma sprawdzać — kroki pod „Więcej”. Potem kliknij kafel **Aktualizacje**."
           }
         }
       }
@@ -6231,6 +6573,22 @@
         }
       }
     },
+    "Pakiety systemu i Nextclouda narzędzie sprawdza samo. Program postawiony z GitHuba albo z /opt dopisz do **/etc/pve-update-check/apps.conf**, jedna linia na program: numer kontenera, nazwa, polecenie wypisujące wersję, skąd brać najnowszą.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The tool checks system packages and Nextcloud on its own. Add an app installed from GitHub or into /opt to **/etc/pve-update-check/apps.conf**, one line per app: container number, name, command that prints the version, where to get the latest one."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pakiety systemu i Nextclouda narzędzie sprawdza samo. Program postawiony z GitHuba albo z /opt dopisz do **/etc/pve-update-check/apps.conf**, jedna linia na program: numer kontenera, nazwa, polecenie wypisujące wersję, skąd brać najnowszą."
+          }
+        }
+      }
+    },
     "Pamięć": {
       "localizations": {
         "en": {
@@ -6695,6 +7053,22 @@
         }
       }
     },
+    "Ponowne uruchomienie przerwane": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart interrupted"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponowne uruchomienie przerwane"
+          }
+        }
+      }
+    },
     "Poprzednia strona": {
       "localizations": {
         "en": {
@@ -6983,6 +7357,22 @@
         }
       }
     },
+    "Proces na serwerze już nie działa i nie zapisał wyniku. Zanim spróbujesz ponownie, zajrzyj do logu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The process on the server is no longer running and didn't save a result. Check the log before you try again."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proces na serwerze już nie działa i nie zapisał wyniku. Zanim spróbujesz ponownie, zajrzyj do logu."
+          }
+        }
+      }
+    },
     "Procesor": {
       "localizations": {
         "en": {
@@ -7139,6 +7529,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Program stoi w miejscu, którego nie da się nadpisać (np. otwarty prosto z Pobranych). Przenieś go do katalogu Aplikacje albo pobierz nową wersję ręcznie."
+          }
+        }
+      }
+    },
+    "Programy spoza pakietów": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apps outside packages"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Programy spoza pakietów"
           }
         }
       }
@@ -8779,6 +9185,22 @@
         }
       }
     },
+    "Sprawdź kolor kropki: pomarańczowa — poprawki bezpieczeństwa, żółta — zwykłe aktualizacje, niebieska — wszystko aktualne.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check the dot colour: orange — security fixes, yellow — regular updates, blue — everything up to date."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprawdź kolor kropki: pomarańczowa — poprawki bezpieczeństwa, żółta — zwykłe aktualizacje, niebieska — wszystko aktualne."
+          }
+        }
+      }
+    },
     "Sprawdź przebiegi teraz": {
       "localizations": {
         "en": {
@@ -8839,6 +9261,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sprzątanie nie wyszło"
+          }
+        }
+      }
+    },
+    "Sprzątanie przerwane": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleanup interrupted"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprzątanie przerwane"
           }
         }
       }
@@ -9739,6 +10177,22 @@
         }
       }
     },
+    "Token **root@pam** z pełnym dostępem i działające SSH — kroki w sekcji „Połączenie z Proxmoksem”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A full-access **root@pam** token and working SSH — steps in the “Connecting to Proxmox” section."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token **root@pam** z pełnym dostępem i działające SSH — kroki w sekcji „Połączenie z Proxmoksem”."
+          }
+        }
+      }
+    },
     "Token API": {
       "localizations": {
         "en": {
@@ -10491,6 +10945,22 @@
         }
       }
     },
+    "Ustawienia leżą w jednym pliku na serwerze. Otwórz go w konsoli serwera:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The settings are in one file on the server. Open it in the server console:"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ustawienia leżą w jednym pliku na serwerze. Otwórz go w konsoli serwera:"
+          }
+        }
+      }
+    },
     "Ustawienia połączenia": {
       "localizations": {
         "en": {
@@ -10519,6 +10989,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ustawienia programu"
+          }
+        }
+      }
+    },
+    "Ustawienia: co sprawdzać": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings: what to check"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ustawienia: co sprawdzać"
           }
         }
       }
@@ -10795,6 +11281,22 @@
         }
       }
     },
+    "W pliku są gotowe przykłady — wystarczy usunąć # i poprawić numer kontenera.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file has ready examples — remove the # and fix the container number."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W pliku są gotowe przykłady — wystarczy usunąć # i poprawić numer kontenera."
+          }
+        }
+      }
+    },
     "W toku": {
       "localizations": {
         "en": {
@@ -11063,6 +11565,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wewnętrzna nazwa usługi: %@"
+          }
+        }
+      }
+    },
+    "Wgranie narzędzia na serwer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing the tool on the server"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wgranie narzędzia na serwer"
           }
         }
       }
@@ -11383,6 +11901,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wszystko działa, także start i zatrzymanie kontenerów, restart serwera i SSH."
+          }
+        }
+      }
+    },
+    "Wybierz zakres: wszystko, same pakiety albo same aplikacje. Serwer Nextclouda zaktualizujesz tylko po zaznaczeniu **Także serwer Nextclouda**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the scope: everything, packages only or apps only. The Nextcloud server is updated only when **Also the Nextcloud server** is ticked."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wybierz zakres: wszystko, same pakiety albo same aplikacje. Serwer Nextclouda zaktualizujesz tylko po zaznaczeniu **Także serwer Nextclouda**."
           }
         }
       }
@@ -11792,6 +12326,22 @@
         }
       }
     },
+    "Wyłączenie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turning it off"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wyłączenie"
+          }
+        }
+      }
+    },
     "Wyłączenie zbieracza:": {
       "localizations": {
         "en": {
@@ -12160,6 +12710,23 @@
         }
       }
     },
+    "Zakres: wszystko, same pakiety albo same aplikacje. Serwer Nextclouda aktualizuje się tylko po zaznaczeniu tego pola.": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scope: everything, system packages only or apps only. The Nextcloud server is updated only when you tick this box."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zakres: wszystko, same pakiety albo same aplikacje. Serwer Nextclouda aktualizuje się tylko po zaznaczeniu tego pola."
+          }
+        }
+      }
+    },
     "Zaktualizowano": {
       "localizations": {
         "en": {
@@ -12396,6 +12963,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zapisy i odczyty na dyskach"
+          }
+        }
+      }
+    },
+    "Zapisz plik (Ctrl+O, Enter, Ctrl+X) i kliknij w mNas **Sprawdź teraz**.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save the file (Ctrl+O, Enter, Ctrl+X) and click **Check Now** in mNas."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapisz plik (Ctrl+O, Enter, Ctrl+X) i kliknij w mNas **Sprawdź teraz**."
           }
         }
       }
@@ -12668,6 +13251,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zaufać nowemu certyfikatowi?"
+          }
+        }
+      }
+    },
+    "Zaznacz „Także serwer Nextclouda” — bez tego nie ma tu nic do zainstalowania.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tick “Also the Nextcloud server” — without it there's nothing to install here."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaznacz „Także serwer Nextclouda” — bez tego nie ma tu nic do zainstalowania."
           }
         }
       }
@@ -13653,6 +14252,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "mNas pyta o każdą rzecz tylko tak często, jak ona się zmienia, i nie budzi śpiących dysków talerzowych."
+          }
+        }
+      }
+    },
+    "mNas wgra **/usr/local/bin/pve-update-check**, ustawienia do **/etc/pve-update-check** i włączy codzienne sprawdzanie o 7:30. Samo sprawdzanie niczego nie instaluje.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas installs **/usr/local/bin/pve-update-check**, settings into **/etc/pve-update-check** and turns on a daily check at 7:30. Checking alone installs nothing."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mNas wgra **/usr/local/bin/pve-update-check**, ustawienia do **/etc/pve-update-check** i włączy codzienne sprawdzanie o 7:30. Samo sprawdzanie niczego nie instaluje."
           }
         }
       }

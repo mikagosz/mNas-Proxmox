@@ -31,7 +31,9 @@ struct OknoInstrukcji: View {
             .frame(width: Self.szerokosc)
             .textSelection(.enabled)
         }
-        .frame(width: Self.szerokosc)
+        // Okno szersze od treści o miejsce, które `ThinScrollView` dokłada na pasek (3 + 5 pt).
+        // Przy oknie równym treści całość wystawała po 4 pt z obu stron i pasek leżał poza oknem (do 1.2.40).
+        .frame(width: Self.szerokosc + 8)
         .frame(minHeight: 480)
         .zapamietajRozmiarOkna("instrukcja")
     }
@@ -110,7 +112,7 @@ struct SekcjaInstrukcji {
     let szeroki: Bool
     let wiecej: Wiecej?
 
-    enum Wiecej { case polaczenie, ssh, kafle, historia }
+    enum Wiecej { case polaczenie, ssh, kafle, historia, aktualizacje }
 
     static let wszystkie: [SekcjaInstrukcji] = [
         SekcjaInstrukcji(
@@ -183,8 +185,19 @@ struct SekcjaInstrukcji {
             kadr: Kadr(CGRect(x: 0, y: 55, width: 680, height: 400), punkty: [.m(22), .m(90), .m(190), .m(358)]),
             szeroki: true, wiecej: nil),
         SekcjaInstrukcji(
+            tytul: "Aktualizacje serwera",
+            opis: "Najpierw raz przygotuj serwer: wgraj narzędzie i ustaw, co ma sprawdzać — kroki pod „Więcej”. Potem kliknij kafel **Aktualizacje**.",
+            kroki: ["Kliknij **Sprawdź teraz**, żeby odświeżyć listę od razu. Bez tego serwer sprawdza sam codziennie o 7:30.",
+                    "Sprawdź kolor kropki: pomarańczowa — poprawki bezpieczeństwa, żółta — zwykłe aktualizacje, niebieska — wszystko aktualne.",
+                    "Kliknij **Zainstaluj…** przy kontenerze. mNas zrobi kopię, zainstaluje i pokaże postęp. Gdy coś pójdzie źle, kliknij **Cofnij do stanu sprzed aktualizacji…**.",
+                    "Wybierz zakres: wszystko, same pakiety albo same aplikacje. Serwer Nextclouda zaktualizujesz tylko po zaznaczeniu **Także serwer Nextclouda**."],
+            plik: "aktualizacje",
+            kadr: Kadr(CGRect(x: 0, y: 55, width: 640, height: 530),
+                       punkty: [CGPoint(x: 505, y: 10), CGPoint(x: 12, y: 46), CGPoint(x: 513, y: 128), CGPoint(x: 26, y: 406)]),
+            szeroki: true, wiecej: .aktualizacje),
+        SekcjaInstrukcji(
             tytul: "Pasek menu",
-            opis: "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii.",
+            opis: "Ikona w pasku menu otwiera panel. Zamknięcie okna chowa mNas do paska menu — program dalej pilnuje kopii. Pomarańczowe kółko ze strzałką przy ikonie znaczy, że na serwerze czekają aktualizacje.",
             kroki: ["Stan połączenia. Suwaki wybierają kafle panelu, strzałka odświeża.",
                     "Przebiegi, które właśnie trwają.",
                     "Co wymaga uwagi, np. nieudana kopia albo przekroczony czas.",
@@ -330,6 +343,7 @@ private struct WiecejInstrukcji: View {
             case .ssh: ssh
             case .kafle: kafle
             case .historia: historia
+            case .aktualizacje: aktualizacje
             }
         }
     }
@@ -392,6 +406,42 @@ private struct WiecejInstrukcji: View {
             krok(2, "mNas doinstaluje pakiet rrdtool, wgra skrypt **/usr/local/bin/mnas-historia** i timer systemd uruchamiany co minutę. Dane leżą w **/var/lib/mnas-historia**, więc każdy Mac widzi tę samą historię.")
             Text("Wyłączenie zbieracza:")
             polecenie("systemctl disable --now mnas-historia.timer")
+        }
+    }
+
+    @ViewBuilder private var aktualizacje: some View {
+        sekcja("Czego potrzeba", "checklist") {
+            punkt("Token **root@pam** z pełnym dostępem i działające SSH — kroki w sekcji „Połączenie z Proxmoksem”.")
+            punkt("Kontenery do sprawdzania muszą być uruchomione. Zatrzymane narzędzie pomija i wypisuje w raporcie.")
+        }
+        sekcja("Wgranie narzędzia na serwer", "square.and.arrow.down") {
+            krok(1, "Kliknij kafel **Aktualizacje**, potem **Zainstaluj narzędzie na serwerze…** i **Zainstaluj**.")
+            krok(2, "mNas wgra **/usr/local/bin/pve-update-check**, ustawienia do **/etc/pve-update-check** i włączy codzienne sprawdzanie o 7:30. Samo sprawdzanie niczego nie instaluje.")
+            krok(3, "Kliknij **Sprawdź teraz**. Na liście pojawią się host i wszystkie uruchomione kontenery — narzędzie znajduje je samo, niczego nie trzeba dopisywać.")
+            Text("Gdy mNas ma nowszą wersję narzędzia, w tym samym miejscu pokaże **Zaktualizuj narzędzie…**. Twoje ustawienia zostają.")
+                .foregroundStyle(.secondary)
+        }
+        sekcja("Ustawienia: co sprawdzać", "slider.horizontal.3") {
+            Text("Ustawienia leżą w jednym pliku na serwerze. Otwórz go w konsoli serwera:")
+            polecenie("nano /etc/pve-update-check/config")
+            krok(1, "Kontener do pominięcia — wpisz jego numer, kilka oddziel spacją:")
+            polecenie("EXCLUDE_IDS=\"105 110\"")
+            krok(2, "Maszyny wirtualne z Linuksem — włącz je (w maszynie musi działać qemu-guest-agent):")
+            polecenie("CHECK_VM=1")
+            krok(3, "Kopia przed aktualizacją: na dyskach ZFS, LVM-thin i Ceph narzędzie robi snapshot. Na zwykłym katalogu robi kopię vzdump na storage z **BACKUP_STORAGE** — wpisz taki, na którym jest miejsce na cały kontener:")
+            polecenie("BACKUP_STORAGE=\"local\"")
+            krok(4, "Zapisz plik (Ctrl+O, Enter, Ctrl+X) i kliknij w mNas **Sprawdź teraz**.")
+        }
+        sekcja("Programy spoza pakietów", "shippingbox") {
+            Text("Pakiety systemu i Nextclouda narzędzie sprawdza samo. Program postawiony z GitHuba albo z /opt dopisz do **/etc/pve-update-check/apps.conf**, jedna linia na program: numer kontenera, nazwa, polecenie wypisujące wersję, skąd brać najnowszą.")
+                .foregroundStyle(.secondary)
+            polecenie("nano /etc/pve-update-check/apps.conf")
+            polecenie("105 | Vaultwarden | vaultwarden --version | github:dani-garcia/vaultwarden")
+            Text("W pliku są gotowe przykłady — wystarczy usunąć # i poprawić numer kontenera.")
+        }
+        sekcja("Wyłączenie", "power") {
+            Text("Codzienne sprawdzanie:")
+            polecenie("systemctl disable --now pve-update-check.timer")
         }
     }
 

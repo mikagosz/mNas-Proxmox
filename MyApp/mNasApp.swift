@@ -46,7 +46,7 @@ struct mNasApp: App {
         Window("Instrukcja", id: OknoInstrukcji.id) {
             OknoInstrukcji()
         }
-        .defaultSize(width: OknoInstrukcji.szerokosc, height: 900)
+        .defaultSize(width: OknoInstrukcji.szerokosc + 8, height: 900)
 
         // Ustawienia programu — zębatka w nagłówku i na ekranie łączenia, ⌘,.
         Window("Ustawienia", id: OknoUstawien.id) {

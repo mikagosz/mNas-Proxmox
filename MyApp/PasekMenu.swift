@@ -44,7 +44,8 @@ struct PasekMenuEtykieta: View {
         let stan = StanPaska(przebiegi: model.przebiegi,
                              polaczony: model.status.showsDashboard,
                              nieodczytane: model.nieodczytane.count,
-                             odhaczone: model.potwierdzone.klucze)
+                             odhaczone: model.potwierdzone.klucze,
+                             doZainstalowania: model.aktualizacje?.doZainstalowania ?? 0)
         Image(nsImage: obraz(dla: stan))
             .help(stan.opis)
             .accessibilityLabel("mNas — \(stan.opis)")
@@ -145,6 +146,8 @@ enum RysunekIkony {
     /// Licznik jest **osobnym** znacznikiem, nie odznaką dysku — musi mieć wokół siebie
     /// powietrze, inaczej czyta się jak doklejony do obudowy.
     private static let odstepLicznika: CGFloat = 2
+    /// Znak aktualizacji — to samo kółko co odznaka stanu, z odstępem od dysku (1.2.39).
+    private static let odstepAktualizacji: CGFloat = 2
 
     static func zbuduj(_ stan: StanPaska) -> NSImage {
         let maOdznake = stan.odznaka.symbol != nil
@@ -158,7 +161,8 @@ enum RysunekIkony {
 
         let etykieta = etykietaChmurki(stan.nieodczytane)
         let szerokoscChmurki = etykieta.map { szerokoscChmurki($0) } ?? 0
-        let szerokosc = przesuniecieDysku + szerokoscDysku + szerokoscChmurki
+        let szerokoscAktualizacji = stan.doZainstalowania > 0 ? odstepAktualizacji + srednicaOdznaki : 0
+        let szerokosc = przesuniecieDysku + szerokoscDysku + szerokoscAktualizacji + szerokoscChmurki
 
         let obraz = NSImage(size: NSSize(width: szerokosc, height: wysokosc))
         obraz.lockFocus()
@@ -172,8 +176,11 @@ enum RysunekIkony {
                                  y: (wysokosc - dysk.size.height) / 2,
                                  width: dysk.size.width, height: dysk.size.height))
         }
+        if stan.doZainstalowania > 0 {
+            rysujAktualizacje(x: przesuniecieDysku + szerokoscDysku + odstepAktualizacji)
+        }
         if let etykieta {
-            rysujLicznik(etykieta, x: przesuniecieDysku + szerokoscDysku, szerokosc: szerokoscChmurki)
+            rysujLicznik(etykieta, x: przesuniecieDysku + szerokoscDysku + szerokoscAktualizacji, szerokosc: szerokoscChmurki)
         }
         return obraz
     }
@@ -209,6 +216,20 @@ enum RysunekIkony {
             .withSymbolConfiguration(konfiguracja) else { return }
         znak.draw(in: NSRect(x: kolo.midX - znak.size.width / 2,
                              y: kolo.midY - znak.size.height / 2,
+                             width: znak.size.width, height: znak.size.height))
+    }
+
+    /// Znak aktualizacji: pomarańczowe kółko z białą strzałką w dół, zaraz za dyskiem.
+    /// Zamiast powiadomienia macOS (2026-10-17). Ten sam kształt i znak co odznaka stanu.
+    private static func rysujAktualizacje(x: CGFloat) {
+        let kolo = NSRect(x: x, y: (wysokosc - srednicaOdznaki) / 2, width: srednicaOdznaki, height: srednicaOdznaki)
+        NSColor.systemOrange.setFill()
+        NSBezierPath(ovalIn: kolo).fill()
+        let konfiguracja = NSImage.SymbolConfiguration(pointSize: 6.5, weight: .heavy)
+            .applying(NSImage.SymbolConfiguration(paletteColors: [.white]))
+        guard let znak = NSImage(systemSymbolName: "arrow.down", accessibilityDescription: nil)?
+            .withSymbolConfiguration(konfiguracja) else { return }
+        znak.draw(in: NSRect(x: kolo.midX - znak.size.width / 2, y: kolo.midY - znak.size.height / 2,
                              width: znak.size.width, height: znak.size.height))
     }
 
@@ -281,12 +302,14 @@ nonisolated struct StanPaska: Sendable, Equatable {
     var alarmow: Int
     /// Liczba w chmurce po prawej. `0` = chmurki nie ma.
     var nieodczytane: Int
+    /// Maszyny z aktualizacjami do zainstalowania (kropka pomarańczowa albo żółta). `0` = bez znaku.
+    var doZainstalowania: Int
 
     /// - Parameter odhaczone: klucze alarmów, które użytkownik zakwitował przyciskiem
     ///   „Przyjęte". Puste = zachowanie sprzed 2026-08-23, czyli każdy alarm liczy się
     ///   do czerwieni. Patrz `PotwierdzoneAlerty.swift`.
     init(przebiegi: [Przebieg], polaczony: Bool, nieodczytane: Int = 0,
-         odhaczone: Set<String> = []) {
+         odhaczone: Set<String> = [], doZainstalowania: Int = 0) {
         let trwajace = przebiegi.filter { $0.stan == .trwa }
         // 🔴 Warunek alarmu siedzi w `KluczAlertu.dla` i **tylko tam** — inaczej lista,
         // którą gasi przycisk, i lista, która zapala ikonę, rozjechałyby się przy
@@ -298,6 +321,7 @@ nonisolated struct StanPaska: Sendable, Equatable {
         trwajacych = trwajace.count
         alarmow = alarmy.count
         self.nieodczytane = nieodczytane
+        self.doZainstalowania = doZainstalowania
 
         if !alarmy.isEmpty {
             odznaka = .blad
@@ -319,6 +343,9 @@ nonisolated struct StanPaska: Sendable, Equatable {
             opis = String(localized: "połączony, nic się nie kopiuje")
         }
 
+        if doZainstalowania > 0 {
+            opis += String(localized: ", aktualizacje na serwerze: \(doZainstalowania)")
+        }
         if nieodczytane > 0 {
             // Odmiana po liczbie w katalogu tekstów (warianty liczby mnogiej).
             opis += String(localized: ", \(nieodczytane) nowych wiadomości")

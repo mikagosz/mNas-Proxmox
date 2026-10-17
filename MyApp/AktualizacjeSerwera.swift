@@ -258,6 +258,9 @@ nonisolated struct OdczytAktualizacji: Sendable, Equatable {
     var narzedzie: Narzedzie
     var stan: StanAktualizacji?
     var postep: PostepAktualizacji?
+    /// Maszyny z czymś do zainstalowania — kropka pomarańczowa albo żółta (ta sama reguła co kafel).
+    /// Znak aktualizacji na ikonce w pasku menu (1.2.39).
+    var doZainstalowania: Int { stan?.doAktualizacji.filter { $0.pilnosc >= .aktualizacje }.count ?? 0 }
     /// Jednostka `pve-update-check-mnas` (aktualizacja albo cofnięcie) albo sprawdzanie
     /// z timera — póki coś chodzi, nowego startu nie zlecamy.
     var zajete: Bool
