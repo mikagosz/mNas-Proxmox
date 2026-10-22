@@ -9,7 +9,14 @@ import Foundation
 nonisolated struct PunktHistorii: Sendable, Hashable {
     var czas: Date
     /// `nil` = brak próbki (host stał, timer nie tyknął). Wykres rysuje dziurę, nie zero.
+    /// Średnia z przedziału — z niej liczą się „średnio”, energia i warstwy RAM.
     var wartosc: Double?
+    /// Najwyższa próbka w przedziale (archiwum MAX). W dobie przedział to minuta i obie
+    /// wartości są prawie równe; w tygodniu 30 min, w roku cały dzień — średnia spłaszczała
+    /// szczyty: CPU 32% w dobie, 19% w tygodniu, 13% w roku (zmierzone 2026-10-22).
+    var maks: Double? = nil
+    /// Co rysuje linia i co liczy „szczyt”: maksimum, a bez niego średnia.
+    var naWykresie: Double? { maks ?? wartosc }
 }
 
 /// `przeplyw` = bajty na sekundę (zapisy i odczyty dysków, od 1.2.16).
@@ -23,8 +30,16 @@ nonisolated struct SeriaHistorii: Identifiable, Sendable, Hashable {
 
     private var wartosci: [Double] { punkty.compactMap(\.wartosc) }
     var srednia: Double? { wartosci.isEmpty ? nil : wartosci.reduce(0, +) / Double(wartosci.count) }
-    var szczyt: Double? { wartosci.max() }
+    /// Z maksimów przedziałów — szczyt z doby ma być widać też w tygodniu i w roku.
+    var szczyt: Double? { punkty.compactMap(\.naWykresie).max() }
     var ostatniOdczyt: Date? { punkty.last { $0.wartosc != nil }?.czas }
+}
+
+/// Szereg RRD Proxmoksa dwa razy: `cf=AVERAGE` i `cf=MAX` (od 1.2.43). Maksima puste,
+/// gdy drugie żądanie nie przeszło — wykres wraca wtedy do samych średnich.
+nonisolated struct RRDzMaksimami: Sendable {
+    var srednie: [WierszRRD]
+    var maksima: [WierszRRD] = []
 }
 
 nonisolated struct HistoriaZbieracza: Sendable {
@@ -67,11 +82,15 @@ nonisolated enum HistoriaParsers {
                 : plik.hasPrefix("miejsce-") ? .bajty
                 : plik.hasPrefix("io-") ? .przeplyw
                 : .stopnie
-            let serie = x.meta.legend.enumerated().map { (i, ds) in
-                SeriaHistorii(id: ds, nazwa: nazwa(ds), jednostka: jednostka,
+            // Kolumna `<ds>.max` (od 1.2.43) to maksima tej samej serii — nie osobna seria.
+            let kolumna = Dictionary(x.meta.legend.enumerated().map { ($1, $0) }, uniquingKeysWith: { a, _ in a })
+            let serie = x.meta.legend.enumerated().filter { !$0.element.hasSuffix(".max") }.map { (i, ds) in
+                let m = kolumna[ds + ".max"]
+                return SeriaHistorii(id: ds, nazwa: nazwa(ds), jednostka: jednostka,
                               punkty: x.data.enumerated().map { (j, wiersz) in
                                   PunktHistorii(czas: Date(timeIntervalSince1970: TimeInterval(x.meta.start + j * x.meta.step)),
-                                                wartosc: i < wiersz.count ? wiersz[i] : nil)
+                                                wartosc: i < wiersz.count ? wiersz[i] : nil,
+                                                maks: m.flatMap { $0 < wiersz.count ? wiersz[$0] : nil })
                               })
             }
             switch plik {
@@ -110,30 +129,35 @@ nonisolated enum HistoriaParsers {
 
     // MARK: - RRD Proxmoksa — CPU i RAM
 
-    private static func seria(_ w: [WierszRRD], id: String, nazwa: String,
+    /// `maksima` — ten sam szereg z `cf=MAX`, łączony po czasie. Pusty = same średnie.
+    private static func seria(_ w: [WierszRRD], maksima: [WierszRRD] = [], id: String, nazwa: String,
                               jednostka: JednostkaHistorii, _ v: (WierszRRD) -> Double?) -> SeriaHistorii {
-        SeriaHistorii(id: id, nazwa: nazwa, jednostka: jednostka,
-                      punkty: w.map { PunktHistorii(czas: Date(timeIntervalSince1970: TimeInterval($0.time)), wartosc: v($0)) })
+        let m = Dictionary(maksima.map { ($0.time, $0) }, uniquingKeysWith: { a, _ in a })
+        return SeriaHistorii(id: id, nazwa: nazwa, jednostka: jednostka,
+                      punkty: w.map { PunktHistorii(czas: Date(timeIntervalSince1970: TimeInterval($0.time)),
+                                                    wartosc: v($0), maks: m[$0.time].flatMap(v)) })
     }
 
     /// RRD podaje `cpu` jako ułamek 0–1 — na wykresie procenty.
-    static func cpuProcent(_ w: [WierszRRD]) -> SeriaHistorii {
-        seria(w, id: "cpu", nazwa: String(localized: "Wykorzystanie CPU"), jednostka: .procent) { $0.cpu.map { $0 * 100 } }
+    static func cpuProcent(_ w: RRDzMaksimami) -> SeriaHistorii {
+        seria(w.srednie, maksima: w.maksima, id: "cpu", nazwa: String(localized: "Wykorzystanie CPU"), jednostka: .procent) { $0.cpu.map { $0 * 100 } }
     }
 
     /// Obciążenie (loadavg 1 min) — spec: zakładka CPU pokazuje „CPU %, obciążenie, temp.”.
-    static func obciazenie(_ w: [WierszRRD]) -> SeriaHistorii {
-        seria(w, id: "loadavg", nazwa: String(localized: "Obciążenie (1 min)"), jednostka: .liczba) { $0.loadavg }
+    static func obciazenie(_ w: RRDzMaksimami) -> SeriaHistorii {
+        seria(w.srednie, maksima: w.maksima, id: "loadavg", nazwa: String(localized: "Obciążenie (1 min)"), jednostka: .liczba) { $0.loadavg }
     }
 
-    static func ramHosta(_ w: [WierszRRD]) -> SeriaHistorii {
-        seria(w, id: "ram", nazwa: String(localized: "RAM hosta"), jednostka: .bajty) { $0.memused }
+    static func ramHosta(_ w: RRDzMaksimami) -> SeriaHistorii {
+        seria(w.srednie, maksima: w.maksima, id: "ram", nazwa: String(localized: "RAM hosta"), jednostka: .bajty) { $0.memused }
     }
 
     /// Warstwy wykresu RAM: kontener z największą średnią na dole. Zatrzymany kontener
-    /// daje `nil` w swoich minutach — warstwa ma tam dziurę, reszta stoi.
-    static func ramKontenerow(_ goscie: [(nazwa: String, vmid: Int, wiersze: [WierszRRD])]) -> [SeriaHistorii] {
-        goscie.map { g in seria(g.wiersze, id: "ct\(g.vmid)", nazwa: g.nazwa, jednostka: .bajty) { $0.mem } }
+    /// daje `nil` w swoich minutach — warstwa ma tam dziurę, reszta stoi. Warstwy rysują
+    /// się ze średnich (szczyty z różnych chwil nie sumują się do RAM-u hosta), maksima
+    /// idą tylko do kolumny „szczyt”.
+    static func ramKontenerow(_ goscie: [(nazwa: String, vmid: Int, wiersze: RRDzMaksimami)]) -> [SeriaHistorii] {
+        goscie.map { g in seria(g.wiersze.srednie, maksima: g.wiersze.maksima, id: "ct\(g.vmid)", nazwa: g.nazwa, jednostka: .bajty) { $0.mem } }
               .sorted { ($0.srednia ?? 0) > ($1.srednia ?? 0) }
     }
 
@@ -201,7 +225,7 @@ extension HistoriaParsers {
         var wynik: [[PunktHistorii]] = []
         var biezacy: [PunktHistorii] = []
         for p in s.punkty {
-            if p.wartosc == nil {
+            if p.naWykresie == nil {
                 if !biezacy.isEmpty { wynik.append(biezacy); biezacy = [] }
             } else {
                 biezacy.append(p)

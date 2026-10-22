@@ -22,6 +22,8 @@ nonisolated enum NarzedzieAktualizacji {
     static let katalogLogow = "/var/log/pve-update-check/"
     /// Jednostka `systemd-run`, w której chodzi aktualizacja albo cofnięcie zlecone z mNas.
     static let jednostka = "pve-update-check-mnas"
+    /// Przebieg „Zaktualizuj wszystkie po kolei” (od 1.2.43): które z kolei i wyniki poprzednich.
+    static let plikKolejki = "\(katalogStanu)/kolejka-mnas"
 
     /// (zasób, miejsce na serwerze, uprawnienia, tylko gdy nie ma)
     static let pliki: [(zasob: String, cel: String, tryb: String, tylkoNowy: Bool)] = [
@@ -58,6 +60,14 @@ nonisolated struct StanAktualizacji: Codable, Sendable, Equatable {
 
     /// Maszyny, przy których jest coś do zrobienia: aktualizacje albo ponowne uruchomienie.
     var doAktualizacji: [MaszynaAktualizacji] { maszyny.filter { $0.maAktualizacje || $0.wymagaRestartu } }
+
+    /// Co idzie do „Zaktualizuj wszystkie po kolei”: kontenery i VM z czymś do zainstalowania,
+    /// rosnąco po numerze. Bez hosta (jądro + DKMS, tylko w Terminalu) i bez samej wersji
+    /// głównej Nextclouda (bez „Także serwer Nextclouda” nie ma tam nic do zrobienia).
+    var doKolejki: [MaszynaAktualizacji] {
+        maszyny.filter { !$0.jestHostem && $0.maAktualizacje && !$0.tylkoWersjaGlowna && AktualizacjeParsers.poprawneID($0.id) }
+               .sorted { (Int($0.id) ?? 0) < (Int($1.id) ?? 0) }
+    }
 }
 
 nonisolated struct MaszynaAktualizacji: Codable, Sendable, Equatable, Identifiable {
@@ -239,6 +249,37 @@ nonisolated struct PostepAktualizacji: Codable, Sendable, Equatable {
     }
 }
 
+/// Plik `kolejka-mnas`: `start <data>`, przed każdą maszyną `@ <nr> <ile> <id>`, po niej
+/// `<id> <stan z aktualizacja.json>`, na końcu `koniec`.
+nonisolated struct KolejkaAktualizacji: Sendable, Equatable {
+    struct Wynik: Sendable, Equatable { var id: String; var stan: String }
+    var start: String?
+    var nr = 0
+    var ile = 0
+    var biezaca: String?
+    var wyniki: [Wynik] = []
+    var skonczona = false
+
+    /// `ok` i `nic` (nie było już czego instalować) to sukces; reszta — błędy, przerwana, brak stanu.
+    var nieudane: [String] { wyniki.filter { !["ok", "nic"].contains($0.stan) }.map(\.id) }
+
+    static func parsuj(_ linie: [String]) -> KolejkaAktualizacji? {
+        var k = KolejkaAktualizacji()
+        for l in linie.map({ $0.trimmingCharacters(in: .whitespaces) }) where !l.isEmpty {
+            let p = l.split(separator: " ").map(String.init)
+            if p[0] == "start", p.count == 2 { k.start = p[1] }
+            else if p[0] == "koniec" { k.skonczona = true }
+            else if p[0] == "@", p.count == 4, let nr = Int(p[1]), let ile = Int(p[2]) {
+                (k.nr, k.ile, k.biezaca) = (nr, ile, p[3])
+            } else if p.count == 2, AktualizacjeParsers.poprawneID(p[0]) {
+                k.wyniki.append(Wynik(id: p[0], stan: p[1]))
+                if k.biezaca == p[0] { k.biezaca = nil }
+            }
+        }
+        return k.start == nil ? nil : k
+    }
+}
+
 /// Zakres aktualizacji — tylko te trzy wartości idą do komendy (`-o`).
 nonisolated enum ZakresAktualizacji: String, CaseIterable, Sendable, Identifiable {
     case wszystko, pakiety, aplikacje
@@ -266,6 +307,10 @@ nonisolated struct OdczytAktualizacji: Sendable, Equatable {
     var zajete: Bool
     var sprawdzaTeraz: Bool
     var ogonLogu: [String]
+    var kolejka: KolejkaAktualizacji? = nil
+
+    /// Kolejka „po kolei” jeszcze idzie — jednostka żyje, a `koniec` nie padł.
+    var kolejkaTrwa: Bool { zajete && kolejka.map { !$0.skonczona } == true }
 }
 
 nonisolated enum AktualizacjeParsers {
@@ -293,6 +338,7 @@ nonisolated enum AktualizacjeParsers {
                 biezaca = ""
             } else if linia.hasPrefix("@@STAN") { biezaca = "stan" }
             else if linia.hasPrefix("@@POSTEP") { biezaca = "postep" }
+            else if linia.hasPrefix("@@KOLEJKA") { biezaca = "kolejka" }
             else if linia.hasPrefix("@@LOG") { biezaca = "log" }
             else if linia.hasPrefix("@@KONIEC") { biezaca = "" }
             else if !biezaca.isEmpty { sekcje[biezaca, default: []].append(linia) }
@@ -318,7 +364,8 @@ nonisolated enum AktualizacjeParsers {
             postep: postep,
             zajete: jednostka == "active" || jednostka == "activating",
             sprawdzaTeraz: timer == "active" || timer == "activating",
-            ogonLogu: (sekcje["log"] ?? []).map(bezSterujacych).filter { !$0.isEmpty })
+            ogonLogu: (sekcje["log"] ?? []).map(bezSterujacych).filter { !$0.isEmpty },
+            kolejka: KolejkaAktualizacji.parsuj(sekcje["kolejka"] ?? []))
     }
 
     /// Sekwencje sterujące terminala (`ESC[2K`, `ESC[5D` — paski z `updater.phar`) i `\r`.

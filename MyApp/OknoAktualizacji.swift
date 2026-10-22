@@ -20,6 +20,8 @@ struct OknoAktualizacji: View {
     @State private var hostKrok: Int?
     @State private var hostMaszyna: MaszynaAktualizacji?
     @State private var instalacjaPytanie = false
+    /// „Zaktualizuj wszystkie po kolei” — lista zamrożona w chwili kliknięcia.
+    @State private var wszystkiePytanie: [MaszynaAktualizacji]?
     @State private var komunikat: String?
     @State private var pracuje = false
     /// Maszyna kliknięta przed chwilą — jej karta pokazuje postęp, zanim serwer zapisze pierwszy stan.
@@ -135,6 +137,7 @@ struct OknoAktualizacji: View {
                     .font(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
             narzedzie(odczyt)
+            if let k = odczyt.kolejka { kolejka(k, odczyt) }
             if model.aktualizacjaTrwa, kartaPostepu(odczyt) == nil { postep(odczyt) }
             else if !model.aktualizacjaTrwa, let p = odczyt.postep, ["ok", "bledy", "przerwana"].contains(p.stan),
                     // przerwana bez zapisanego wyniku nie ma `koniec` — liczy się wtedy start
@@ -167,6 +170,45 @@ struct OknoAktualizacji: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(10)
             .background(RoundedRectangle(cornerRadius: 8).fill(.quaternary.opacity(0.4)))
+        }
+    }
+
+    /// Przebieg „po kolei”: który kontener teraz, a po końcu — podsumowanie przez dobę.
+    @ViewBuilder private func kolejka(_ k: KolejkaAktualizacji, _ o: OdczytAktualizacji) -> some View {
+        let nazwa = { (id: String) in o.stan?.maszyny.first { $0.id == id }?.etykieta ?? "CT \(id)" }
+        if o.kolejkaTrwa {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text("Po kolei: \(k.nr) z \(k.ile)\(k.biezaca.map { " — \(nazwa($0))" } ?? "")").font(.callout.bold())
+                    Spacer()
+                }
+                ProgressView(value: Double(k.wyniki.count), total: Double(max(k.ile, 1))).tint(.green)
+                if !k.nieudane.isEmpty {
+                    Text("Z błędami: \(k.nieudane.map(nazwa).joined(separator: ", "))")
+                        .font(.caption).foregroundStyle(.orange)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .background(RoundedRectangle(cornerRadius: 8).fill(.green.opacity(0.08)))
+        } else if !o.zajete, let start = AktualizacjeParsers.data(k.start), Date().timeIntervalSince(start) < 24 * 3600 {
+            let czysto = k.skonczona && k.nieudane.isEmpty
+            VStack(alignment: .leading, spacing: 4) {
+                let przerwanaNa = k.biezaca.map(nazwa) ?? "?"
+                Label(k.skonczona ? (czysto ? String(localized: "Po kolei: zaktualizowano \(k.wyniki.count) z \(k.ile)")
+                                            : String(localized: "Po kolei: \(k.wyniki.count - k.nieudane.count) z \(k.ile) bez błędów"))
+                                  : String(localized: "Po kolei: przerwane na \(przerwanaNa) (\(k.wyniki.count) z \(k.ile) gotowe)"),
+                      systemImage: czysto ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                    .font(.callout.bold()).foregroundStyle(czysto ? .green : .orange)
+                if !k.nieudane.isEmpty {
+                    Text("Z błędami: \(k.nieudane.map(nazwa).joined(separator: ", ")) — szczegóły w logach na serwerze (\(NarzedzieAktualizacji.katalogLogow)).")
+                        .font(.caption).fixedSize(horizontal: false, vertical: true).textSelection(.enabled)
+                }
+                Text(start.formatted(date: .abbreviated, time: .shortened)).font(.caption2).foregroundStyle(.tertiary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .background(RoundedRectangle(cornerRadius: 8).fill((czysto ? Color.green : .orange).opacity(0.08)))
         }
     }
 
@@ -315,6 +357,18 @@ struct OknoAktualizacji: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
+            if stan.doKolejki.count > 1 {
+                Button("Zaktualizuj wszystkie po kolei…") { wszystkiePytanie = stan.doKolejki }
+                    .disabled(pracuje || model.aktualizacjaTrwa)
+                .confirmationDialog(String(localized: "Zaktualizować po kolei \(wszystkiePytanie?.count ?? 0) maszyn?"),
+                                    isPresented: Binding(get: { wszystkiePytanie != nil }, set: { if !$0 { wszystkiePytanie = nil } }),
+                                    presenting: wszystkiePytanie) { lista in
+                    Button("Zaktualizuj wszystkie") { Task { await instalujWszystkie(lista) } }
+                    Button("Anuluj", role: .cancel) {}
+                } message: { lista in
+                    Text("Po kolei: \(lista.map(\.etykieta).joined(separator: ", ")). Każda dostaje najpierw snapshot albo kopię vzdump, a błąd jednej nie zatrzymuje reszty. Sam Proxmox i serwer Nextclouda zostają — mają swoje przyciski.")
+                }
+            }
             Button("Sprawdź teraz") { Task { await sprawdz() } }
                 .disabled(pracuje || model.aktualizacjaTrwa || odczyt?.narzedzie == .brak)
         }
@@ -427,8 +481,23 @@ struct OknoAktualizacji: View {
 
     @ViewBuilder private func sterowanie(_ m: MaszynaAktualizacji) -> some View {
         if m.jestHostem {
-            Text("Sam Proxmox aktualizuj w SSH (pve-update-check -u -t host): nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować.")
-                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            let polecenie = SSHRunner.polecenieTerminala(host: model.host, user: model.sshUser,
+                                                         komenda: "\(NarzedzieAktualizacji.sciezka) -u -t host")
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Sam Proxmox aktualizuj w Terminalu: nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować. Skopiuj polecenie, wklej je w Terminal i potwierdź, wpisując TAK.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 6) {
+                    Text(polecenie).font(.caption.monospaced()).textSelection(.enabled)
+                        .lineLimit(1).truncationMode(.middle)
+                    Spacer()
+                    Button("Kopiuj polecenie") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(polecenie, forType: .string)
+                    }
+                    .controlSize(.small)
+                    .disabled(model.host.isEmpty)
+                }
+            }
         } else if AktualizacjeParsers.poprawneID(m.id) {
             let zakres = Binding(get: { zakresy[m.klucz] ?? .wszystko }, set: { zakresy[m.klucz] = $0 })
             VStack(alignment: .leading, spacing: 6) {
@@ -522,6 +591,12 @@ struct OknoAktualizacji: View {
         let zakres = zakresy[m.klucz] ?? .wszystko
         obsluz(await model.zainstalujAktualizacje(id: m.id, zakres: zakres,
                                                   serwerNextcloud: m.nextcloudSerwer && serwerNC[m.klucz] == true))
+    }
+
+    private func instalujWszystkie(_ lista: [MaszynaAktualizacji]) async {
+        pracuje = true; defer { pracuje = false }
+        uruchomiona = lista.first?.id
+        obsluz(await model.zainstalujWszystkie(ids: lista.map(\.id)))
     }
 
     private func cofnij(_ w: PostepAktualizacji.Wynik) async {

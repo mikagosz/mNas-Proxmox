@@ -73,7 +73,7 @@ struct HistoriaParsersTests {
 
     @Test func cpuToProcentyZUlamka() throws {
         let w = try wiersze(Fixtures.rrdWezlaPelny)
-        let s = HistoriaParsers.cpuProcent(w)
+        let s = HistoriaParsers.cpuProcent(RRDzMaksimami(srednie: w))
         #expect(s.jednostka == .procent)
         #expect(s.punkty.count == 5)
         #expect(s.punkty[0].wartosc == w[0].cpu.map { $0 * 100 })
@@ -82,7 +82,7 @@ struct HistoriaParsersTests {
 
     @Test func ramHostaToMemused() throws {
         let w = try wiersze(Fixtures.rrdWezlaPelny)
-        let s = HistoriaParsers.ramHosta(w)
+        let s = HistoriaParsers.ramHosta(RRDzMaksimami(srednie: w))
         #expect(s.jednostka == .bajty)
         #expect(s.punkty[0].wartosc == w[0].memused)
         #expect(w[0].memtotal == 25_025_552_384)
@@ -97,7 +97,7 @@ struct HistoriaParsersTests {
     @Test func zatrzymanyKontenerNieWywracaWarstw() {
         // Kontener stał przez dwie środkowe minuty: RRD daje wiersze bez `mem`.
         let w = [WierszRRD(time: 60, mem: 100), WierszRRD(time: 120), WierszRRD(time: 180), WierszRRD(time: 240, mem: 300)]
-        let s = HistoriaParsers.ramKontenerow([(nazwa: "samba", vmid: 104, wiersze: w)])
+        let s = HistoriaParsers.ramKontenerow([(nazwa: "samba", vmid: 104, wiersze: RRDzMaksimami(srednie: w))])
         #expect(s.first?.punkty.map(\.wartosc) == [100, nil, nil, 300])
         #expect(s.first?.id == "ct104")
         #expect(s.first?.nazwa == "samba")
@@ -105,8 +105,49 @@ struct HistoriaParsersTests {
 
     @Test func kontenerySortowanePoSredniej() {
         let a = [WierszRRD(time: 60, mem: 10)], b = [WierszRRD(time: 60, mem: 99)]
-        let s = HistoriaParsers.ramKontenerow([(nazwa: "a", vmid: 1, wiersze: a), (nazwa: "b", vmid: 2, wiersze: b)])
+        let s = HistoriaParsers.ramKontenerow([(nazwa: "a", vmid: 1, wiersze: RRDzMaksimami(srednie: a)), (nazwa: "b", vmid: 2, wiersze: RRDzMaksimami(srednie: b))])
         #expect(s.map(\.id) == ["ct2", "ct1"])
+    }
+
+    // MARK: - Maksima (od 1.2.43)
+
+    /// Zgłoszenie 2026-10-22: CPU 30% w dobie, 19% w tygodniu, 13% w roku — średnie
+    /// dłuższych przedziałów zjadały szczyt. Szczyt i linia idą z maksimów, średnia zostaje.
+    @Test func maksimaRRDLaczonePoCzasie() {
+        let sr = [WierszRRD(time: 60, mem: 10), WierszRRD(time: 120, mem: 20), WierszRRD(time: 180)]
+        let mx = [WierszRRD(time: 120, mem: 90), WierszRRD(time: 60, mem: 30)]
+        let s = HistoriaParsers.ramKontenerow([(nazwa: "a", vmid: 1, wiersze: RRDzMaksimami(srednie: sr, maksima: mx))])[0]
+        #expect(s.punkty.map(\.maks) == [30, 90, nil])
+        #expect(s.szczyt == 90)
+        #expect(s.srednia == 15)
+        #expect(HistoriaParsers.odcinki(s, warstwowy: false).map(\.count) == [2])
+    }
+
+    @Test func bezMaksimowSzczytZeSrednich() {
+        let s = HistoriaParsers.ramKontenerow([(nazwa: "a", vmid: 1, wiersze: RRDzMaksimami(srednie: [WierszRRD(time: 60, mem: 40)]))])[0]
+        #expect(s.szczyt == 40 && s.punkty[0].maks == nil)
+    }
+
+    @Test func kolumnaMaxZbieraczaDoklejonaDoSerii() throws {
+        let tekst = """
+        @@WERSJA 3
+        @@PLIK dysk-S1.rrd
+        {"meta":{"start":60,"step":1800,"end":180,"rows":2,"columns":2,"legend":["temp","temp.max"]},
+         "data":[[30.5,41.0],[null,null]]}
+        """
+        let h = try #require(HistoriaParsers.zbieracz(tekst))
+        let d = try #require(h.dyski["S1"])
+        #expect(d.id == "temp")
+        #expect(d.punkty.map(\.wartosc) == [30.5, nil])
+        #expect(d.punkty.map(\.maks) == [41.0, nil])
+        #expect(d.szczyt == 41.0 && d.srednia == 30.5)
+    }
+
+    @Test func odczytHistoriiBierzeMaksZPowrotemDoSrednich() {
+        let c = ServerCommands.poleceniOdczytuHistorii(.week)
+        #expect(c.contains(#""DEF:m$d=$f:$d:MAX" "XPORT:m$d:$d.max""#))
+        #expect(c.contains(#""CDEF:m$d=rm$d,1000000,/""#))
+        #expect(c.contains(#""${a[@]}" "${m[@]}" 2>/dev/null"#))
     }
 
     // MARK: - Stan zbieracza (Task 6)
@@ -225,7 +266,7 @@ struct HistoriaParsersTests {
     /// Przegląd #4: spec każe w zakładce CPU pokazać też obciążenie (loadavg).
     @Test func obciazenieZRRDWezla() throws {
         let w = try wiersze(Fixtures.rrdWezlaPelny)
-        let s = HistoriaParsers.obciazenie(w)
+        let s = HistoriaParsers.obciazenie(RRDzMaksimami(srednie: w))
         #expect(s.jednostka == .liczba)
         #expect(s.punkty[0].wartosc == w[0].loadavg)
         #expect(FormatHistorii.wartosc(0.56, .liczba) == "0,56" || FormatHistorii.wartosc(0.56, .liczba) == "0.56")

@@ -424,4 +424,17 @@ struct RuchDyskowTests {
         #expect(TransferyParsers.progObciazeniaIO > 14)
         #expect(TransferyParsers.progObciazeniaIO < 42)
     }
+
+    /// Od 1.2.44: w oknach od tygodnia szczyt z `cf=MAX`, sumy bajtów dalej ze średnich.
+    @Test func szczytZMaksimowSumaZeSrednich() {
+        let sr = [WierszRRD(time: 0, netin: 100, netout: 0), WierszRRD(time: 1800, netin: 200, netout: 0)]
+        let mx = [WierszRRD(time: 1800, netin: 9_000, netout: 50)]
+        let s = TransferyParsers.strumien(zrodlo: "host", kto: "x", rodzaj: .lacze, wiersze: sr, maksima: mx, okno: .week)
+        #expect(s.punkty.map(\.szczyt) == [nil, 9_050])
+        #expect(s.szczytNaSekunde == 9_050)
+        #expect(s.sredniaNaSekunde == 150)
+        #expect(s.razemBajtow == Int64(300 * 1800))
+        let bez = TransferyParsers.strumien(zrodlo: "host", kto: "x", rodzaj: .lacze, wiersze: sr, okno: .week)
+        #expect(bez.szczytNaSekunde == 200)
+    }
 }

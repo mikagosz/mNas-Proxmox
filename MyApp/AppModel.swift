@@ -1168,20 +1168,27 @@ final class AppModel {
             obciazenieIO = psi
         }
 
+        // Szczyty z `cf=MAX` tylko tam, gdzie kubełek jest dłuższy niż minuta (od tygodnia):
+        // w godzinie i dobie średnia i maksimum są tym samym, a kafel pyta co 5 s o `.hour`.
+        let zMaksimami = okno == .week || okno == .month || okno == .year
+        let maksLacza = zMaksimami ? ((try? await client.rrdWezla(okno, maksima: true)) ?? []) : []
         var wynik = [TransferyParsers.strumien(zrodlo: "host",
                                                kto: nodeName ?? "Proxmox",
                                                rodzaj: .lacze,
                                                wiersze: wierszeLacza,
+                                               maksima: maksLacza,
                                                okno: okno)]
 
         for gosc in guests where gosc.running {
             guard let wiersze = try? await client.rrdGoscia(gosc, okno: okno) else { continue }
+            let maks = zMaksimami ? ((try? await client.rrdGoscia(gosc, okno: okno, maksima: true)) ?? []) : []
             let kontener = gosc.kind == .container
             wynik.append(TransferyParsers.strumien(
                 zrodlo: "\(kontener ? "lxc" : "qemu")/\(gosc.vmid)",
                 kto: gosc.name,
                 rodzaj: kontener ? .kontener(vmid: gosc.vmid) : .maszyna(vmid: gosc.vmid),
                 wiersze: wiersze,
+                maksima: maks,
                 okno: okno))
         }
         return .success(wynik)
@@ -1205,24 +1212,30 @@ final class AppModel {
         return .success(HistoriaParsers.zbieracz(r.output))
     }
 
-    func historiaWezla(_ okno: OknoRRD) async -> Result<[WierszRRD], BladHistorii> {
+    func historiaWezla(_ okno: OknoRRD) async -> Result<RRDzMaksimami, BladHistorii> {
         guard let client, status == .connected else {
             return .failure(BladHistorii(opis: String(localized: "Historia wymaga połączenia z Proxmoksem.")))
         }
-        do { return .success(try await client.rrdWezla(okno)) }
+        do {
+            let srednie = try await client.rrdWezla(okno)
+            return .success(RRDzMaksimami(srednie: srednie, maksima: (try? await client.rrdWezla(okno, maksima: true)) ?? []))
+        }
         catch { return .failure(BladHistorii(opis: String(localized: "Proxmox nie oddał historii. \(friendly(error))"))) }
     }
 
     /// Zajętość magazynów Proxmoksa w czasie (od 1.2.16). Magazyn PBS pomijamy —
     /// leży na tym samym systemie plików co `backup`, więc byłby drugą kopią tej samej linii.
-    func historiaMagazynow(_ okno: OknoRRD) async -> Result<[(id: String, rodzaj: String?, wiersze: [WierszMagazynuRRD])], BladHistorii> {
+    /// `maksima` — `cf=MAX` (od 1.2.44): na wykresie najwyższe zapełnienie w przedziale.
+    func historiaMagazynow(_ okno: OknoRRD) async -> Result<[(id: String, rodzaj: String?, wiersze: [WierszMagazynuRRD], maksima: [WierszMagazynuRRD])], BladHistorii> {
         guard let client, status == .connected else {
             return .failure(BladHistorii(opis: String(localized: "Historia magazynów wymaga połączenia z Proxmoksem.")))
         }
         do {
-            var wynik: [(id: String, rodzaj: String?, wiersze: [WierszMagazynuRRD])] = []
+            var wynik: [(id: String, rodzaj: String?, wiersze: [WierszMagazynuRRD], maksima: [WierszMagazynuRRD])] = []
             for m in try await client.storages() where m.kind != "pbs" {
-                if let w = try? await client.rrdMagazynu(m.name, okno: okno) { wynik.append((m.name, m.kind, w)) }
+                guard let w = try? await client.rrdMagazynu(m.name, okno: okno) else { continue }
+                let mx = (try? await client.rrdMagazynu(m.name, okno: okno, maksima: true)) ?? []
+                wynik.append((m.name, m.kind, w, mx))
             }
             return .success(wynik)
         } catch {
@@ -1232,11 +1245,13 @@ final class AppModel {
 
     /// Wszystkie kontenery, nie tylko uruchomione: zatrzymany teraz mógł chodzić w środku
     /// zakresu i jego warstwa ma się pokazać. Potknięcie na jednym nie kasuje reszty.
-    func historiaRamKontenerow(_ okno: OknoRRD) async -> [(nazwa: String, vmid: Int, wiersze: [WierszRRD])] {
+    func historiaRamKontenerow(_ okno: OknoRRD) async -> [(nazwa: String, vmid: Int, wiersze: RRDzMaksimami)] {
         guard let client, status == .connected else { return [] }
-        var wynik: [(nazwa: String, vmid: Int, wiersze: [WierszRRD])] = []
+        var wynik: [(nazwa: String, vmid: Int, wiersze: RRDzMaksimami)] = []
         for g in guests where g.kind == .container {
-            if let w = try? await client.rrdGoscia(g, okno: okno) { wynik.append((g.name, g.vmid, w)) }
+            guard let w = try? await client.rrdGoscia(g, okno: okno) else { continue }
+            let m = (try? await client.rrdGoscia(g, okno: okno, maksima: true)) ?? []
+            wynik.append((g.name, g.vmid, RRDzMaksimami(srednie: w, maksima: m)))
         }
         return wynik
     }
@@ -1352,6 +1367,13 @@ final class AppModel {
 
     func zainstalujAktualizacje(id: String, zakres: ZakresAktualizacji, serwerNextcloud: Bool) async -> WynikZlecenia {
         guard let polecenie = ServerCommands.poleceniStartuAktualizacji(id: id, zakres: zakres, serwerNextcloud: serwerNextcloud) else {
+            return .blad(String(localized: "Niepoprawny numer maszyny."))
+        }
+        return await zlec(polecenie)
+    }
+
+    func zainstalujWszystkie(ids: [String]) async -> WynikZlecenia {
+        guard let polecenie = ServerCommands.poleceniStartuWszystkich(ids: ids) else {
             return .blad(String(localized: "Niepoprawny numer maszyny."))
         }
         return await zlec(polecenie)

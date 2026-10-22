@@ -84,6 +84,24 @@ nonisolated struct SSHRunner: Sendable {
             .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    // MARK: - Polecenie do Terminala
+
+    /// Gotowe polecenie do wklejenia w Terminal macOS — na tym samym kluczu i tych samych
+    /// known_hosts co mNas, więc działa bez osobnej konfiguracji `~/.ssh`.
+    ///
+    /// `-t` jest konieczne: `pve-update-check` przy hoście czyta „TAK” z `/dev/tty`,
+    /// a bez pty ssh go nie ma i skrypt pomija hosta.
+    static func polecenieTerminala(host: String, user: String, komenda: String) -> String {
+        func q(_ s: String) -> String { "'" + s.replacingOccurrences(of: "'", with: "'\\''") + "'" }
+        return [
+            "ssh -t",
+            "-i", q(keyPath.path),
+            "-o", q("UserKnownHostsFile=\"\(knownHosts.path)\""),
+            q("\(user)@\(host)"),
+            q(komenda),
+        ].joined(separator: " ")
+    }
+
     // MARK: - Uruchamianie komend
 
     /// Odpala komendę zdalnie i zwraca stdout/stderr/kod wyjścia.

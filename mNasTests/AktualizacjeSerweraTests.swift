@@ -288,4 +288,49 @@ struct AktualizacjeSerweraTests {
         #expect(instalacja.contains("enable --now pve-update-check.timer"))
         #expect(!instalacja.contains("pve-update-check-upgrade.timer >/dev/null"))   // automat zostaje wyłączony
     }
+
+    @Test("Polecenie do Terminala: pty, klucz mNas i cytowanie")
+    func polecenieTerminala() {
+        let c = SSHRunner.polecenieTerminala(host: "10.0.0.5", user: "root",
+                                             komenda: "/usr/local/bin/pve-update-check -u -t host")
+        #expect(c.hasPrefix("ssh -t -i '"))
+        #expect(c.contains("/mNas-Proxmox/id_ed25519'"))
+        #expect(c.contains(#"'UserKnownHostsFile=""#) && c.contains(#"/mNas-Proxmox/known_hosts"'"#))
+        #expect(c.hasSuffix("'root@10.0.0.5' '/usr/local/bin/pve-update-check -u -t host'"))
+        #expect(SSHRunner.polecenieTerminala(host: "h", user: "u", komenda: "echo 'a'")
+            .hasSuffix(#"'echo '\''a'\'''"#))
+    }
+
+    @Test("Po kolei: tylko poprawne ID, pętla w pliku, jedna jednostka")
+    func poKoleiPolecenie() throws {
+        #expect(ServerCommands.poleceniStartuWszystkich(ids: []) == nil)
+        #expect(ServerCommands.poleceniStartuWszystkich(ids: ["101", "108; reboot"]) == nil)
+        let c = try #require(ServerCommands.poleceniStartuWszystkich(ids: ["101", "103", "115"]))
+        #expect(c.contains("for id in 101 103 115; do"))
+        #expect(c.contains(#"echo "@ $i 3 $id""#))
+        #expect(c.contains("<<'KOLEJKA'") && c.contains("\nKOLEJKA\n"))
+        #expect(c.contains("--unit=pve-update-check-mnas "))
+        #expect(c.contains(#"-u -y -t "$id""#))
+        #expect(c.contains("@@ZAJETE"))
+    }
+
+    @Test("Po kolei: odczyt pliku kolejki — w trakcie, koniec, błędy")
+    func poKoleiOdczyt() throws {
+        let baza = "@@WERSJA pve-update-check 2.8\n@@STAN\n@@BRAK\n@@POSTEP\n@@BRAK\n@@KOLEJKA\n"
+        let trwa = AktualizacjeParsers.odczyt(baza + "start 2026-10-22T10:00:00+02:00\n@ 1 3 101\n101 ok\n@ 2 3 103\n@@KONIEC\n@@JEDNOSTKA active\n")
+        let k = try #require(trwa.kolejka)
+        #expect(k.nr == 2 && k.ile == 3 && k.biezaca == "103" && k.wyniki.count == 1 && !k.skonczona)
+        #expect(trwa.kolejkaTrwa)
+        let koniec = AktualizacjeParsers.odczyt(baza + "start 2026-10-22T10:00:00+02:00\n@ 1 2 101\n101 ok\n@ 2 2 108\n108 bledy\nkoniec\n@@KONIEC\n")
+        let k2 = try #require(koniec.kolejka)
+        #expect(k2.skonczona && k2.biezaca == nil && k2.nieudane == ["108"])
+        #expect(!koniec.kolejkaTrwa)
+        #expect(AktualizacjeParsers.odczyt(baza + "@@KONIEC\n").kolejka == nil)
+    }
+
+    @Test("Po kolei: do kolejki bez hosta, rosnąco po numerze")
+    func poKoleiDoKolejki() throws {
+        let stan = try #require(AktualizacjeParsers.odczyt(Self.odczyt).stan)
+        #expect(stan.doKolejki.map(\.id) == ["108"])
+    }
 }

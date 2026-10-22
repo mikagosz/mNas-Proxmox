@@ -126,6 +126,13 @@ nonisolated struct PunktTransferu: Sendable, Hashable {
     var odNiego: Double
 
     var razemNaSekunde: Double { doNiego + odNiego }
+    /// Najwyższa prędkość w kubełku (`cf=MAX`, od 1.2.44): suma maksimów `netin` i `netout`.
+    /// W oknach od tygodnia kubełek to 30 min i więcej, a średnia spłaszczała skok transferu.
+    /// Oba kierunki mogły mieć szczyt w różnych minutach kubełka — przy jednym kierunku
+    /// transferu (zwykły przypadek) suma jest praktycznie dokładna.
+    var szczyt: Double? = nil
+    /// Co rysuje wykres i co liczy „szczyt”. Sumy bajtów i „średnio” zostają na średnich.
+    var naWykresie: Double { szczyt ?? razemNaSekunde }
 }
 
 // MARK: - Strumień
@@ -166,7 +173,7 @@ nonisolated struct Strumien: Identifiable, Sendable, Hashable {
     var doNiegoNaSekunde: Double { teraz?.doNiego ?? 0 }
     var odNiegoNaSekunde: Double { teraz?.odNiego ?? 0 }
 
-    var szczytNaSekunde: Double { punkty.map(\.razemNaSekunde).max() ?? 0 }
+    var szczytNaSekunde: Double { punkty.map(\.naWykresie).max() ?? 0 }
 
     var sredniaNaSekunde: Double {
         guard !punkty.isEmpty else { return 0 }
@@ -299,14 +306,21 @@ nonisolated enum TransferyParsers {
     /// sprzed pierwszych danych, czyli brak pomiaru. Zero narysowałoby ciszę, której
     /// nikt nie zmierzył — a odróżnianie „nie wiem" od „nic nie płynęło" jest w tym
     /// projekcie regułą, nie ozdobą.
-    static func punkty(_ wiersze: [WierszRRD]) -> [PunktTransferu] {
-        wiersze
+    ///
+    /// `maksima` — ten sam szereg z `cf=MAX`, łączony po czasie (od 1.2.44). Pusty = bez szczytów.
+    static func punkty(_ wiersze: [WierszRRD], maksima: [WierszRRD] = []) -> [PunktTransferu] {
+        let m = Dictionary(maksima.map { ($0.time, $0) }, uniquingKeysWith: { a, _ in a })
+        return wiersze
             .compactMap { w -> PunktTransferu? in
                 guard let doNiego = w.netin, let odNiego = w.netout else { return nil }
                 // Ujemnej prędkości RRD nie podaje; gdyby podał, jest to śmieć, nie pomiar.
                 guard doNiego >= 0, odNiego >= 0 else { return nil }
+                var szczyt: Double?
+                if let mw = m[w.time], let a = mw.netin, let b = mw.netout, a >= 0, b >= 0 {
+                    szczyt = max(a + b, doNiego + odNiego)
+                }
                 return PunktTransferu(czas: Date(timeIntervalSince1970: Double(w.time)),
-                                      doNiego: doNiego, odNiego: odNiego)
+                                      doNiego: doNiego, odNiego: odNiego, szczyt: szczyt)
             }
             .sorted { $0.czas < $1.czas }
     }
@@ -331,8 +345,9 @@ nonisolated enum TransferyParsers {
                          kto: String,
                          rodzaj: Strumien.Rodzaj,
                          wiersze: [WierszRRD],
+                         maksima: [WierszRRD] = [],
                          okno: OknoRRD) -> Strumien {
-        let p = punkty(wiersze)
+        let p = punkty(wiersze, maksima: maksima)
         return Strumien(zrodlo: zrodlo,
                         kto: kto,
                         rodzaj: rodzaj,

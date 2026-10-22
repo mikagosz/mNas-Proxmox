@@ -420,25 +420,27 @@ actor ProxmoxClient {
     // wielkości poniżej ruchu, który ten monitor obserwuje.
 
     /// Szereg RRD **węzła** — czyli całego łącza.
-    func rrdWezla(_ okno: OknoRRD) async throws -> [WierszRRD] {
+    /// `maksima: true` = `cf=MAX` — najwyższa próbka w każdym przedziale (historia, od 1.2.43).
+    /// Monitor transferów zostaje na średnich.
+    func rrdWezla(_ okno: OknoRRD, maksima: Bool = false) async throws -> [WierszRRD] {
         let node = try requireNode()
-        return try await get("/nodes/\(node)/rrddata?timeframe=\(okno.rawValue)", as: [WierszRRD].self)
+        return try await get("/nodes/\(node)/rrddata?timeframe=\(okno.rawValue)\(maksima ? "&cf=MAX" : "")", as: [WierszRRD].self)
     }
 
     /// Historia zajętości jednego magazynu (od 1.2.16). Proxmox trzyma ją sam
     /// (`pvestatd`), rok wstecz — także dla dysku kopii na talerzu, bez nowego odczytu.
-    func rrdMagazynu(_ id: String, okno: OknoRRD) async throws -> [WierszMagazynuRRD] {
+    func rrdMagazynu(_ id: String, okno: OknoRRD, maksima: Bool = false) async throws -> [WierszMagazynuRRD] {
         let node = try requireNode()
-        return try await get("/nodes/\(node)/storage/\(id)/rrddata?timeframe=\(okno.rawValue)",
+        return try await get("/nodes/\(node)/storage/\(id)/rrddata?timeframe=\(okno.rawValue)\(maksima ? "&cf=MAX" : "")",
                              as: [WierszMagazynuRRD].self)
     }
 
     /// Szereg RRD jednego gościa. Gałąź zależy od rodzaju: kontener siedzi pod `lxc`,
     /// maszyna pod `qemu`, i pomylenie ich daje czyste 404, nie pustą listę.
-    func rrdGoscia(_ guest: Guest, okno: OknoRRD) async throws -> [WierszRRD] {
+    func rrdGoscia(_ guest: Guest, okno: OknoRRD, maksima: Bool = false) async throws -> [WierszRRD] {
         let node = try requireNode()
         let galaz = guest.kind == .container ? "lxc" : "qemu"
-        return try await get("/nodes/\(node)/\(galaz)/\(guest.vmid)/rrddata?timeframe=\(okno.rawValue)",
+        return try await get("/nodes/\(node)/\(galaz)/\(guest.vmid)/rrddata?timeframe=\(okno.rawValue)\(maksima ? "&cf=MAX" : "")",
                              as: [WierszRRD].self)
     }
 

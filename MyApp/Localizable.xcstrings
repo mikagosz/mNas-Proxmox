@@ -6829,6 +6829,86 @@
         }
       }
     },
+    "Po kolei: %@. Każda dostaje najpierw snapshot albo kopię vzdump, a błąd jednej nie zatrzymuje reszty. Sam Proxmox i serwer Nextclouda zostają — mają swoje przyciski.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One by one: %@. Each gets a snapshot or a vzdump backup first, and an error on one doesn't stop the rest. Proxmox itself and the Nextcloud server stay as they are — they have their own buttons."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po kolei: %@. Każda dostaje najpierw snapshot albo kopię vzdump, a błąd jednej nie zatrzymuje reszty. Sam Proxmox i serwer Nextclouda zostają — mają swoje przyciski."
+          }
+        }
+      }
+    },
+    "Po kolei: %lld z %lld bez błędów": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One by one: %lld of %lld without errors"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po kolei: %lld z %lld bez błędów"
+          }
+        }
+      }
+    },
+    "Po kolei: %lld z %lld%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One by one: %lld of %lld%@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po kolei: %lld z %lld%@"
+          }
+        }
+      }
+    },
+    "Po kolei: przerwane na %@ (%lld z %lld gotowe)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One by one: stopped at %@ (%lld of %lld done)"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po kolei: przerwane na %@ (%lld z %lld gotowe)"
+          }
+        }
+      }
+    },
+    "Po kolei: zaktualizowano %lld z %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One by one: updated %lld of %lld"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po kolei: zaktualizowano %lld z %lld"
+          }
+        }
+      }
+    },
     "Pobieram i sprawdzam paczkę…": {
       "localizations": {
         "en": {
@@ -8322,6 +8402,7 @@
       }
     },
     "Rozdzielczość w tym oknie to %@ — krótkie szarpnięcie rozmyje się w średniej kubełka.": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -8333,6 +8414,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozdzielczość w tym oknie to %@ — krótkie szarpnięcie rozmyje się w średniej kubełka."
+          }
+        }
+      }
+    },
+    "Rozdzielczość w tym oknie to %@. Wykres i szczyt pokazują najwyższą prędkość w każdym kubełku, sumy i średnia liczą się ze średnich.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The resolution in this window is %@. The chart and the peak show the highest speed in each bucket; totals and the average come from averages."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozdzielczość w tym oknie to %@. Wykres i szczyt pokazują najwyższą prędkość w każdym kubełku, sumy i średnia liczą się ze średnich."
           }
         }
       }
@@ -8657,18 +8754,18 @@
         }
       }
     },
-    "Sam Proxmox aktualizuj w SSH (pve-update-check -u -t host): nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować.": {
+    "Sam Proxmox aktualizuj w Terminalu: nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować. Skopiuj polecenie, wklej je w Terminal i potwierdź, wpisując TAK.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Update Proxmox itself over SSH (pve-update-check -u -t host): a new kernel needs headers and a rebuilt network card driver, and the host can't be snapshotted."
+            "value": "Update Proxmox itself in Terminal: a new kernel needs headers and a rebuilt network card driver, and the host can't be snapshotted. Copy the command, paste it into Terminal and confirm by typing TAK."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sam Proxmox aktualizuj w SSH (pve-update-check -u -t host): nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować."
+            "value": "Sam Proxmox aktualizuj w Terminalu: nowe jądro wymaga nagłówków i przebudowy sterownika karty sieciowej, a hosta nie da się zsnapshotować. Skopiuj polecenie, wklej je w Terminal i potwierdź, wpisując TAK."
           }
         }
       }
@@ -12406,6 +12503,38 @@
         }
       }
     },
+    "Z błędami: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With errors: %@"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z błędami: %@"
+          }
+        }
+      }
+    },
+    "Z błędami: %@ — szczegóły w logach na serwerze (%@).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With errors: %@ — details in the logs on the server (%@)."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z błędami: %@ — szczegóły w logach na serwerze (%@)."
+          }
+        }
+      }
+    },
     "ZFS": {
       "localizations": {
         "en": {
@@ -12775,6 +12904,22 @@
         }
       }
     },
+    "Zaktualizować po kolei %lld maszyn?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update %lld machines one by one?"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizować po kolei %lld maszyn?"
+          }
+        }
+      }
+    },
     "Zaktualizuj narzędzie…": {
       "localizations": {
         "en": {
@@ -12787,6 +12932,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zaktualizuj narzędzie…"
+          }
+        }
+      }
+    },
+    "Zaktualizuj wszystkie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update All"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuj wszystkie"
+          }
+        }
+      }
+    },
+    "Zaktualizuj wszystkie po kolei…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update All One by One…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaktualizuj wszystkie po kolei…"
           }
         }
       }

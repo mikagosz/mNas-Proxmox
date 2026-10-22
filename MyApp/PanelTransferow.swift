@@ -90,7 +90,7 @@ struct PanelTransferow: View {
             PanelSection(title: "Jak to czytać") {
                 wskazowka("Strzałki są z punktu widzenia tego, co stoi w nazwie — „w górę” znaczy, że dane wyszły z niego.")
                 wskazowka("„\(lacze?.kto ?? String(localized: "Węzeł"))” to całe łącze: Proxmox liczy tam wyłącznie karty fizyczne, więc mostki i kontenery nie wchodzą do tej sumy dwa razy.")
-                wskazowka("Rozdzielczość w tym oknie to \(okno.opisRozdzielczosci) — krótkie szarpnięcie rozmyje się w średniej kubełka.")
+                wskazowka("Rozdzielczość w tym oknie to \(okno.opisRozdzielczosci). Wykres i szczyt pokazują najwyższą prędkość w każdym kubełku, sumy i średnia liczą się ze średnich.")
                 wskazowka("Który kontener przesyłał — widać. Która maszyna w domu się z nim łączyła — nie: RRD nie zna adresu klienta.")
             }
         }
@@ -106,7 +106,7 @@ struct PanelTransferow: View {
                 Text("szczyt \(Format.predkosc(s.szczytNaSekunde))")
                     .font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
             }
-            Sparkline(points: s.punkty.map(\.razemNaSekunde), tint: .mint, upperBound: skala)
+            Sparkline(points: s.punkty.map(\.naWykresie), tint: .mint, upperBound: skala)
                 .frame(height: 44)
                 .background(RoundedRectangle(cornerRadius: 6).fill(.quaternary.opacity(0.3)))
         }

@@ -80,7 +80,7 @@ struct HistoriaRAMWidok: View {
         case .failure(let e): blad = e.opis
         }
         kontenery = HistoriaParsers.ramKontenerow(g)
-        przydzialy = Dictionary(g.compactMap { x in HistoriaParsers.przydzial(x.wiersze).map { ("ct\(x.vmid)", $0) } },
+        przydzialy = Dictionary(g.compactMap { x in HistoriaParsers.przydzial(x.wiersze.srednie).map { ("ct\(x.vmid)", $0) } },
                                 uniquingKeysWith: { a, _ in a })
     }
 }

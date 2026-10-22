@@ -57,7 +57,7 @@ struct WykresHistorii: View {
                                 .foregroundStyle(by: .value("Seria", s.nazwa))
                         } else {
                             LineMark(x: .value("Czas", p.czas),
-                                     y: .value("Wartość", p.wartosc ?? 0),
+                                     y: .value("Wartość", p.naWykresie ?? 0),
                                      series: .value("Odcinek", "\(s.id)#\(i)"))
                                 .foregroundStyle(by: .value("Seria", s.nazwa))
                         }
@@ -68,7 +68,7 @@ struct WykresHistorii: View {
                 ForEach(Array(HistoriaParsers.odcinki(linia, warstwowy: false).enumerated()), id: \.offset) { i, odc in
                     ForEach(odc, id: \.czas) { p in
                         LineMark(x: .value("Czas", p.czas),
-                                 y: .value("Wartość", p.wartosc ?? 0),
+                                 y: .value("Wartość", p.naWykresie ?? 0),
                                  series: .value("Odcinek", "linia#\(i)"))
                             .foregroundStyle(Color.primary)
                             .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
@@ -103,7 +103,9 @@ struct WykresHistorii: View {
             Text(czas.formatted(date: .abbreviated, time: .shortened)).font(.caption2.bold())
             ForEach(serie + (linia.map { [$0] } ?? [])) { s in
                 let p = s.punkty.min { abs($0.czas.timeIntervalSince(czas)) < abs($1.czas.timeIntervalSince(czas)) }
-                Text("\(s.nazwa): \(FormatHistorii.wartosc(p?.wartosc, s.jednostka))")
+                // Warstwy pokazują średnią (z niej są narysowane), linie — to, co widać na wykresie.
+                let w = warstwowy && s.id != linia?.id ? p?.wartosc : p?.naWykresie
+                Text("\(s.nazwa): \(FormatHistorii.wartosc(w, s.jednostka))")
                     .font(.caption2.monospacedDigit())
             }
         }

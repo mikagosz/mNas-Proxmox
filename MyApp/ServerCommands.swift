@@ -341,6 +341,7 @@ nonisolated struct ServerCommands: Sendable {
         echo "@@WERSJA $(\#(NarzedzieAktualizacji.sciezka) -v 2>/dev/null)"
         echo '@@STAN'; cat \#(d)/stan.json 2>/dev/null || echo '@@BRAK'
         echo '@@POSTEP'; cat \#(d)/aktualizacja.json 2>/dev/null || echo '@@BRAK'
+        echo '@@KOLEJKA'; cat \#(NarzedzieAktualizacji.plikKolejki) 2>/dev/null
         echo '@@KONIEC'
         systemctl is-active --quiet \#(NarzedzieAktualizacji.jednostka) && echo '@@JEDNOSTKA active'
         # „trwa”, a procesu z `pid` już nie ma (albo pid dostał ktoś inny) — @@MARTWY
@@ -401,6 +402,35 @@ nonisolated struct ServerCommands: Sendable {
         systemd-run --unit=\(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=3h \
           \(NarzedzieAktualizacji.sciezka) \(argumenty) >/dev/null && echo '@@START'
         """
+    }
+
+    /// „Zaktualizuj wszystkie po kolei” (od 1.2.43): jedna jednostka w tle, w niej po kolei
+    /// `-u -y -t <id>` dla każdej maszyny — każda dostaje swój snapshot albo kopię i swój
+    /// postęp w `aktualizacja.json`, a błąd jednej nie zatrzymuje reszty. Pętla idzie do pliku
+    /// (heredoc bez rozwijania), bo `systemd-run` sam rozwija `$` w argumentach.
+    /// `nil`, gdy lista pusta albo któreś ID nie przeszło walidacji.
+    static func poleceniStartuWszystkich(ids: [String]) -> String? {
+        guard !ids.isEmpty, ids.allSatisfy(AktualizacjeParsers.poprawneID) else { return nil }
+        let k = NarzedzieAktualizacji.plikKolejki
+        let skrypt = "/run/\(NarzedzieAktualizacji.jednostka)-kolejka.sh"
+        return #"""
+        \#(wstepStartu)
+        cat > \#(skrypt) <<'KOLEJKA'
+        #!/bin/bash
+        k=\#(k)
+        echo "start $(date -Iseconds)" > "$k"
+        i=0
+        for id in \#(ids.joined(separator: " ")); do
+          i=$((i+1)); echo "@ $i \#(ids.count) $id" >> "$k"
+          \#(NarzedzieAktualizacji.sciezka) -u -y -t "$id"
+          s=$(sed -n 's/^ *"stan" *: *"\([a-z]*\)".*/\1/p' \#(NarzedzieAktualizacji.katalogStanu)/aktualizacja.json 2>/dev/null | head -n1)
+          echo "$id ${s:-brak}" >> "$k"
+        done
+        echo koniec >> "$k"
+        KOLEJKA
+        systemd-run --unit=\#(NarzedzieAktualizacji.jednostka) --collect --property=RuntimeMaxSec=8h \
+          /bin/bash \#(skrypt) >/dev/null && echo '@@START'
+        """#
     }
 
     /// Powrót do snapshotu `puc_` albo kopii vzdump sprzed ostatniej aktualizacji.
@@ -522,15 +552,19 @@ nonisolated struct ServerCommands: Sendable {
         for f in *.rrd; do
           [ -f "$f" ] || continue
           echo "@@PLIK $f"
-          a=()
+          a=(); m=()
           for d in $(rrdtool info "$f" | sed -n 's/^ds\[\(.*\)\]\.index.*/\1/p'); do
             if [ "$f" = moc.rrd ]; then
               a+=("DEF:r$d=$f:$d:AVERAGE" "CDEF:$d=r$d,1000000,/" "XPORT:$d:$d")
+              m+=("DEF:rm$d=$f:$d:MAX" "CDEF:m$d=rm$d,1000000,/" "XPORT:m$d:$d.max")
             else
               a+=("DEF:$d=$f:$d:AVERAGE" "XPORT:$d:$d")
+              m+=("DEF:m$d=$f:$d:MAX" "XPORT:m$d:$d.max")
             fi
           done
-          rrdtool xport --json --start -\#(okno.sekundy) --end now --step \#(okno.krokZbieracza) "${a[@]}"
+          # Kolumna `<ds>.max` = maksima przedziałów (od 1.2.43). Plik bez archiwum MAX → same średnie.
+          rrdtool xport --json --start -\#(okno.sekundy) --end now --step \#(okno.krokZbieracza) "${a[@]}" "${m[@]}" 2>/dev/null \
+            || rrdtool xport --json --start -\#(okno.sekundy) --end now --step \#(okno.krokZbieracza) "${a[@]}"
         done
         exit 0
         """#

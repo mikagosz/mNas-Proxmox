@@ -184,8 +184,10 @@ struct HistoriaMiejscaWidok: View {
         switch mg {
         case .success(let lista):
             magazyny = lista.map { m in
+                let maks = Dictionary(m.maksima.map { ($0.time, $0.used) }, uniquingKeysWith: { a, _ in a })
                 let punkty = m.wiersze.map {
-                    PunktHistorii(czas: Date(timeIntervalSince1970: TimeInterval($0.time)), wartosc: $0.used)
+                    PunktHistorii(czas: Date(timeIntervalSince1970: TimeInterval($0.time)), wartosc: $0.used,
+                                  maks: maks[$0.time] ?? nil)
                 }
                 return PozycjaMiejsca(id: "pve.\(m.id)", nazwa: m.id,
                                       zajete: SeriaHistorii(id: "pve.\(m.id)", nazwa: m.id, jednostka: .bajty, punkty: punkty),
