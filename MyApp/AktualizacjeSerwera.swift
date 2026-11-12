@@ -16,7 +16,7 @@ import Foundation
 /// w paczce `pve-update-check` w Brudnopisie.
 nonisolated enum NarzedzieAktualizacji {
     /// Musi się zgadzać z `VERSION=` w `puc-pve-update-check.sh` — pilnuje test.
-    static let wersja = "2.8"
+    static let wersja = "2.9"
     static let sciezka = "/usr/local/bin/pve-update-check"
     static let katalogStanu = "/var/lib/pve-update-check"
     static let katalogLogow = "/var/log/pve-update-check/"
@@ -49,6 +49,28 @@ nonisolated enum NarzedzieAktualizacji {
     }
 }
 
+nonisolated extension StanAktualizacji {
+    /// Jedna maszyna, której wpisu nie da się odczytać, nie gasi całego stanu.
+    ///
+    /// Do 2.8 gość mógł tabulatorem rozjechać swój wiersz w `stan.json`; wtedy dekodowanie całej
+    /// tablicy padało i kafel „Aktualizacje” był pusty dla hosta i wszystkich gości (audyt
+    /// dynamiczny 2026-11-12, D-B-P1-01). Nieczytelny wpis jest pomijany, reszta zostaje.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        format = try c.decode(Int.self, forKey: .format)
+        wersja = try c.decode(String.self, forKey: .wersja)
+        host = try c.decode(String.self, forKey: .host)
+        sprawdzono = try c.decode(String.self, forKey: .sprawdzono)
+        maszyny = try c.decode([Pominiety<MaszynaAktualizacji>].self, forKey: .maszyny).compactMap(\.wartosc)
+    }
+}
+
+/// Element tablicy, który przy błędzie dekodowania daje `nil` zamiast przerwać całą tablicę.
+nonisolated struct Pominiety<T: Decodable>: Decodable {
+    let wartosc: T?
+    init(from decoder: Decoder) throws { wartosc = try? T(from: decoder) }
+}
+
 // MARK: - Pliki stanu (kontrakt: MNAS.md w paczce pve-update-check)
 
 nonisolated struct StanAktualizacji: Codable, Sendable, Equatable {
@@ -58,6 +80,16 @@ nonisolated struct StanAktualizacji: Codable, Sendable, Equatable {
     var sprawdzono: String
     var maszyny: [MaszynaAktualizacji]
 
+    /// Ten sam stan bez „wymaga ponownego uruchomienia” — gdy host wstał już po sprawdzeniu,
+    /// bo restart hosta uruchamia ponownie także kontenery i ich usługi (od mNas 1.2.47).
+    func bezRestartow() -> StanAktualizacji {
+        var s = self
+        for i in s.maszyny.indices {
+            s.maszyny[i].restart = false
+            s.maszyny[i].uslugiDoRestartu = nil
+        }
+        return s
+    }
     /// Maszyny, przy których jest coś do zrobienia: aktualizacje albo ponowne uruchomienie.
     var doAktualizacji: [MaszynaAktualizacji] { maszyny.filter { $0.maAktualizacje || $0.wymagaRestartu } }
 

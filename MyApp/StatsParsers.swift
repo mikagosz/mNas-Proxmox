@@ -98,6 +98,10 @@ nonisolated enum StatsParsers {
             guard var ct = currentCT else { continue }
 
             if head == "IP", parts.count >= 2 {
+                // Gdy kontener nie ma stałego adresu, ten wiersz pisze program W kontenerze.
+                // `evil.example` dawało kafel z podpisem „Nextcloud” i linkiem do obcego hosta
+                // (audyt dynamiczny 2026-11-12, D-B-P2-01). Przyjmujemy wyłącznie adres IP.
+                guard Self.adresIP(String(parts[1])) else { currentCT = ct; continue }
                 ct.address = String(parts[1])
                 currentCT = ct
                 continue
@@ -131,6 +135,13 @@ nonisolated enum StatsParsers {
 
     /// Wyciąga numer portu z adresu z `ss` (`0.0.0.0:3000`, `*:8080`, `[::]:443`,
     /// `127.0.0.1:9000`). Pętla zwrotna → `nil`, bo z Maca i tak się tam nie dobijemy.
+    /// Adres IPv4 albo IPv6 (także w nawiasach), sprawdzony parserem systemu, nie wyglądem.
+    static func adresIP(_ s: String) -> Bool {
+        var v4 = in_addr(), v6 = in6_addr()
+        let goly = s.hasPrefix("[") && s.hasSuffix("]") ? String(s.dropFirst().dropLast()) : s
+        return inet_pton(AF_INET, goly, &v4) == 1 || inet_pton(AF_INET6, goly, &v6) == 1
+    }
+
     private static func listeningPort(_ field: String) -> Int? {
         guard let colon = field.lastIndex(of: ":") else { return nil }
         let host = String(field[field.startIndex..<colon])
@@ -263,9 +274,12 @@ nonisolated enum StatsParsers {
             let numStr = parts[1].trimmingCharacters(in: .whitespaces).split(separator: " ").first ?? ""
             if let v = Double(numStr) { vals[key] = v * 1024 }   // kB → bajty
         }
-        guard let total = vals["MemTotal"], total > 0 else { return nil }
-        let free = vals["MemAvailable"] ?? vals["MemFree"] ?? 0
-        let zfs = min(max(arcBytes ?? 0, 0), total)
+        // `Int64(Double)` kończy program dla `inf`, `nan` i liczb ≥ 2^63 — a te przychodzą z
+        // serwera tekstem („1e999 kB”). Poza zakresem: odczytu nie ma (audyt dynamiczny 2026-11-12,
+        // D-S-P2-01).
+        guard let total = vals["MemTotal"], Self.bajtyWZakresie(total), total > 0 else { return nil }
+        let free = min(max(vals["MemAvailable"] ?? vals["MemFree"] ?? 0, 0), total)
+        let zfs = min(max(arcBytes.flatMap { $0.isFinite ? $0 : nil } ?? 0, 0), total)
         let services = max(0, total - free - zfs)
         // `nil`, a nie `0`, gdy serwer w ogóle nie ma ZFS-a. Zero znaczy „zmierzono zero",
         // a tu nie ma czego mierzyć: `/proc/spl/kstat/zfs/arcstats` na LVM-thin nie istnieje.
@@ -452,7 +466,8 @@ nonisolated enum StatsParsers {
                 let device = String(c[1]).replacingOccurrences(of: "/dev/", with: "")
                 if let disk = rootDisk(of: device) { vgToDisk[String(c[2])] = disk }
             } else if head == "POOL", c.count >= 4,
-                      let size = Double(c[2]), let percent = Double(c[3]) {
+                      let size = Double(c[2]), let percent = Double(c[3]),
+                      Self.bajtyWZakresie(size * percent / 100), size * percent >= 0 {
                 // Do tego miejsca dochodzą **wyłącznie pule** (`lv_attr` zaczyna się
                 // od `t`), odsiane po stronie serwera. Wolumeny maszyn też mają
                 // `data_percent`, ale ich zajętość siedzi **już w puli** — liczenie
@@ -461,12 +476,14 @@ nonisolated enum StatsParsers {
                 // Świadomie nie liczymy zwykłych wolumenów (`swap`, 8 GB na serwerze testowym):
                 // przydzielone są, ale bez zamontowania nie wiadomo, ile z nich zajęte,
                 // a wpisanie całego rozmiaru byłoby zgadywaniem.
-                poolBytes[String(c[1]), default: 0] += Int64(size * percent / 100)
+                let (suma, za) = poolBytes[String(c[1]), default: 0].addingReportingOverflow(Int64(size * percent / 100))
+                poolBytes[String(c[1])] = za ? Int64.max : suma
             }
         }
         for (vg, bytes) in poolBytes {
             guard let disk = vgToDisk[vg], var u = out[disk] else { continue }
-            u.used += bytes
+            let (suma, za) = u.used.addingReportingOverflow(bytes)
+            u.used = za ? Int64.max : suma
             out[disk] = u
         }
         return out
@@ -500,6 +517,11 @@ nonisolated enum StatsParsers {
 
     /// Czyta sekcję `@@POWER`: pierwszy wiersz to znacznik czasu serwera w nanosekundach,
     /// dalej po jednym wierszu na domenę: `nazwa energia_uj max_uj`.
+    /// Czy liczba bajtów z serwera da się zamienić na `Int64` bez pułapki procesu.
+    static func bajtyWZakresie(_ d: Double) -> Bool {
+        d.isFinite && d > -9.2e18 && d < 9.2e18
+    }
+
     static func raplSample(_ text: String) -> RAPLSample? {
         var lines = text.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
@@ -522,7 +544,11 @@ nonisolated enum StatsParsers {
     /// `max_energy_range_uj` (na serwerze testowym ~262 s przy 1 kW, w praktyce kilka godzin).
     /// Ujemna różnica znaczy przewinięcie, nie spadek poboru — dodajemy zakres.
     static func watts(from previous: RAPLSample, to current: RAPLSample) -> [String: Double] {
-        let seconds = Double(current.timestampNanos - previous.timestampNanos) / 1_000_000_000
+        // Liczniki i znaczniki czasu przychodzą z serwera; zwykłe odejmowanie `Int64` przy
+        // wartościach na granicy zakresu kończyło program (D-S-P2-01).
+        let (roznica, przepelnienie) = current.timestampNanos.subtractingReportingOverflow(previous.timestampNanos)
+        guard !przepelnienie else { return [:] }
+        let seconds = Double(roznica) / 1_000_000_000
         // Zbyt krótki albo cofnięty odstęp daje dzielenie przez ~zero i liczby rzędu
         // tysięcy watów. Lepiej nie pokazać nic niż pokazać bzdurę.
         guard seconds >= 0.5, seconds <= 600 else { return [:] }
@@ -530,10 +556,12 @@ nonisolated enum StatsParsers {
         var out: [String: Double] = [:]
         for (name, now) in current.domains {
             guard let before = previous.domains[name] else { continue }
-            var delta = now.energy - before.energy
+            var (delta, za) = now.energy.subtractingReportingOverflow(before.energy)
+            guard !za else { continue }
             if delta < 0 {
                 guard before.max > 0 else { continue }
-                delta += before.max
+                (delta, za) = delta.addingReportingOverflow(before.max)
+                guard !za else { continue }
             }
             guard delta >= 0 else { continue }
             let w = Double(delta) / 1_000_000 / seconds

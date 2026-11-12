@@ -97,6 +97,7 @@ nonisolated struct SSHRunner: Sendable {
             "ssh -t",
             "-i", q(keyPath.path),
             "-o", q("UserKnownHostsFile=\"\(knownHosts.path)\""),
+            "--",                                  // dalej już tylko cel i polecenie, żadnych opcji
             q("\(user)@\(host)"),
             q(komenda),
         ].joined(separator: " ")
@@ -137,12 +138,31 @@ nonisolated struct SSHRunner: Sendable {
         }
     }
 
+    /// Konto i adres, które `ssh` przyjmie jako cel, a nie jako opcję.
+    ///
+    /// Konto bierze się z części identyfikatora tokenu przed `@`. `-oProxyCommand=…@pam!x`
+    /// trafiało do `ssh` jako argument zaczynający się od `-`, czyli jako opcja — i polecenie
+    /// z pola wykonywało się na Macu (audyt dynamiczny 2026-11-12, D-B-P3-01).
+    static func poprawnyCel(host: String, user: String) -> Bool {
+        let konto = user.unicodeScalars
+        guard let pierwszy = konto.first, CharacterSet.letters.contains(pierwszy) || pierwszy == "_",
+              konto.allSatisfy({ $0.isASCII && (CharacterSet.alphanumerics.contains($0) || "_.-".unicodeScalars.contains($0)) })
+        else { return false }
+        guard !host.isEmpty, !host.hasPrefix("-"),
+              host.unicodeScalars.allSatisfy({ $0.isASCII && (CharacterSet.alphanumerics.contains($0) || ".-:[]".unicodeScalars.contains($0)) })
+        else { return false }
+        return true
+    }
+
     private static func execute(command: String,
                                 host: String,
                                 user: String,
                                 totalTimeout: Int,
                                 connectTimeout: Int,
                                 forceTTY: Bool) -> Result {
+        guard poprawnyCel(host: host, user: user) else {
+            return Result(output: "", error: String(localized: "Niepoprawne konto albo adres serwera dla SSH: „\(user)@\(host)”."), code: -1)
+        }
         ensureKey()
 
         let p = Process()
@@ -175,7 +195,8 @@ nonisolated struct SSHRunner: Sendable {
             "-o", "ControlPersist=60",
         ]
         if forceTTY { args += ["-tt", "-o", "LogLevel=ERROR"] }
-        args += ["\(user)@\(host)", command]
+        // `--`: cel nigdy nie zostanie wzięty za opcję, nawet gdyby walidacja wyżej coś przepuściła.
+        args += ["--", "\(user)@\(host)", command]
         p.arguments = args
 
         // Wyjście zbieramy do plików tymczasowych, nie do `Pipe`.
@@ -231,9 +252,13 @@ nonisolated struct SSHRunner: Sendable {
         if timedOut {
             Log.ssh.error("Komenda przerwana po \(totalTimeout, privacy: .public) s: \(command.prefix(80), privacy: .public)")
         }
+        // Dekodowanie z zastępowaniem złych bajtów. Ścisłe UTF-8 zwracało błąd dla CAŁEGO pliku,
+        // a `?? ""` robiło z niego pusty sukces: jeden bajt Latin-1 w nazwie czujnika albo
+        // w wiadomości monitora Kumy gasił wszystkie kafle z tego polecenia (audyt dynamiczny
+        // 2026-11-12, D-S-P2-02).
         return Result(
-            output: (try? String(contentsOf: outURL, encoding: .utf8)) ?? "",
-            error: (try? String(contentsOf: errURL, encoding: .utf8)) ?? "",
+            output: String(decoding: (try? Data(contentsOf: outURL)) ?? Data(), as: UTF8.self),
+            error: String(decoding: (try? Data(contentsOf: errURL)) ?? Data(), as: UTF8.self),
             code: p.terminationStatus,
             timedOut: timedOut
         )

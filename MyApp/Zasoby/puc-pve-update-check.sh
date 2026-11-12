@@ -31,7 +31,7 @@
 #   /etc/pve-update-check/apps.conf     aplikacje sprawdzane wg wersji (np. z GitHub Releases)
 
 set -uo pipefail
-VERSION=2.8
+VERSION=2.9
 
 # ---------- ustawienia domyślne (nadpisywane przez plik konfiguracyjny) ----------
 ETC=${PUC_ETC:-/etc/pve-update-check}
@@ -319,7 +319,10 @@ write_state() {
         binmode STDIN, ":encoding(UTF-8)";
         while (my $l = <STDIN>) {
             chomp $l; next unless length $l;
-            my ($typ, $id, $et, $os, $n, $sec, $nu, $ncs, $rb, $upd, $err, $pk, $free, $ncv, $ncg, $svc, $kern) = split /\t/, $l, -1;
+            # 17 pól i tabulator za ostatnim — inny kształt to wiersz zepsuty, nie dane maszyny
+            my @pola = split /\t/, $l, -1;
+            next unless @pola == 18;
+            my ($typ, $id, $et, $os, $n, $sec, $nu, $ncs, $rb, $upd, $err, $pk, $free, $ncv, $ncg, $svc, $kern) = @pola;
             my @lista = map { my @f = split / /; { nazwa => $f[0], z => $f[1], na => $f[2], bezpieczenstwo => ($f[3] ? $T : $F) } }
                         grep { length } split /\x1f/, ($pk // "");
             $m{"$typ:$id"} = {
@@ -354,6 +357,11 @@ process() {
     local os="" n=0 sec=0 nu=0 list="" apps="" info="" err="" line p o v s appup="" ncsrv=0 ncv="" ncnew="" ncg=0
     local updl="" errl="" pkgl="" US=$'\x1f' free="" svcl="" kern=""
     while IFS= read -r line; do
+        # Wiersz przychodzi z wnętrza gościa — root w kontenerze pisze tu, co chce. Tabulator
+        # i \x1f to separatory pól stan.json niżej: jeden tabulator w „OS …” przesuwał wszystkie
+        # dalsze kolumny i gość sam sobie wpisywał restart, liczbę pakietów i serwer Nextclouda,
+        # a mNas nie czytał potem stanu wcale (audyt dynamiczny mNas 2026-11-12, D-B-P1-01).
+        line=${line//[$'\t\x1f\r']/ }
         case $line in
             "OS "*)  os=${line#OS } ;;
             "PKG "*)
@@ -364,7 +372,7 @@ process() {
                     list+="    - $p  $o -> $v"; [[ $s == 1 ]] && list+="  [bezpieczeństwo]"; list+=$'\n'
                 fi ;;
             "REBOOT"*) reboot=1 ;;
-            "FREE "*) free=${line#FREE } ;;
+            "FREE "*) free=${line#FREE }; [[ $free =~ ^[0-9]{1,12}$ ]] || free="" ;;
             "SVC "*)  svcl+="${line#SVC }$US" ;;
             "KERNEL "*) kern=${line#KERNEL } ;;
             "UPD "*)  apps+="    * NOWA WERSJA: ${line#UPD }"$'\n'; nu=$((nu + 1)); updl+="${line#UPD }$US"

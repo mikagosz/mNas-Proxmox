@@ -1883,7 +1883,15 @@ struct DashboardView: View {
 
         tile(size) {
             head("Aktualizacje", DashTileID.aktualizacje.ikona, DashTileID.aktualizacje.kolor, size, trailing: kiedy)
-            if case .brak = odczyt?.narzedzie {
+            if model.restartHostaTrwa {
+                VStack(alignment: .leading, spacing: 4) {
+                    Spacer(minLength: 0)
+                    Text("↻").font(.system(size: size == .small ? 22 : 26, weight: .bold)).foregroundStyle(.blue)
+                    Text(model.status == .connected ? "serwer się wyłącza…" : "serwer wstaje…")
+                        .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    PasekPostepu(ulamek: 0.02, kolor: .blue)
+                }
+            } else if case .brak = odczyt?.narzedzie {
                 bigValue("—", "narzędzie nie jest zainstalowane", color: .secondary)
             } else if model.aktualizacjaTrwa {
                 let p = odczyt?.postep

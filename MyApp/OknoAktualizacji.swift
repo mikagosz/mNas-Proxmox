@@ -126,9 +126,17 @@ struct OknoAktualizacji: View {
     // MARK: Treść
 
     @ViewBuilder private var tresc: some View {
+        if model.restartHostaTrwa {
+            restartHostaKarta
+        } else if model.stanSprzedStartuHosta
+                    || model.restartHostaWstal.map({ Date().timeIntervalSince($0) < 30 * 60 }) == true {
+            poStarcieHosta
+        }
         if !model.gpuSSHEnabled || model.status != .connected {
-            Label("Aktualizacje wymagają połączenia SSH z hostem.", systemImage: "exclamationmark.triangle.fill")
-                .foregroundStyle(.orange)
+            if !model.restartHostaTrwa {
+                Label("Aktualizacje wymagają połączenia SSH z hostem.", systemImage: "exclamationmark.triangle.fill")
+                    .foregroundStyle(.orange)
+            }
         } else if odczyt == nil {
             HStack { ProgressView().controlSize(.small); Text("Czytam stan z serwera…").foregroundStyle(.secondary) }
         } else if let odczyt {
@@ -138,14 +146,61 @@ struct OknoAktualizacji: View {
             }
             narzedzie(odczyt)
             if let k = odczyt.kolejka { kolejka(k, odczyt) }
-            if model.aktualizacjaTrwa, kartaPostepu(odczyt) == nil { postep(odczyt) }
-            else if !model.aktualizacjaTrwa, let p = odczyt.postep, ["ok", "bledy", "przerwana"].contains(p.stan),
+            if model.aktualizacjaTrwa, !model.restartHostaTrwa, kartaPostepu(odczyt) == nil { postep(odczyt) }
+            // W trakcie restartu hosta jego przebieg pokazuje karta wyżej — nie „Uruchomiono ponownie” sprzed wyłączenia.
+            else if !model.aktualizacjaTrwa, !model.restartHostaTrwa, let p = odczyt.postep, ["ok", "bledy", "przerwana"].contains(p.stan),
                     // przerwana bez zapisanego wyniku nie ma `koniec` — liczy się wtedy start
                     let koniec = AktualizacjeParsers.data(p.koniec ?? (p.przerwana ? p.start : nil)),
                     Date().timeIntervalSince(koniec) < 24 * 3600 {
                 ostatniWynik(p, koniec: koniec, ogonLogu: odczyt.ogonLogu)
             }
             if let stan = odczyt.stan { maszyny(stan) }
+        }
+    }
+
+    /// Restart hosta zlecony z mNas, serwer jeszcze nie wstał (od 1.2.47).
+    private var restartHostaKarta: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Serwer uruchamia się ponownie", systemImage: "arrow.clockwise.circle.fill")
+                .font(.callout.bold()).foregroundStyle(.blue)
+            Text(model.status == .connected
+                 ? "Zatrzymuje kontenery i usługi, zaraz zniknie z sieci."
+                 : "Serwer jest niedostępny — wstaje. mNas połączy się sam, zwykle po 2–3 minutach.")
+                .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            ProgressView().progressViewStyle(.linear).tint(.blue)
+            if let z = model.restartHostaZlecony {
+                TimelineView(.periodic(from: .now, by: 1)) { kontekst in
+                    Text("od zlecenia \(Self.czas(od: z, do: kontekst.date))")
+                        .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(RoundedRectangle(cornerRadius: 8).fill(.blue.opacity(0.08)))
+    }
+
+    /// Host wstał: kiedy, ile maszyn działa i czy lista niżej jest już sprawdzona po starcie.
+    @ViewBuilder private var poStarcieHosta: some View {
+        if let wstal = model.hostWstal {
+            let sprzed = model.stanSprzedStartuHosta
+            let goscie = model.guests
+            VStack(alignment: .leading, spacing: 4) {
+                Label("Serwer wstał o \(wstal.formatted(date: .omitted, time: .shortened))",
+                      systemImage: "checkmark.circle.fill")
+                    .font(.callout.bold()).foregroundStyle(.green)
+                if !goscie.isEmpty {
+                    Text("Działa \(goscie.filter(\.running).count) z \(goscie.count) maszyn i kontenerów.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+                Text(sprzed
+                     ? "Lista niżej jest sprzed restartu, więc „wymaga ponownego uruchomienia” jest z niej zdjęte. Serwer sprawdzi aktualizacje sam ok. \(wstal.addingTimeInterval(AppModel.sprawdzeniePoStarcie).formatted(date: .omitted, time: .shortened)) — albo kliknij „Sprawdź teraz”."
+                     : "Aktualizacje sprawdzone na nowo po starcie.")
+                    .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .background(RoundedRectangle(cornerRadius: 8).fill(.green.opacity(0.08)))
         }
     }
 

@@ -440,6 +440,9 @@ final class AppModel {
         aktualizacje = nil
         zleconoAktualizacje = nil
         bladAktualizacji = nil
+        restartHostaZlecony = nil
+        restartHostaWstal = nil
+        hostWstal = nil
         mechanizmyWczytane = false
         kumaWczytana = false
         lastTransferyRead = .distantPast
@@ -507,6 +510,7 @@ final class AppModel {
             // „na żywo"; czyta `/proc` na serwerze i nie dotyka żadnego dysku.
             let node = try await client.nodeSnapshot()
             systemInfo = node.info
+            zapiszStartHosta(node.info.uptimeSeconds)
             applyAPIMeasurements(node)
 
             // Lista dysków raz na 10 minut: model, rozmiar i serial się nie zmieniają.
@@ -1319,9 +1323,49 @@ final class AppModel {
         return a.zajete || a.sprawdzaTeraz || a.postep?.trwa == true || zleconoAktualizacje != nil
     }
 
+    // MARK: Restart hosta (od 1.2.47)
+    //
+    // 2026-10-24: po „Uruchom ponownie serwer…” był tylko pasek i zielone „Uruchomiono
+    // ponownie”, a po powrocie serwera okno dalej wołało „Wymaga ponownego uruchomienia” —
+    // stan.json był z 9:17, sprzed restartu, a nowe sprawdzenie robi timer dopiero 5 min po starcie.
+
+    /// Chwila zlecenia restartu hosta z mNas — do powrotu serwera okno i kafel mówią „restartuje się”.
+    private(set) var restartHostaZlecony: Date?
+    /// Kiedy host wstał: z `uptime` węzła, liczone w chwili odczytu (co turę).
+    private(set) var hostWstal: Date?
+    /// Restart zlecony z mNas, który już się skończył — do komunikatu „wstał o …”.
+    private(set) var restartHostaWstal: Date?
+    /// Timer narzędzia sprawdza aktualizacje 5 min po starcie hosta (`OnBootSec=5min`).
+    static let sprawdzeniePoStarcie: TimeInterval = 5 * 60
+
+    var restartHostaTrwa: Bool { restartHostaZlecony != nil }
+
+    /// Stan aktualizacji sprawdzony przed ostatnim startem hosta — jego „wymaga ponownego
+    /// uruchomienia” nie jest już prawdą (restart hosta restartuje też kontenery).
+    var stanSprzedStartuHosta: Bool {
+        guard let w = hostWstal, let s = AktualizacjeParsers.data(aktualizacje?.stan?.sprawdzono) else { return false }
+        return s < w
+    }
+
+    private func zapiszStartHosta(_ uptime: Double?) {
+        guard let uptime else { return }
+        let wstal = Date().addingTimeInterval(-uptime)
+        // Nowy start (a nie drganie liczenia o sekundy) — stan aktualizacji czytamy od razu.
+        if let poprzedni = hostWstal, wstal.timeIntervalSince(poprzedni) > 60 { lastAktualizacjeRead = .distantPast }
+        hostWstal = wstal
+        if let z = restartHostaZlecony, wstal > z {
+            restartHostaZlecony = nil
+            restartHostaWstal = wstal
+            Log.connection.notice("Host wstał po restarcie zleconym z mNas")
+        }
+        // Zlecony restart, który po 15 min dalej nie nastąpił (narzędzie odmówiło po cichu) — nie wisi w nieskończoność.
+        if let z = restartHostaZlecony, Date().timeIntervalSince(z) > 15 * 60 { restartHostaZlecony = nil }
+    }
+
     private func odswiezAktualizacjeWPetli() async {
         guard gpuSSHEnabled, status == .connected else { return }
-        let odstep = aktualizacjaTrwa ? 0 : Self.aktualizacjeInterval
+        // Po starcie hosta, dopóki timer nie zapisze świeżego stanu, czytamy co turę.
+        let odstep = aktualizacjaTrwa || stanSprzedStartuHosta ? 0 : Self.aktualizacjeInterval
         guard minelo(&lastAktualizacjeRead, odstep) else { return }
         await odswiezAktualizacje()
     }
@@ -1331,11 +1375,16 @@ final class AppModel {
         lastAktualizacjeRead = Date()
         let r = await commands.odczytajAktualizacje()
         guard r.ok else {
+            // Serwer właśnie się wyłącza — milczenie to przebieg restartu, nie błąd.
+            if restartHostaTrwa { return }
             bladAktualizacji = r.timedOut ? String(localized: "Serwer nie oddał stanu aktualizacji w limicie czasu.")
                                           : String(localized: "Serwer nie oddał stanu aktualizacji (kod \(r.code)).")
             return
         }
-        let nowy = AktualizacjeParsers.odczyt(r.output)
+        var nowy = AktualizacjeParsers.odczyt(r.output)
+        if let w = hostWstal, let s = AktualizacjeParsers.data(nowy.stan?.sprawdzono), s < w {
+            nowy.stan = nowy.stan?.bezRestartow()
+        }
         // Zlecenie jest potwierdzone, gdy serwer ma nowszy start albo coś już chodzi;
         // po 2 minutach bez potwierdzenia uznajemy, że nie ruszyło (log jest w journalu).
         if let z = zleconoAktualizacje {
@@ -1402,7 +1451,11 @@ final class AppModel {
 
     func uruchomPonownieHost() async -> WynikZlecenia {
         await restorePWMAuto()
-        return await zlec(ServerCommands.poleceniRestartuHosta())
+        let wynik = await zlec(ServerCommands.poleceniRestartuHosta())
+        // Postęp restartu prowadzi `restartHostaZlecony`, nie potwierdzenie startu zadania:
+        // serwer gaśnie, zanim je zapisze, a po 2 min wyszłoby „Aktualizacja nie ruszyła”.
+        if wynik == .start { restartHostaZlecony = Date(); restartHostaWstal = nil; zleconoAktualizacje = nil }
+        return wynik
     }
 
     func sprawdzAktualizacjeTeraz() async -> WynikZlecenia {
@@ -1966,7 +2019,9 @@ final class AppModel {
         }
         // Serwer zniknie za chwilę — oddaj wentylatory układowi, zanim padnie kanał.
         await restorePWMAuto()
-        await wykonajAkcje(String(localized: "Restart węzła")) { try await $0.rebootNode() }
+        if await wykonajAkcje(String(localized: "Restart węzła"), { try await $0.rebootNode() }) == nil {
+            restartHostaZlecony = Date(); restartHostaWstal = nil
+        }
     }
 
     // MARK: - Auto-odświeżanie
