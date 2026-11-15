@@ -155,6 +155,44 @@ nonisolated struct Guest: Identifiable, Sendable, Equatable {
         var symbol: String { self == .container ? "shippingbox" : "desktopcomputer" }
     }
 
+    /// Akcja na gościu — `rawValue` to końcówka ścieżki API (`…/status/<akcja>`).
+    enum Akcja: String, Sendable {
+        case start
+        case shutdown
+        case reboot
+
+        var przycisk: String {
+            switch self {
+            case .start:    return String(localized: "Uruchom")
+            case .shutdown: return String(localized: "Zatrzymaj")
+            case .reboot:   return String(localized: "Restart")
+            }
+        }
+        /// Napis w trakcie — „Zamykanie…”.
+        var wToku: String {
+            switch self {
+            case .start:    return String(localized: "Uruchamianie…")
+            case .shutdown: return String(localized: "Zamykanie…")
+            case .reboot:   return String(localized: "Restartowanie…")
+            }
+        }
+        /// Napis po udanym końcu — „Zamknięty”.
+        var gotowe: String {
+            switch self {
+            case .start:    return String(localized: "Uruchomiony")
+            case .shutdown: return String(localized: "Zamknięty")
+            case .reboot:   return String(localized: "Zrestartowany")
+            }
+        }
+        var ikona: String {
+            switch self {
+            case .start:    return "play.fill"
+            case .shutdown: return "stop.fill"
+            case .reboot:   return "arrow.clockwise"
+            }
+        }
+    }
+
     var vmid: Int
     var name: String
     var kind: Kind

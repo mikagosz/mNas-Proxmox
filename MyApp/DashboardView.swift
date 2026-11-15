@@ -84,7 +84,7 @@ private struct ServiceAction: Identifiable {
 private struct GuestAction: Identifiable {
     let id = UUID()
     let guest: Guest
-    let start: Bool
+    let akcja: Guest.Akcja
 }
 
 struct DashboardView: View {
@@ -240,15 +240,12 @@ struct DashboardView: View {
             get: { pendingGuest != nil },
             set: { if !$0 { pendingGuest = nil } }
         ), presenting: pendingGuest) { act in
-            Button(act.start ? "Uruchom" : "Zatrzymaj", role: act.start ? nil : .destructive) {
-                Task { await model.setGuest(act.guest, running: act.start) }
+            Button(act.akcja.przycisk, role: act.akcja == .start ? nil : .destructive) {
+                Task { await model.guestAction(act.guest, act.akcja) }
             }
             Button("Anuluj", role: .cancel) {}
         } message: { act in
-            let what = "\(act.guest.kind.label.lowercased()) \(act.guest.vmid) (\(act.guest.name))"
-            Text(act.start
-                 ? "Uruchomić \(what)?"
-                 : "Zatrzymać \(what)? mNas wysyła `shutdown`, czyli łagodne zamknięcie systemu gościa — nie odcina zasilania.")
+            Text(OknoGosci.pytanie(act.guest, act.akcja))
         }
         .alert("Restart węzła", isPresented: $confirmReboot) {
             Button("Restart", role: .destructive) { Task { await model.rebootServer() } }
@@ -877,6 +874,8 @@ struct DashboardView: View {
                 }
             }
         }
+        // Od 1.2.49: klik otwiera okno ze wszystkimi gośćmi i przyciskami start/stop/restart.
+        .onTapGesture { if !editingLayout { openWindow(id: OknoPaneluTrwalego.id, value: OknoPaneluTrwalego.Cel.goscie) } }
     }
 
     /// Pasek stanu gości — jeden słupek na maszynę, zielony = chodzi.
@@ -896,15 +895,28 @@ struct DashboardView: View {
             Image(systemName: guest.kind.symbol)
                 .foregroundStyle(guest.running ? .green : .secondary)
                 .frame(width: 16)
+            NumerGoscia(vmid: guest.vmid, dziala: guest.running, maly: true)
             VStack(alignment: .leading, spacing: 1) {
-                Text(guest.name).font(.caption.weight(.medium)).lineLimit(1)
+                HStack(spacing: 3) {
+                    Text(guest.name).font(.caption.weight(.medium)).lineLimit(1)
+                    // Ten sam znak co „startuje z systemem” przy usługach.
+                    if model.startZSerwerem[guest.vmid] == true {
+                        Image(systemName: "bolt.fill")
+                            .font(.system(size: 8))
+                            .foregroundStyle(.yellow)
+                            .help("Startuje razem z serwerem")
+                    }
+                }
                 if !dense {
-                    Text("\(guest.kind.label) \(guest.vmid)")
+                    Text(guest.kind.label)
                         .font(.caption2).foregroundStyle(.secondary)
                 }
             }
             Spacer(minLength: 4)
-            if guest.running {
+            if let trwa = model.akcjeGosci[guest.vmid] {
+                // Ta sama informacja co w oknie gości: co się dzieje i od ilu sekund.
+                StanAkcjiGoscia(trwa: trwa, maly: true)
+            } else if guest.running {
                 VStack(alignment: .trailing, spacing: 1) {
                     if let cpu = guest.cpuPercent {
                         Text("\(String(format: "%.1f", cpu))%")
@@ -925,8 +937,11 @@ struct DashboardView: View {
         // Start/stop maszyny to zmiana stanu serwera — zawsze przez potwierdzenie,
         // nigdy jednym kliknięciem w kafel.
         .contextMenu {
-            Button(guest.running ? "Zatrzymaj (shutdown)" : "Uruchom") {
-                pendingGuest = GuestAction(guest: guest, start: !guest.running)
+            if guest.running {
+                Button("Zatrzymaj (shutdown)") { pendingGuest = GuestAction(guest: guest, akcja: .shutdown) }
+                Button("Restart") { pendingGuest = GuestAction(guest: guest, akcja: .reboot) }
+            } else {
+                Button("Uruchom") { pendingGuest = GuestAction(guest: guest, akcja: .start) }
             }
         }
     }

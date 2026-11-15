@@ -544,12 +544,63 @@ actor ProxmoxClient {
         try await post("/nodes/\(node)/status", form: ["command": "reboot"])
     }
 
-    /// Start/stop maszyny albo kontenera. `kind` decyduje o gałęzi ścieżki (`qemu` vs `lxc`).
-    func setGuest(_ guest: Guest, running: Bool) async throws {
+    /// Zmiana stanu gościa: start, łagodne zamknięcie albo restart.
+    /// `kind` decyduje o gałęzi ścieżki (`qemu` vs `lxc`).
+    /// Restart to `reboot` — system gościa zamyka się sam i wstaje, nie twardy reset.
+    ///
+    /// Zwraca UPID zadania na serwerze. Proxmox odpowiada od razu, gdy tylko **przyjmie**
+    /// polecenie — samo zamykanie trwa potem w tle, więc koniec akcji poznaje się po
+    /// zakończeniu tego zadania, nie po odpowiedzi na POST.
+    @discardableResult
+    func guestAction(_ guest: Guest, _ akcja: Guest.Akcja) async throws -> String? {
         let node = try requireNode()
         let branch = guest.kind == .container ? "lxc" : "qemu"
-        let action = running ? "start" : "shutdown"
-        try await post("/nodes/\(node)/\(branch)/\(guest.vmid)/status/\(action)")
+        let data = try await post("/nodes/\(node)/\(branch)/\(guest.vmid)/status/\(akcja.rawValue)")
+        return try? JSONDecoder().decode(String.self, from: data)
+    }
+
+    /// Czy gość startuje razem z serwerem (`onboot`) — dla każdego z listy osobno.
+    ///
+    /// `/cluster/resources` tego pola nie podaje, więc czytamy konfigurację każdego gościa.
+    /// Brak `onboot` w konfiguracji znaczy „nie startuje” (domyślne 0 w Proxmoksie).
+    /// Gość, którego konfiguracji nie udało się odczytać, nie trafia do wyniku.
+    func startZSerwerem(_ guests: [Guest]) async -> [Int: Bool] {
+        guard let node = try? requireNode() else { return [:] }
+        var wynik: [Int: Bool] = [:]
+        for g in guests {
+            let branch = g.kind == .container ? "lxc" : "qemu"
+            if let c = try? await get("/nodes/\(node)/\(branch)/\(g.vmid)/config", as: GuestConfig.self) {
+                wynik[g.vmid] = c.onboot == 1
+            }
+        }
+        return wynik
+    }
+
+    /// Włącza albo wyłącza start gościa razem z serwerem. Stanu gościa teraz nie zmienia.
+    func ustawStartZSerwerem(_ guest: Guest, _ wlacz: Bool) async throws {
+        let node = try requireNode()
+        let branch = guest.kind == .container ? "lxc" : "qemu"
+        _ = try await request("/nodes/\(node)/\(branch)/\(guest.vmid)/config", method: "PUT",
+                          form: ["onboot": wlacz ? "1" : "0"])
+    }
+}
+
+/// Konfiguracja gościa — potrzebne jest z niej tylko `onboot`.
+/// Proxmox podaje je jako liczbę, ale przez `pvesh` i starsze wersje bywa tekstem.
+private nonisolated struct GuestConfig: Decodable {
+    let onboot: Int?
+
+    enum CodingKeys: String, CodingKey { case onboot }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        if let i = try? c.decode(Int.self, forKey: .onboot) {
+            onboot = i
+        } else if let s = try? c.decode(String.self, forKey: .onboot) {
+            onboot = Int(s)
+        } else {
+            onboot = nil
+        }
     }
 }
 

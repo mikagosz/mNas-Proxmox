@@ -19,6 +19,7 @@ enum OknoPaneluTrwalego {
         case transfery
         case zdarzenia
         case uslugi
+        case goscie
         /// Nazwa dysku z Proxmoksa (`/dev/…`) — sam `Disk` nie jest `Codable`,
         /// a okno musi dać się odtworzyć po samej wartości.
         case dysk(String)
@@ -42,6 +43,8 @@ struct OknoPaneluTrwalegoWidok: View {
                 OknoZdarzen()
             case .uslugi:
                 OknoUslug()
+            case .goscie:
+                OknoGosci()
             case .dysk(let nazwa):
                 if let d = model.disks.first(where: { $0.name == nazwa }) {
                     DiskHealthView(disk: d)
@@ -71,6 +74,7 @@ struct OknoPaneluTrwalegoWidok: View {
         case .transfery:       return String(localized: "Transfery — historia")
         case .zdarzenia:       return String(localized: "Zdarzenia")
         case .uslugi:          return String(localized: "Usługi")
+        case .goscie:          return String(localized: "Maszyny i kontenery")
         case .dysk(let nazwa): return model.disks.first { $0.name == nazwa }?.model ?? nazwa
         }
     }

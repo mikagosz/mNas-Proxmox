@@ -1,6 +1,286 @@
 {
   "sourceLanguage": "pl",
   "strings": {
+    "z serwerem startuje %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld start with the server"
+          }
+        }
+      }
+    },
+    "Zatrzymaj i Restart zamykają system gościa łagodnie — mNas nie odcina zasilania. „Start z serwerem” decyduje, czy gość wstanie sam po restarcie serwera; jego stanu teraz nie zmienia.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop and Restart shut the guest system down gracefully — mNas never cuts the power. “Start with server” decides whether the guest comes up on its own after the server restarts; it does not change its state now."
+          }
+        }
+      }
+    },
+    "Start z serwerem": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with server"
+          }
+        }
+      }
+    },
+    "sprawdzam…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "checking…"
+          }
+        }
+      }
+    },
+    "startuje sam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "starts on its own"
+          }
+        }
+      }
+    },
+    "nie startuje sam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "does not start on its own"
+          }
+        }
+      }
+    },
+    "Czy gość wstanie sam po restarcie serwera (ustawienie „onboot” w Proxmoksie).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whether the guest comes up on its own after the server restarts (the “onboot” setting in Proxmox)."
+          }
+        }
+      }
+    },
+    "Startuje razem z serwerem": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starts with the server"
+          }
+        }
+      }
+    },
+    "Start z serwerem dla %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start with server for %@"
+          }
+        }
+      }
+    },
+    "Wyłączenie startu z serwerem dla %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turning off start with server for %@"
+          }
+        }
+      }
+    },
+    "Uruchamianie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting…"
+          }
+        }
+      }
+    },
+    "Zamykanie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shutting down…"
+          }
+        }
+      }
+    },
+    "Restartowanie…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restarting…"
+          }
+        }
+      }
+    },
+    "Uruchomiony": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Started"
+          }
+        }
+      }
+    },
+    "Zamknięty": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shut down"
+          }
+        }
+      }
+    },
+    "Zrestartowany": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restarted"
+          }
+        }
+      }
+    },
+    "%@ po %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ after %lld s"
+          }
+        }
+      }
+    },
+    "Nie udało się": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed"
+          }
+        }
+      }
+    },
+    "%@ — serwer zgłosił błąd: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ — the server reported an error: %@"
+          }
+        }
+      }
+    },
+    "%@ %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %lld s"
+          }
+        }
+      }
+    },
+    "numer %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID %lld"
+          }
+        }
+      }
+    },
+    "Szukaj po nazwie albo numerze": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search by name or ID"
+          }
+        }
+      }
+    },
+    "Serwer nie zgłasza żadnej maszyny ani kontenera.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server reports no virtual machines or containers."
+          }
+        }
+      }
+    },
+    "Zatrzymaj i Restart zamykają system gościa łagodnie — mNas nie odcina zasilania.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop and Restart shut the guest system down gracefully — mNas never cuts the power."
+          }
+        }
+      }
+    },
+    "Zrestartować %@? System gościa zamknie się i wstanie od nowa; to, co w nim chodzi, na chwilę zniknie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart %@? The guest system will shut down and start again; whatever runs inside it will be gone for a moment."
+          }
+        }
+      }
+    },
+    "Restart %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restart %@"
+          }
+        }
+      }
+    },
+    "od %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "up %@"
+          }
+        }
+      }
+    },
+    "CPU %@%%": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU %@%%"
+          }
+        }
+      }
+    },
     "\n\n→ mNas zakłada logowanie jako root. Sprawdź część przed „@\" w polu tokenu i klucz w /root/.ssh/authorized_keys.": {
       "localizations": {
         "en": {

@@ -227,6 +227,9 @@ final class AppModel {
     private var lastAlertsRead = Date.distantPast
     private var lastDisksRead = Date.distantPast
     private static let guestsInterval: TimeInterval = 30
+    /// `onboot` czytamy z konfiguracji każdego gościa osobno — stąd rzadziej niż listę.
+    private var lastStartZSerweremRead = Date.distantPast
+    private static let startZSerweremInterval: TimeInterval = 60
     private static let servicesInterval: TimeInterval = 60
     private static let alertsInterval: TimeInterval = 30
     private static let disksInterval: TimeInterval = 10 * 60
@@ -406,6 +409,7 @@ final class AppModel {
         nodeName = nil
         systemInfo = nil
         guests = []
+        startZSerwerem = [:]
         disks = []
         temperaturyDyskow = [:]
         kondycjeDyskow = [:]
@@ -536,6 +540,10 @@ final class AppModel {
             // gości nie może wywalić całego odświeżania, więc każde leci osobno i cicho.
             if minelo(&lastGuestsRead, Self.guestsInterval) {
                 guests = (try? await client.guests()) ?? guests
+            }
+            if !guests.isEmpty, minelo(&lastStartZSerweremRead, Self.startZSerweremInterval) {
+                let odczyt = await client.startZSerwerem(guests)
+                if !odczyt.isEmpty { startZSerwerem = odczyt }
             }
             if minelo(&lastServicesRead, Self.servicesInterval) {
                 services = (try? await client.services()) ?? []
@@ -1996,13 +2004,86 @@ final class AppModel {
         return blad
     }
 
-    /// Start/stop maszyny wirtualnej albo kontenera.
+    /// Akcja na gościu, która właśnie trwa na serwerze — klucz to `vmid`.
+    ///
+    /// Zgłoszenie 2026-11-14: po „Zatrzymaj” kółko znikało po sekundzie, a kontener
+    /// gasł dopiero po kilkunastu — nie było widać, że cokolwiek się dzieje.
+    /// Proxmox odpowiada na POST od razu, więc stan trzymamy do końca **zadania**
+    /// na serwerze. Trzyma go model, nie okno: kafel i okno pokazują to samo,
+    /// a zamknięcie okna nie gubi śledzenia.
+    struct TrwajacaAkcjaGoscia: Equatable {
+        var akcja: Guest.Akcja
+        var od: Date
+        /// Ustawione po końcu: napis widoczny jeszcze chwilę („Zamknięty po 14 s”).
+        var wynik: String?
+        var blad: Bool = false
+    }
+    var akcjeGosci: [Int: TrwajacaAkcjaGoscia] = [:]
+
+    /// Czy gość startuje razem z serwerem (`onboot`), klucz to `vmid`. Brak klucza = jeszcze
+    /// nie odczytane. Zgłoszenie 2026-11-14: chcę widzieć, który kontener po restarcie
+    /// wstanie sam, i móc to włączać i wyłączać.
+    var startZSerwerem: [Int: Bool] = [:]
+
+    /// Włącza albo wyłącza start gościa razem z serwerem.
     @discardableResult
-    func setGuest(_ guest: Guest, running: Bool) async -> String? {
-        let blad = await wykonajAkcje(running ? String(localized: "Start \(guest.name)") : String(localized: "Stop \(guest.name)")) {
-            try await $0.setGuest(guest, running: running)
+    func ustawStartZSerwerem(_ guest: Guest, _ wlacz: Bool) async -> String? {
+        let opis = wlacz
+            ? String(localized: "Start z serwerem dla \(guest.name)")
+            : String(localized: "Wyłączenie startu z serwerem dla \(guest.name)")
+        let blad = await wykonajAkcje(opis) { try await $0.ustawStartZSerwerem(guest, wlacz) }
+        if let client, !guests.isEmpty {
+            let odczyt = await client.startZSerwerem(guests)
+            if !odczyt.isEmpty { startZSerwerem = odczyt }
+            lastStartZSerweremRead = Date()
+        }
+        return blad
+    }
+
+    /// Start, zatrzymanie albo restart gościa — wspólne dla kafla i okna gości.
+    /// Wraca dopiero, gdy zadanie na serwerze się skończy (najwyżej po 10 minutach).
+    @discardableResult
+    func guestAction(_ guest: Guest, _ akcja: Guest.Akcja) async -> String? {
+        let opis: String
+        switch akcja {
+        case .start:    opis = String(localized: "Start \(guest.name)")
+        case .shutdown: opis = String(localized: "Stop \(guest.name)")
+        case .reboot:   opis = String(localized: "Restart \(guest.name)")
+        }
+        // Druga akcja na tym samym gościu, zanim pierwsza się skończy, nie ma sensu.
+        if let trwa = akcjeGosci[guest.vmid], trwa.wynik == nil { return nil }
+        let start = Date()
+        akcjeGosci[guest.vmid] = TrwajacaAkcjaGoscia(akcja: akcja, od: start)
+
+        var upid: String?
+        var blad = await wykonajAkcje(opis) { upid = try await $0.guestAction(guest, akcja) }
+        if blad == nil, let upid, let client {
+            // Zadanie na serwerze: pytamy co 1,5 s, aż przestanie trwać.
+            let limit = start.addingTimeInterval(600)
+            while Date() < limit {
+                try? await Task.sleep(for: .milliseconds(1500))
+                guard let st = await client.wynikZadania(upid: upid) else { continue }
+                if st.status == "stopped" {
+                    if let e = st.exitstatus, e != "OK" {
+                        blad = String(localized: "\(opis) — serwer zgłosił błąd: \(e)")
+                        bladAkcji = blad
+                    }
+                    break
+                }
+            }
         }
         await refresh()
+
+        let sekundy = Int(Date().timeIntervalSince(start).rounded())
+        akcjeGosci[guest.vmid]?.wynik = blad == nil
+            ? String(localized: "\(akcja.gotowe) po \(sekundy) s")
+            : String(localized: "Nie udało się")
+        akcjeGosci[guest.vmid]?.blad = blad != nil
+        // Wynik zostaje na chwilę, żeby było widać koniec — potem wiersz wraca do zwykłego stanu.
+        Task { [weak self] in
+            try? await Task.sleep(for: .seconds(6))
+            if self?.akcjeGosci[guest.vmid]?.od == start { self?.akcjeGosci[guest.vmid] = nil }
+        }
         return blad
     }
 
